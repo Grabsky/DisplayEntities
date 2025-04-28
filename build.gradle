@@ -1,0 +1,64 @@
+plugins {
+    id("java-library")
+    id("de.eldoria.plugin-yml.paper") version "0.7.1"
+}
+
+group = "cloud.grabsky"
+version = "1.21.4-${System.getenv("GITHUB_RUN_NUMBER") ?: "DEV"}"
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    // Repository for the Paper API.
+    maven { url = "https://repo.papermc.io/repository/maven-public/" }
+    // Repository for the PlaceholderAPI, API.
+    maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
+    // Repository for the PacketEvents API.
+    maven { url = "https://repo.codemc.io/repository/maven-snapshots/" }
+    // Repository containing the 'bedrock' dependency.
+    maven { url = "https://maven.pkg.github.com/grabsky/bedrock"
+        credentials {
+            username = findProperty("gpr.actor") ?: System.getenv("GITHUB_ACTOR")
+            password = findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+}
+
+dependencies {
+    // Lombok
+    compileOnly("org.projectlombok:lombok:1.18.38")
+    annotationProcessor("org.projectlombok:lombok:1.18.38")
+    // Paper API
+    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    // Plugin libraries and other runtime dependencies. Downloading and loading handled by Paper's Plugin Loader API.
+    paperLibrary("io.github.revxrsal:lamp.common:4.0.0-rc.11")
+    paperLibrary("io.github.revxrsal:lamp.bukkit:4.0.0-rc.11")
+    paperLibrary("io.github.revxrsal:spec:1.3")
+    // Plugin runtime dependencies.
+    compileOnly("me.clip:placeholderapi:2.11.6")
+    compileOnly("com.github.retrooper:packetevents-spigot:2.8.0-SNAPSHOT")
+}
+
+tasks {
+    jar {
+        archiveFileName = "${rootProject.name}-${project.version}.jar"
+    }
+    compileJava {
+        options.fork = true
+        options.compilerArgs += "-parameters"
+        // Setting compatibility to Java 21 and higher.
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+}
+
+paper {
+    main = "cloud.grabsky.displayentities.DisplayEntities"
+    loader = "cloud.grabsky.displayentities.DisplayEntities\$PluginLoader"
+    apiVersion = "1.21"
+    generateLibrariesJson = true
+    serverDependencies {
+        "PlaceholderAPI"  { load = "BEFORE"; required = false }
+        "packetevents"    { load = "BEFORE"; required = false }
+    }
+}
