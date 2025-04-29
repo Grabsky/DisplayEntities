@@ -71,7 +71,7 @@ public enum CommandDisplayBackground {
         // Setting the background color property of the display entity.
         display.entity().setBackgroundColor(finalColor);
         // Sending success message to the sender.
-        return configuration.messages().commandDisplayEditBackgroundSuccess().repl("{color}", Integer.toHexString(finalColor.asARGB()).toUpperCase());
+        return configuration.messages().commandDisplayEditBackgroundSuccess().repl("{color}", "#" + Integer.toHexString(finalColor.asARGB()).toUpperCase());
     }
 
 }
