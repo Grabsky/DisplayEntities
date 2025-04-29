@@ -54,8 +54,10 @@ public interface PluginConfiguration {
     @ConfigSpec
     interface Messages {
 
+        // Display > Create
+
         @Order(0) @Key("command.display.create.usage")
-        @Comment("Display Create")
+        @Comment("Display > Create")
         default String commandDisplayCreateUsage() {
             return "<dark_gray>› <gray>Usage: <yellow>/display create (type) (name)";
         }
@@ -65,8 +67,10 @@ public interface PluginConfiguration {
             return "<dark_gray>› <gray>Display <yellow>{name}<gray> has been created.";
         }
 
+        // Display > Delete
+
         @Order(2) @Key("command.display.delete.usage")
-        @Comment("Display Delete")
+        @Comment("Display > Delete")
         default String commandDisplayDeleteUsage() {
             return "<dark_gray>› <gray>Usage: <yellow>/display delete (name)";
         }
@@ -76,11 +80,15 @@ public interface PluginConfiguration {
             return "<dark_gray>› <gray>Display <yellow>{name}<gray> has been deleted.";
         }
 
+        // Display > Reload
+
         @Order(4) @Key("command.display.reload")
-        @Comment("Display Reload")
+        @Comment("Display > Reload")
         default String commandDisplayReload() {
             return "<dark_gray>› <gray>Plugin <yellow>DisplayEntities<gray> has been reloaded.";
         }
+
+        // Display > Edit > Alignment
 
         @Order(5) @Key("command.display.edit.alignment.usage")
         @Comment("Display > Edit > Alignment")
@@ -93,6 +101,8 @@ public interface PluginConfiguration {
             return "<dark_gray>› <gray>Display is now using <yellow>{alignment} <gray>alignment.";
         }
 
+        // Display > Edit > Background
+
         @Order(7) @Key("command.display.edit.background.usage")
         @Comment("Display > Edit > Background")
         default String commandDisplayEditBackgroundUsage() {
@@ -103,6 +113,8 @@ public interface PluginConfiguration {
         default String commandDisplayEditBackgroundSuccess() {
             return "<dark_gray>› <gray>Display is now using <yellow>{color} <gray>background color.";
         }
+
+        // Display > Edit > Billboard
 
         @Order(9) @Key("command.display.edit.billboard.usage")
         @Comment("Display > Edit > Billboard")
@@ -115,6 +127,8 @@ public interface PluginConfiguration {
             return "<dark_gray>› <gray>Display is now using <yellow>{billboard} <gray>billboard.";
         }
 
+        // Display > Edit > Scale
+
         @Order(11) @Key("command.display.edit.scale.usage")
         @Comment("Display > Edit > Scale")
         default String commandDisplayEditScaleUsage() {
@@ -126,6 +140,8 @@ public interface PluginConfiguration {
             return "<dark_gray>› <gray>Display scale has been set to <yellow>{x}<gray>, <yellow>{y}<gray>, <yellow>{z}<gray>.";
         }
 
+        // Display > Edit > View Range
+
         @Order(13) @Key("command.display.edit.view_range.usage")
         @Comment("Display > Edit > View Range")
         default String commandDisplayEditViewRangeUsage() {
@@ -136,6 +152,8 @@ public interface PluginConfiguration {
         default String commandDisplayEditViewRangeSuccess() {
             return "<dark_gray>› <gray>Display view range has been set to <yellow>{range}<gray>.";
         }
+
+        // Display > Edit > Block
 
         @Order(15) @Key("command.display.edit.block.usage")
         @Comment("Display > Edit > Block")
@@ -150,8 +168,10 @@ public interface PluginConfiguration {
 
         @Order(17) @Key("command.display.edit.block.failure")
         default String commandDisplayEditBlockFailure() {
-            return "<dark_gray>› <gray>Failed to set block type. Specify argument or make sure you are holding an item in your hand.";
+            return "<dark_gray>› <red>Failed to set block type. Specify argument or make sure you are holding an item in your hand.";
         }
+
+        // Display > Edit > Item
 
         @Order(18) @Key("command.display.edit.item.usage")
         @Comment("Display > Edit > Item")
@@ -166,27 +186,83 @@ public interface PluginConfiguration {
 
         @Order(20) @Key("command.display.edit.item.failure")
         default String commandDisplayEditItemFailure() {
-            return "<dark_gray>› <gray>Failed to set item type. Specify argument or make sure you are holding an item in your hand.";
+            return "<dark_gray>› <red>Failed to set item type. Specify argument or make sure you are holding an item in your hand.";
         }
 
-        @Order(21) @Key("command.display.edit.see_through.success")
+        // Display > Edit > Add Line
+
+        @Order(21) @Key("command.display.edit.add_line.usage")
+        @Comment("Display > Edit > Add Line")
+        default String commandDisplayEditAddLineUsage() {
+            return "<dark_gray>› <gray>Usage: <yellow>/display edit (display) add_line (text)";
+        }
+
+        @Order(22) @Key("command.display.edit.add_line.success")
+        default String commandDisplayEditAddLineSuccess() {
+            return "<dark_gray>› <gray>Line <yellow>{number} <gray>has been added to the display.";
+        }
+
+        // Display > Edit > Remove Line
+
+        @Order(23) @Key("command.display.edit.remove_line.usage")
+        @Comment("Display > Edit > Remove Line")
+        default String commandDisplayEditRemoveLineUsage() {
+            return "<dark_gray>› <gray>Usage: <yellow>/display edit (display) remove_line (line)";
+        }
+
+        @Order(24) @Key("command.display.edit.remove_line.failure.out_of_bounds")
+        default String commandDisplayEditRemoveLineFailureOutOfBounds() {
+            return "<dark_gray>› <red>Line <yellow>{number} <red>is out of bounds. (Max: {max})";
+        }
+
+        @Order(25) @Key("command.display.edit.remove_line.success")
+        default String commandDisplayEditRemoveLineSuccess() {
+            return "<dark_gray>› <gray>Line <yellow>{number} <gray>has been removed from the display.";
+        }
+
+        // Display > Edit > Set Line
+
+        @Order(26) @Key("command.display.edit.set_line.usage")
+        @Comment("Display > Edit > Set Line")
+        default String commandDisplayEditSetLineUsage() {
+            return "<dark_gray>› <gray>Usage: <yellow>/display edit (display) set_line (line) (text)";
+        }
+
+        @Order(27) @Key("command.display.edit.set_line.success")
+        default String commandDisplayEditSetLineSuccess() {
+            return "<dark_gray>› <gray>Line <yellow>{number} <gray>has been modified.";
+        }
+
+        @Order(28) @Key("command.display.edit.set_line.failure.out_of_bounds")
+        default String commandDisplayEditSetLineFailureOutOfBounds() {
+            return "<dark_gray>› <red>Line <yellow>{number} <red>is out of bounds. (Max: {max})";
+        }
+
+        // Display > Edit > See Through
+
+        @Order(29) @Key("command.display.edit.see_through.success")
+        @Comment("Display > Edit > See Through")
         default String commandDisplayEditSeeThroughSuccess() {
             return "<dark_gray>› <gray>Display see through has been set to <yellow>{state}<gray>.";
         }
 
-        @Order(22) @Key("command.display.edit.text_shadow.success")
+        // Display > Edit > Text Shadow
+
+        @Order(30) @Key("command.display.edit.text_shadow.success")
         @Comment("Display > Edit > Text Shadow")
         default String commandDisplayEditTextShadowSuccess() {
             return "<dark_gray>› <gray>Display text shadow has been set to <yellow>{state}<gray>.";
         }
-        
-        @Order(23) @Key("command.display.edit.text_opacity.usage")
+
+        // Display > Edit > Text Opacity
+
+        @Order(31) @Key("command.display.edit.text_opacity.usage")
         @Comment("Display > Edit > Text Opacity")
         default String commandDisplayEditTextOpacityUsage() {
             return "<dark_gray>› <gray>Usage: <yellow>/display edit (display) text_opacity (opacity)";
         }
 
-        @Order(24) @Key("command.display.edit.text_opacity.success")
+        @Order(32) @Key("command.display.edit.text_opacity.success")
         default String commandDisplayEditTextOpacitySuccess() {
             return "<dark_gray>› <gray>Display text opacity has been set to <yellow>{opacity}<gray>.";
         }

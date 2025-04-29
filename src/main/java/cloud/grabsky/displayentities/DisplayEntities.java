@@ -111,7 +111,6 @@ public final class DisplayEntities extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-
         // Initializing instance File representing config.yml file of this plugin.
         this.configurationFile = new File(this.getDataFolder(), "config.yml");
         // Loading configuration file.
