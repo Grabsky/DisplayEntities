@@ -9,7 +9,11 @@
 
 </div>
 
-Small plugin that simplifies display entity management. You can use it for map-making, holograms or anything you'd use display entities for.
+To put it simple, **DisplayEntities** is an utility plugin that adds commands for manipulating **server-side** display entities. Display entities are **lightweight** and **powerful** alternative to armor stands. Reasonable amount of these entities should **never** be a subject to server lag.
+
+Plugin does not store anything on it's own except configuration file and necessary data attached to the PDC (Persistent Data Container) of each entity it interacts with. It means that each entity created by the plugin will be kept in the world until manually removed. This can be done either by using `/display delete (name)` command provided by the plugin, or vanilla `/kill` command.
+
+To make the plugin a bit more useful, I also added packet-level **PlaceholderAPI** support which should possibly make it as useful as any other holograms plugin you're already familiar with.
 
 <br />
 
@@ -22,26 +26,19 @@ Small plugin that simplifies display entity management. You can use it for map-m
   Basically a user-friendly wrapper around display entities. There's not much logic attached to it.
 
 - **Compatibility**  
-  Entities created by the plugin are real entities that can be modified with commands or other plugins.
+  Entities created by the plugin are real entities that can be modified with commands and other plugins.
 
 - **Folia Support**  
   Designed to run on Paper and Folia servers. Folia Scheduler APIs are used when available.
 
 - **PlaceholderAPI Support** (Optional)  
-  Placeholders inside text displays are parsed and displayed per-player. Requires **[PlaceholderAPI](https://github.com/PlaceholderAPI/PlaceholderAPI)** and **[PacketEvents](https://github.com/retrooper/packetevents)**.
+  Placeholders inside text displays are parsed and displayed per-player.  
+  <sup>(Requires **[PlaceholderAPI](https://github.com/PlaceholderAPI/PlaceholderAPI)** and **[PacketEvents](https://github.com/retrooper/packetevents)**)</sup>
 
 <br/>
 
 ## Requirements
 Plugin runs only on **Paper 1.21.4** and above, powered by **Java 21** or higher.
-
-<br/>
-
-## Details
-Plugin is based on display entities that were added by Mojang back in 1.19.4 as a light and powerful alternative to armor stands. Reasonable amounts of them should never be a subject of lag. Plugin does not store anything on it's own except for necessary data attached to the PDC (Persistent Data Container) of each entity it interacts with. It means that each "hologram" created by the plugin will be kept in the world until you manually remove it, either by using the `/display delete (name)` command provided by the plugin, or vanilla `/kill` command. If that's not what you're looking for, consider using a fully packet-based plugin such as **[FancyHolograms](https://modrinth.com/plugin/fancyholograms)**.
-
-<ins>**Still not sure what is all of that about?**</ins>  
-Join our Discord server and ask your question. (Not set up yet)
 
 <br/>
 
