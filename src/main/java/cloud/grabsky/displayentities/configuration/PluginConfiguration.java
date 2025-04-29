@@ -42,9 +42,9 @@ public interface PluginConfiguration {
     }
 
     @Order(1) @Key("refresh_interval")
-    @Comment("Placeholders refresh interval in ticks. (Default: 20)")
+    @Comment("Placeholders refresh interval in ticks. (Default: 100)")
     default int refreshInterval() {
-        return 20;
+        return 100;
     }
 
     @Order(2) @Key("messages")

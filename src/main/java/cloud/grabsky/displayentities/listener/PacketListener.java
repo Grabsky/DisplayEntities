@@ -91,15 +91,18 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
                             hasActiveTask.remove(entityId);
                             return;
                         }
-                        entity.getTrackedBy().forEach(viewer -> {
-                            final var packet = new WrapperPlayServerEntityMetadata(entityId, List.of(
-                                    // Setting text to an empty component. This is intercepted in the entity_metadata listener where all placeholders and colors are applied.
-                                    new EntityData<>(23, EntityDataTypes.ADV_COMPONENT, Component.empty())
-                            ));
-                            // Sending packet to the viewer.
-                            PacketEvents.getAPI().getPlayerManager().sendPacket(viewer, packet);
-                            // Logging debug information to the console.
-                            plugin.debug("[E:" + entityId + "] Packet sent to user " + viewer.getName() + "... [P:" + packet.getNativePacketId() + "] [H:" + packet.hashCode() + "]");
+                        // Scheduling further logic to be run off the main thread.
+                        plugin.getServer().getAsyncScheduler().runNow(plugin, (it) -> {
+                            entity.getTrackedBy().forEach(viewer -> {
+                                final var packet = new WrapperPlayServerEntityMetadata(entityId, List.of(
+                                        // Setting text to an empty component. This is intercepted in the entity_metadata listener where all placeholders and colors are applied.
+                                        new EntityData<>(23, EntityDataTypes.ADV_COMPONENT, Component.empty())
+                                ));
+                                // Sending packet to the viewer.
+                                PacketEvents.getAPI().getPlayerManager().sendPacket(viewer, packet);
+                                // Logging debug information to the console.
+                                plugin.debug("[E:" + entityId + "] Packet sent to user " + viewer.getName() + "... [P:" + packet.getNativePacketId() + "] [H:" + packet.hashCode() + "]");
+                            });
                         });
                     }, () -> {
                         // Logging debug information to the console.
