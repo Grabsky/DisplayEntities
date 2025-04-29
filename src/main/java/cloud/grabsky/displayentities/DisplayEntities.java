@@ -153,7 +153,6 @@ public final class DisplayEntities extends JavaPlugin {
                         context.actor().sender().sendRichMessage(message);
                 })
                 .build();
-
         // Registering plugin commands.
         this.registerCommands(this.lamp);
     }
