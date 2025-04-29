@@ -1,4 +1,14 @@
-# Display Entities
+<div align="center">
+  
+  ![](https://i.imgur.com/aziwQIL.png)
+
+  [![GitHub Release](https://img.shields.io/github/v/release/Grabsky/DisplayEntities?logo=github&labelColor=%2324292F&color=%23454F5A)](https://github.com/Grabsky/DisplayEntities/releases/latest)
+  [![Modrinth Downloads](https://img.shields.io/modrinth/dt/displayentities?logo=modrinth&logoColor=white&label=downloads&labelColor=%23139549&color=%2318c25f)](https://modrinth.com/plugin/displayentities)
+  [![Discord](https://img.shields.io/discord/1366851451208601783?cacheSeconds=3600&logo=discord&logoColor=white&label=%20&labelColor=%235865F2&color=%23707BF4)](https://discord.com/invite/PuzqF2Yd5q)
+  [![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/Grabsky/DisplayEntities?logo=codefactor&logoColor=white&label=%20)](https://www.codefactor.io/repository/github/grabsky/displayentities/issues/main)
+
+</div>
+
 Small plugin that simplifies display entity management. You can use it for map-making, holograms or anything you'd use display entities for.
 
 <br />
