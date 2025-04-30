@@ -50,6 +50,10 @@ import com.google.gson.Gson;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import io.papermc.paper.plugin.loader.PluginClasspathBuilder;
 import io.papermc.paper.plugin.loader.library.impl.MavenLibraryResolver;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.Tag;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Color;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -79,6 +83,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -100,6 +105,9 @@ public final class DisplayEntities extends JavaPlugin {
     @Getter(AccessLevel.PUBLIC)
     private Lamp<BukkitCommandActor> lamp;
 
+    @Getter(AccessLevel.PUBLIC)
+    private MiniMessage miniMessage = MiniMessage.miniMessage();
+
     private static final ThreadLocal<Yaml> YAML = ThreadLocal.withInitial(() -> {
         final DumperOptions options = new DumperOptions();
         options.setSplitLines(false);
@@ -119,9 +127,9 @@ public final class DisplayEntities extends JavaPlugin {
                 new CommentedConfiguration(this.configurationFile.toPath(), CommentedConfiguration.GSON, ArrayCommentStyle.COMMENT_FIRST_ELEMENT, YAML.get())
         );
         // Saving default contents to the configuration file.
-        this.configuration.save();
+        this.configuration.performSave();
         // Reloading and mapping configuration file contents to the PluginConfiguration instance.
-        this.configuration.reload();
+        this.configuration.performReload();
         // Printing warning to the console if PacketEvents is not installed.
         if (this.getServer().getPluginManager().getPlugin("packetevents") == null)
             if (this.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)
@@ -150,7 +158,7 @@ public final class DisplayEntities extends JavaPlugin {
                 // Registering command response handler for String object.
                 .responseHandler(String.class, (message, context) -> {
                     if (message.isEmpty() == false)
-                        context.actor().sender().sendRichMessage(message);
+                        context.actor().reply(miniMessage.deserialize(message));
                 })
                 .build();
         // Registering plugin commands.
@@ -194,6 +202,25 @@ public final class DisplayEntities extends JavaPlugin {
     public void debug(final String message) {
         if (this.configuration.debugMode() == true)
             this.getLogger().warning("[DEBUG] " + message);
+    }
+
+    @SuppressWarnings("PatternValidation")
+    public void rebuildMiniMessage() {
+        this.miniMessage = MiniMessage.builder()
+                .tags(TagResolver.standard())
+                .editTags(it -> {
+                    this.configuration.predefinedColors().forEach((key, value) -> {
+                        final @Nullable TextColor color = TextColor.fromHexString(value);
+                        // Logging invalid invalid color definitions.
+                        if (color == null) {
+                            this.getLogger().warning("Color '" + key + "' with value '" + value + "' is not a valid hex color.");
+                            return;
+                        }
+                        // Adding new tag.
+                        it.tag(key, Tag.styling(color));
+                    });
+                })
+                .build();
     }
 
     /* PERSISTENT DATA CONTAINER KEYS; FOR INTERNAL USE ONLY */

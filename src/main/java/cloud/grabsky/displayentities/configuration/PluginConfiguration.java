@@ -25,12 +25,16 @@
  */
 package cloud.grabsky.displayentities.configuration;
 
+import cloud.grabsky.displayentities.DisplayEntities;
 import revxrsal.spec.annotation.Comment;
 import revxrsal.spec.annotation.ConfigSpec;
+import revxrsal.spec.annotation.IgnoreMethod;
 import revxrsal.spec.annotation.Key;
 import revxrsal.spec.annotation.Order;
 import revxrsal.spec.annotation.Reload;
 import revxrsal.spec.annotation.Save;
+
+import java.util.LinkedHashMap;
 
 @ConfigSpec
 public interface PluginConfiguration {
@@ -47,7 +51,16 @@ public interface PluginConfiguration {
         return 100;
     }
 
-    @Order(2) @Key("messages")
+    @Order(2) @Key("predefined_colors")
+    @Comment("Predefined colors for use in messages section of the configuration file.")
+    default LinkedHashMap<String, String> predefinedColors() {
+        return new LinkedHashMap<>() {{
+            put("primary", "#65D85F");
+            put("secondary", "#C7F1C5");
+        }};
+    }
+
+    @Order(3) @Key("messages")
     @Comment("Translatable messages used across the entire plugin. MiniMessage is the only supported text format.")
     Messages messages();
 
@@ -59,12 +72,12 @@ public interface PluginConfiguration {
         @Order(0) @Key("command.display.create.usage")
         @Comment("Display > Create")
         default String commandDisplayCreateUsage() {
-            return "<dark_gray>› <gray>Usage: <yellow>/display create (type) (name)";
+            return "<dark_gray>› <gray>Usage: <primary>/display create (type) (name)";
         }
 
         @Order(1) @Key("command.display.create.success")
         default String commandDisplayCreateSuccess() {
-            return "<dark_gray>› <gray>Display <yellow>{name}<gray> has been created.";
+            return "<dark_gray>› <gray>Display <primary>{name}<gray> has been created.";
         }
 
         // Display > Delete
@@ -72,12 +85,12 @@ public interface PluginConfiguration {
         @Order(2) @Key("command.display.delete.usage")
         @Comment("Display > Delete")
         default String commandDisplayDeleteUsage() {
-            return "<dark_gray>› <gray>Usage: <yellow>/display delete (name)";
+            return "<dark_gray>› <gray>Usage: <primary>/display delete (name)";
         }
 
         @Order(3) @Key("command.display.delete.success")
         default String commandDisplayDeleteSuccess() {
-            return "<dark_gray>› <gray>Display <yellow>{name}<gray> has been deleted.";
+            return "<dark_gray>› <gray>Display <primary>{name}<gray> has been deleted.";
         }
 
         // Display > Reload
@@ -85,7 +98,7 @@ public interface PluginConfiguration {
         @Order(4) @Key("command.display.reload")
         @Comment("Display > Reload")
         default String commandDisplayReload() {
-            return "<dark_gray>› <gray>Plugin <yellow>DisplayEntities<gray> has been reloaded.";
+            return "<dark_gray>› <gray>Plugin <primary>DisplayEntities<gray> has been reloaded.";
         }
 
         // Display > Edit > Alignment
@@ -93,12 +106,12 @@ public interface PluginConfiguration {
         @Order(5) @Key("command.display.edit.alignment.usage")
         @Comment("Display > Edit > Alignment")
         default String commandDisplayEditAlignmentUsage() {
-            return "<dark_gray>› <gray>Usage: <yellow>/display edit (display) alignment (alignment)";
+            return "<dark_gray>› <gray>Usage: <primary>/display edit <secondary>(display) <primary>alignment <secondary>(alignment)";
         }
 
         @Order(6) @Key("command.display.edit.alignment.success")
         default String commandDisplayEditAlignmentSuccess() {
-            return "<dark_gray>› <gray>Display is now using <yellow>{alignment} <gray>alignment.";
+            return "<dark_gray>› <gray>Display is now using <primary>{alignment} <gray>alignment.";
         }
 
         // Display > Edit > Background
@@ -106,12 +119,12 @@ public interface PluginConfiguration {
         @Order(7) @Key("command.display.edit.background.usage")
         @Comment("Display > Edit > Background")
         default String commandDisplayEditBackgroundUsage() {
-            return "<dark_gray>› <gray>Usage: <yellow>/display edit (display) background (color) [transparency]";
+            return "<dark_gray>› <gray>Usage: <primary>/display edit <secondary>(display) <primary>background <secondary>(color) [transparency]";
         }
 
         @Order(8) @Key("command.display.edit.background.success")
         default String commandDisplayEditBackgroundSuccess() {
-            return "<dark_gray>› <gray>Display is now using <yellow>{color} <gray>background color.";
+            return "<dark_gray>› <gray>Display is now using <primary>{color} <gray>background color.";
         }
 
         // Display > Edit > Billboard
@@ -119,12 +132,12 @@ public interface PluginConfiguration {
         @Order(9) @Key("command.display.edit.billboard.usage")
         @Comment("Display > Edit > Billboard")
         default String commandDisplayEditBillboardUsage() {
-            return "<dark_gray>› <gray>Usage: <yellow>/display edit (display) billboard (billboard)";
+            return "<dark_gray>› <gray>Usage: <primary>/display edit <secondary>(display) <primary>billboard <secondary>(billboard)";
         }
 
         @Order(10) @Key("command.display.edit.billboard.success")
         default String commandDisplayEditBillboardSuccess() {
-            return "<dark_gray>› <gray>Display is now using <yellow>{billboard} <gray>billboard.";
+            return "<dark_gray>› <gray>Display is now using <primary>{billboard} <gray>billboard.";
         }
 
         // Display > Edit > Scale
@@ -132,12 +145,12 @@ public interface PluginConfiguration {
         @Order(11) @Key("command.display.edit.scale.usage")
         @Comment("Display > Edit > Scale")
         default String commandDisplayEditScaleUsage() {
-            return "<dark_gray>› <gray>Usage: <yellow>/display edit (display) scale (x) [y] [z]";
+            return "<dark_gray>› <gray>Usage: <primary>/display edit <secondary>(display) <primary>scale <secondary>(x) [y] [z]";
         }
 
         @Order(12) @Key("command.display.edit.scale.success")
         default String commandDisplayEditScaleSuccess() {
-            return "<dark_gray>› <gray>Display scale has been set to <yellow>{x}<gray>, <yellow>{y}<gray>, <yellow>{z}<gray>.";
+            return "<dark_gray>› <gray>Display scale has been set to <primary>{x}<gray>, <primary>{y}<gray>, <primary>{z}<gray>.";
         }
 
         // Display > Edit > View Range
@@ -145,12 +158,12 @@ public interface PluginConfiguration {
         @Order(13) @Key("command.display.edit.view_range.usage")
         @Comment("Display > Edit > View Range")
         default String commandDisplayEditViewRangeUsage() {
-            return "<dark_gray>› <gray>Usage: <yellow>/display edit (display) view_range (range)";
+            return "<dark_gray>› <gray>Usage: <primary>/display edit <secondary>(display) <primary>view_range <secondary>(range)";
         }
 
         @Order(14) @Key("command.display.edit.view_range.success")
         default String commandDisplayEditViewRangeSuccess() {
-            return "<dark_gray>› <gray>Display view range has been set to <yellow>{range}<gray>.";
+            return "<dark_gray>› <gray>Display view range has been set to <primary>{range}<gray>.";
         }
 
         // Display > Edit > Block
@@ -158,12 +171,12 @@ public interface PluginConfiguration {
         @Order(15) @Key("command.display.edit.block.usage")
         @Comment("Display > Edit > Block")
         default String commandDisplayEditBlockUsage() {
-            return "<dark_gray>› <gray>Usage: <yellow>/display edit (display) block (type)";
+            return "<dark_gray>› <gray>Usage: <primary>/display edit <secondary>(display) <primary>block <secondary>(type)";
         }
 
         @Order(16) @Key("command.display.edit.block.success")
         default String commandDisplayEditBlockSuccess() {
-            return "<dark_gray>› <gray>Display block type has been set to <yellow>{type}<gray>.";
+            return "<dark_gray>› <gray>Display block type has been set to <primary>{type}<gray>.";
         }
 
         @Order(17) @Key("command.display.edit.block.failure")
@@ -176,12 +189,12 @@ public interface PluginConfiguration {
         @Order(18) @Key("command.display.edit.item.usage")
         @Comment("Display > Edit > Item")
         default String commandDisplayEditItemUsage() {
-            return "<dark_gray>› <gray>Usage: <yellow>/display edit (display) item (type)";
+            return "<dark_gray>› <gray>Usage: <primary>/display edit <secondary>(display) <primary>item <secondary>(type)";
         }
 
         @Order(19) @Key("command.display.edit.item.success")
         default String commandDisplayEditItemSuccess() {
-            return "<dark_gray>› <gray>Display item type has been set to <yellow>{type}<gray>.";
+            return "<dark_gray>› <gray>Display item type has been set to <primary>{type}<gray>.";
         }
 
         @Order(20) @Key("command.display.edit.item.failure")
@@ -194,12 +207,12 @@ public interface PluginConfiguration {
         @Order(21) @Key("command.display.edit.add_line.usage")
         @Comment("Display > Edit > Add Line")
         default String commandDisplayEditAddLineUsage() {
-            return "<dark_gray>› <gray>Usage: <yellow>/display edit (display) add_line (text)";
+            return "<dark_gray>› <gray>Usage: <primary>/display edit <secondary>(display) <primary>add_line <secondary>(text)";
         }
 
         @Order(22) @Key("command.display.edit.add_line.success")
         default String commandDisplayEditAddLineSuccess() {
-            return "<dark_gray>› <gray>Line <yellow>{number} <gray>has been added to the display.";
+            return "<dark_gray>› <gray>Line <primary>{number} <gray>has been added to the display.";
         }
 
         // Display > Edit > Remove Line
@@ -207,7 +220,7 @@ public interface PluginConfiguration {
         @Order(23) @Key("command.display.edit.remove_line.usage")
         @Comment("Display > Edit > Remove Line")
         default String commandDisplayEditRemoveLineUsage() {
-            return "<dark_gray>› <gray>Usage: <yellow>/display edit (display) remove_line (line)";
+            return "<dark_gray>› <gray>Usage: <primary>/display edit <secondary>(display) <primary>remove_line <secondary>(line)";
         }
 
         @Order(24) @Key("command.display.edit.remove_line.failure.out_of_bounds")
@@ -217,7 +230,7 @@ public interface PluginConfiguration {
 
         @Order(25) @Key("command.display.edit.remove_line.success")
         default String commandDisplayEditRemoveLineSuccess() {
-            return "<dark_gray>› <gray>Line <yellow>{number} <gray>has been removed from the display.";
+            return "<dark_gray>› <gray>Line <primary>{number} <gray>has been removed from the display.";
         }
 
         // Display > Edit > Set Line
@@ -225,12 +238,12 @@ public interface PluginConfiguration {
         @Order(26) @Key("command.display.edit.set_line.usage")
         @Comment("Display > Edit > Set Line")
         default String commandDisplayEditSetLineUsage() {
-            return "<dark_gray>› <gray>Usage: <yellow>/display edit (display) set_line (line) (text)";
+            return "<dark_gray>› <gray>Usage: <primary>/display edit <secondary>(display) <primary>set_line <secondary>(line) (text)";
         }
 
         @Order(27) @Key("command.display.edit.set_line.success")
         default String commandDisplayEditSetLineSuccess() {
-            return "<dark_gray>› <gray>Line <yellow>{number} <gray>has been modified.";
+            return "<dark_gray>› <gray>Line <primary>{number} <gray>has been modified.";
         }
 
         @Order(28) @Key("command.display.edit.set_line.failure.out_of_bounds")
@@ -243,7 +256,7 @@ public interface PluginConfiguration {
         @Order(29) @Key("command.display.edit.see_through.success")
         @Comment("Display > Edit > See Through")
         default String commandDisplayEditSeeThroughSuccess() {
-            return "<dark_gray>› <gray>Display see through has been set to <yellow>{state}<gray>.";
+            return "<dark_gray>› <gray>Display see through has been set to <primary>{state}<gray>.";
         }
 
         // Display > Edit > Text Shadow
@@ -251,7 +264,7 @@ public interface PluginConfiguration {
         @Order(30) @Key("command.display.edit.text_shadow.success")
         @Comment("Display > Edit > Text Shadow")
         default String commandDisplayEditTextShadowSuccess() {
-            return "<dark_gray>› <gray>Display text shadow has been set to <yellow>{state}<gray>.";
+            return "<dark_gray>› <gray>Display text shadow has been set to <primary>{state}<gray>.";
         }
 
         // Display > Edit > Text Opacity
@@ -259,20 +272,46 @@ public interface PluginConfiguration {
         @Order(31) @Key("command.display.edit.text_opacity.usage")
         @Comment("Display > Edit > Text Opacity")
         default String commandDisplayEditTextOpacityUsage() {
-            return "<dark_gray>› <gray>Usage: <yellow>/display edit (display) text_opacity (opacity)";
+            return "<dark_gray>› <gray>Usage: <primary>/display edit <secondary>(display) <primary>text_opacity <secondary>(opacity)";
         }
 
         @Order(32) @Key("command.display.edit.text_opacity.success")
         default String commandDisplayEditTextOpacitySuccess() {
-            return "<dark_gray>› <gray>Display text opacity has been set to <yellow>{opacity}<gray>.";
+            return "<dark_gray>› <gray>Display text opacity has been set to <primary>{opacity}<gray>.";
         }
 
+    /**
+     * Saves default configuration to the file.
+     */
+    @IgnoreMethod
+    default void performSave() {
+        // Saving the configuration.
+        DisplayEntities.instance().configuration().save();
     }
 
-    @Save
+    /**
+     * Loads configuration from the file.
+     */
+    @IgnoreMethod
+    default void performReload() {
+        // Reloading the configuration.
+        DisplayEntities.instance().configuration().reload();
+        // Extra logic goes here...
+        DisplayEntities.instance().rebuildMiniMessage();
+    }
+
+    /* IMPLEMENTED BY SPEC */
+
+    /**
+     * @apiNote This is for internal use only. Please use {@link #performSave() PluginConfiguration.performSave()} method instead.
+     */
+    @Save @Deprecated @SuppressWarnings("DeprecatedIsStillUsed")
     void save();
 
-    @Reload
+    /**
+     * @apiNote This is for internal use only. Please use {@link #performReload() PluginConfiguration.performReload()} method instead.
+     */
+    @Reload @Deprecated @SuppressWarnings("DeprecatedIsStillUsed")
     void reload();
 
 }
