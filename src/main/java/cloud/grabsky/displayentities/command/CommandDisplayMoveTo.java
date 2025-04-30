@@ -28,12 +28,8 @@ package cloud.grabsky.displayentities.command;
 import cloud.grabsky.displayentities.DisplayWrapper;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.util.LombokExtensions;
-import com.mojang.brigadier.suggestion.Suggestion;
-import com.sun.tools.jconsole.JConsoleContext;
 import io.papermc.paper.math.Position;
-import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.units.qual.C;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
 import revxrsal.commands.annotation.SuggestWith;
@@ -41,14 +37,10 @@ import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 import revxrsal.commands.node.ExecutionContext;
-import revxrsal.commands.stream.MutableStringStream;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -60,7 +52,7 @@ import lombok.experimental.ExtensionMethod;
 
 @SuppressWarnings("UnstableApiUsage") // Position, @SuggestWith
 @ExtensionMethod(LombokExtensions.class)
-public enum CommandDisplayPositionManipulation {
+public enum CommandDisplayMoveTo {
     INSTANCE; // SINGLETON
 
     @Dependency

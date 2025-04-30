@@ -32,7 +32,7 @@ import cloud.grabsky.displayentities.command.CommandDisplayBlock;
 import cloud.grabsky.displayentities.command.CommandDisplayCreate;
 import cloud.grabsky.displayentities.command.CommandDisplayDelete;
 import cloud.grabsky.displayentities.command.CommandDisplayItem;
-import cloud.grabsky.displayentities.command.CommandDisplayPositionManipulation;
+import cloud.grabsky.displayentities.command.CommandDisplayMoveTo;
 import cloud.grabsky.displayentities.command.CommandDisplayReload;
 import cloud.grabsky.displayentities.command.CommandDisplayScale;
 import cloud.grabsky.displayentities.command.CommandDisplaySeeThrough;
@@ -190,7 +190,7 @@ public final class DisplayEntities extends JavaPlugin {
         lamp.register(CommandDisplayScale.INSTANCE);
         lamp.register(CommandDisplayBillboard.INSTANCE);
         lamp.register(CommandDisplayViewRange.INSTANCE);
-        lamp.register(CommandDisplayPositionManipulation.INSTANCE);
+        lamp.register(CommandDisplayMoveTo.INSTANCE);
         // Editing (Block)
         lamp.register(CommandDisplayBlock.INSTANCE);
         // Editing (Item)
