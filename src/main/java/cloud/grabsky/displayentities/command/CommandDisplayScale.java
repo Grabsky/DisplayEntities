@@ -28,21 +28,32 @@ package cloud.grabsky.displayentities.command;
 import cloud.grabsky.displayentities.DisplayWrapper;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.util.LombokExtensions;
+import io.papermc.paper.math.Position;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Transformation;
 import org.joml.Vector3f;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
-import revxrsal.commands.annotation.Optional;
-import revxrsal.commands.annotation.Suggest;
+import revxrsal.commands.annotation.SuggestWith;
+import revxrsal.commands.autocomplete.SuggestionProvider;
+import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
+import revxrsal.commands.node.ExecutionContext;
+
+import java.util.Collection;
+import java.util.Collections;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.ExtensionMethod;
 
+@SuppressWarnings("UnstableApiUsage") // Position
 @ExtensionMethod(LombokExtensions.class)
 public enum CommandDisplayScale {
     INSTANCE; // SINGLETON
@@ -64,9 +75,8 @@ public enum CommandDisplayScale {
     public String onDisplayScale(
             final @NotNull Player sender,
             final @NotNull DisplayWrapper display,
-            final @NotNull @Suggest("1.0") Float scaleX,
-            final @Nullable @Optional @Suggest("1.0") Float scaleY,
-            final @Nullable @Optional @Suggest("1.0") Float scaleZ
+            // Not really a Position, but it can be easily re-used for this.
+            final @NotNull @SuggestWith(ScaleSuggestionProvider.class) Position scale
     ) {
         // Getting current transformation of the display.
         final Transformation transformation = display.entity().getTransformation();
@@ -74,13 +84,31 @@ public enum CommandDisplayScale {
         final Transformation modifiedTransformation = new Transformation(
                 transformation.getTranslation(),
                 transformation.getLeftRotation(),
-                new Vector3f(scaleX, scaleY != null ? scaleY : scaleX, scaleY != null && scaleZ != null ? scaleZ : scaleX),
+                new Vector3f((float) scale.x(), (float) scale.y(), (float) scale.z()),
                 transformation.getRightRotation()
         );
         // Updating entity with new transformation.
         display.entity().setTransformation(modifiedTransformation);
         // Sending success message to the sender.
-        return configuration.messages().commandDisplayEditScaleSuccess().repl("{x}", scaleX).repl("{y}", scaleY != null ? scaleY : scaleX).repl("{z}", scaleZ != null ? scaleZ : scaleX);
+        return configuration.messages().commandDisplayEditScaleSuccess().repl("{x}", scale.x()).repl("{y}", scale.y()).repl("{z}", scale.z());
+    }
+
+    @NoArgsConstructor(access = AccessLevel.PUBLIC)
+    public static class ScaleSuggestionProvider implements SuggestionProvider<BukkitCommandActor> {
+
+        @Override
+        public @NotNull Collection<String> getSuggestions(@NotNull final ExecutionContext<BukkitCommandActor> context) {
+            // Getting the DisplayWrapper argument.
+            final @Nullable DisplayWrapper wrapper = context.getResolvedArgumentOrNull(DisplayWrapper.class);
+            // Returning empty list if wrapper was unspecified.
+            if (wrapper == null)
+                return Collections.emptyList();
+            // Getting the scale.
+            final Vector3f scale = wrapper.entity().getTransformation().getScale();
+            // Generating and returning suggestions.
+            return Collections.singletonList(String.format("%.2f %.2f %.2f", scale.x, scale.y, scale.z));
+        }
+
     }
 
 }
