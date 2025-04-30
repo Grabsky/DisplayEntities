@@ -53,6 +53,7 @@ paper {
     main = "cloud.grabsky.displayentities.DisplayEntities"
     loader = "cloud.grabsky.displayentities.DisplayEntities\$PluginLoader"
     apiVersion = "1.21"
+    foliaSupported = true
     generateLibrariesJson = true
     serverDependencies {
         "PlaceholderAPI" { load = "BEFORE"; required = false }
