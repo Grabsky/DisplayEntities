@@ -33,7 +33,15 @@ import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
 import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.annotation.Suggest;
+import revxrsal.commands.annotation.SuggestWith;
+import revxrsal.commands.autocomplete.SuggestionProvider;
+import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
+import revxrsal.commands.node.ExecutionContext;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.IntStream;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,6 +49,7 @@ import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.experimental.ExtensionMethod;
 
+@SuppressWarnings("UnstableApiUsage") // @SuggestWith
 @ExtensionMethod(LombokExtensions.class)
 public enum CommandDisplayViewRange {
     INSTANCE; // SINGLETON
@@ -59,17 +68,29 @@ public enum CommandDisplayViewRange {
 
     @Command("display edit <display> view_range")
     @CommandPermission("displayentities.command.display.edit.view_range")
-    public String onDisplayItem(
+    public String onDisplayViewRange(
             final @NotNull Player sender,
             final @NotNull DisplayWrapper display,
-            final @Nullable @Optional @Suggest("1.0") Float viewRange
+            final @NotNull @SuggestWith(ViewDistanceSuggestionProvider.class) Float viewRange
     ) {
         // Calculating the view range value. Cannot be less than 0.
-        final float finalViewRange = Math.max(0F, (viewRange != null) ? viewRange : 0F);
+        final float finalViewRange = Math.max(0F, viewRange);
         // Setting view range on provided display entity.
         display.entity().setViewRange(finalViewRange);
         // Sending success message to the sender.
         return configuration.messages().commandDisplayEditViewRangeSuccess().repl("{range}", finalViewRange);
+    }
+
+    public static final class ViewDistanceSuggestionProvider implements SuggestionProvider<BukkitCommandActor> {
+
+        @Override
+        public @NotNull Collection<String> getSuggestions(@NotNull final ExecutionContext<BukkitCommandActor> context) {
+            // Getting the DisplayWrapper argument.
+            final @Nullable DisplayWrapper wrapper = context.getResolvedArgumentOrNull(DisplayWrapper.class);
+            // Generating and returning suggestions.
+            return (wrapper != null) ? Collections.singletonList(String.format("%.2f", wrapper.entity().getViewRange())) : Collections.emptyList();
+        }
+
     }
 
 }
