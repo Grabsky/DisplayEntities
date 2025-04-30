@@ -32,6 +32,7 @@ import cloud.grabsky.displayentities.command.CommandDisplayBlock;
 import cloud.grabsky.displayentities.command.CommandDisplayCreate;
 import cloud.grabsky.displayentities.command.CommandDisplayDelete;
 import cloud.grabsky.displayentities.command.CommandDisplayItem;
+import cloud.grabsky.displayentities.command.CommandDisplayPositionManipulation;
 import cloud.grabsky.displayentities.command.CommandDisplayReload;
 import cloud.grabsky.displayentities.command.CommandDisplayScale;
 import cloud.grabsky.displayentities.command.CommandDisplaySeeThrough;
@@ -41,6 +42,7 @@ import cloud.grabsky.displayentities.command.CommandDisplayTextShadow;
 import cloud.grabsky.displayentities.command.CommandDisplayViewRange;
 import cloud.grabsky.displayentities.command.parameter.ColorParameterType;
 import cloud.grabsky.displayentities.command.parameter.DisplayWrapperParameterType;
+import cloud.grabsky.displayentities.command.parameter.PositionParameterType;
 import cloud.grabsky.displayentities.command.parameter.RegistryParameterType;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.listener.PacketListener;
@@ -48,6 +50,7 @@ import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.google.gson.Gson;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
+import io.papermc.paper.math.Position;
 import io.papermc.paper.plugin.loader.PluginClasspathBuilder;
 import io.papermc.paper.plugin.loader.library.impl.MavenLibraryResolver;
 import net.kyori.adventure.text.format.TextColor;
@@ -151,6 +154,7 @@ public final class DisplayEntities extends JavaPlugin {
                 // Registering custom parameter types.
                 .parameterTypes(it -> {
                     it.addParameterType(Color.class, ColorParameterType.INSTANCE);
+                    it.addParameterType(Position.class, PositionParameterType.INSTANCE);
                     it.addParameterType(ItemType.class, new RegistryParameterType<>(ItemType.class, () -> Registry.ITEM));
                     it.addParameterType(BlockType.class, new RegistryParameterType<>(BlockType.class, () -> Registry.BLOCK));
                     it.addParameterTypeFactory(DisplayWrapperParameterType.INSTANCE);
@@ -186,6 +190,7 @@ public final class DisplayEntities extends JavaPlugin {
         lamp.register(CommandDisplayScale.INSTANCE);
         lamp.register(CommandDisplayBillboard.INSTANCE);
         lamp.register(CommandDisplayViewRange.INSTANCE);
+        lamp.register(CommandDisplayPositionManipulation.INSTANCE);
         // Editing (Block)
         lamp.register(CommandDisplayBlock.INSTANCE);
         // Editing (Item)

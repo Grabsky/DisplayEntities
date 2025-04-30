@@ -280,6 +280,21 @@ public interface PluginConfiguration {
             return "<dark_gray>› <gray>Display text opacity has been set to <primary>{opacity}<gray>.";
         }
 
+        // Display > Edit > Move To
+
+        @Order(33) @Key("command.display.edit.move_to.usage")
+        @Comment("Display > Edit > Move To")
+        default String commandDisplayEditMoveToUsage() {
+            return "<dark_gray>› <gray>Usage: <primary>/display edit <secondary>(display) <primary>move_to <secondary>(x) (y) (z)";
+        }
+
+        @Order(34) @Key("command.display.edit.move_to.success")
+        default String commandDisplayEditMoveToSuccess() {
+            return "<dark_gray>› <gray>Display has been moved to <primary>{x}<gray>, <primary>{y}<gray>, <primary>{z}<gray>.";
+        }
+
+    }
+
     /**
      * Saves default configuration to the file.
      */
