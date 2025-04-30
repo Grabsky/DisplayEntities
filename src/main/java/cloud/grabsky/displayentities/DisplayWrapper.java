@@ -152,7 +152,7 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Text, Display
         @Override @SuppressWarnings("unchecked")
         public @NotNull DisplayWrapper.Text initialConfiguration() {
             this.entity().setBillboard(Display.Billboard.VERTICAL);
-            this.entity().setRichText("Use <yellow>/display set_line " + MiniMessage.miniMessage().stripTags(name) + " <reset>command to edit.");
+            this.entity().setRichText("Use <#65D85F>/display edit <#C7F1C5>" + MiniMessage.miniMessage().stripTags(name) + " <#65D85F>set_line <#C7F1C5>(line) (text) <reset>command to edit.");
             this.entity().getPersistentDataContainer().set(DisplayEntities.Keys.TEXT_CONTENTS, PersistentDataType.STRING, "Use <yellow>/display set_line " + MiniMessage.miniMessage().stripTags(name) + " <reset>command to edit.");
             return this;
         }

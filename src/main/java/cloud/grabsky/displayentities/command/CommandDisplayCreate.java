@@ -37,6 +37,8 @@ import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
+import java.util.regex.Pattern;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -52,6 +54,8 @@ public enum CommandDisplayCreate {
     @Dependency
     private @UnknownNullability PluginConfiguration configuration;
 
+    private static final Pattern NAME_FORMAT = Pattern.compile("^[a-zA-Z0-9_/:.-]{1,32}$");
+
     @Command("display create")
     @CommandPermission("displayentities.command.display.create")
     public @NotNull String onDefault(final Player sender) {
@@ -65,6 +69,9 @@ public enum CommandDisplayCreate {
             final @NotNull DisplayType type,
             final @NotNull String name
     ) {
+        // Sending error message if specified name does not does not match the format.
+        if (NAME_FORMAT.matcher(name).matches() == false)
+            return configuration.messages().commandDisplayCreateFailureInvalidFormat();
         // Getting player's location and stripping pitch and yaw from it.
         final Location location = sender.getLocation().withPitch(0F).withYaw(0F);
         // Creating, spawning and configuring new display entity.
