@@ -31,8 +31,7 @@ import cloud.grabsky.displayentities.util.LombokExtensions;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
-import revxrsal.commands.annotation.Optional;
-import revxrsal.commands.annotation.Suggest;
+
 import revxrsal.commands.annotation.SuggestWith;
 import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
@@ -41,12 +40,13 @@ import revxrsal.commands.node.ExecutionContext;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.IntStream;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.experimental.ExtensionMethod;
 
 @SuppressWarnings("UnstableApiUsage") // @SuggestWith
@@ -81,6 +81,9 @@ public enum CommandDisplayViewRange {
         return configuration.messages().commandDisplayEditViewRangeSuccess().repl("{range}", finalViewRange);
     }
 
+    /* SUGGESTION PROVIDERS */
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class ViewDistanceSuggestionProvider implements SuggestionProvider<BukkitCommandActor> {
 
         @Override

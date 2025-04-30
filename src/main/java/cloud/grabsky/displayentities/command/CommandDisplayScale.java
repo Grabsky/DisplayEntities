@@ -93,7 +93,9 @@ public enum CommandDisplayScale {
         return configuration.messages().commandDisplayEditScaleSuccess().repl("{x}", scale.x()).repl("{y}", scale.y()).repl("{z}", scale.z());
     }
 
-    @NoArgsConstructor(access = AccessLevel.PUBLIC)
+    /* SUGGESTION PROVIDERS */
+
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class ScaleSuggestionProvider implements SuggestionProvider<BukkitCommandActor> {
 
         @Override
