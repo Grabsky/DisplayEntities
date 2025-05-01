@@ -13,7 +13,10 @@ To put it simple, **DisplayEntities** is an utility plugin that adds commands fo
 
 Plugin does not store anything on it's own except configuration file and necessary data attached to the PDC (Persistent Data Container) of each entity it interacts with. It means that each entity created by the plugin will be kept in the world until manually removed. This can be done either by using `/display delete (name)` command provided by the plugin, or vanilla `/kill` command.
 
-To make the plugin a bit more useful, I also added packet-level **PlaceholderAPI** support which should possibly make it as useful as any other holograms plugin you're already familiar with.
+To make the plugin a bit more useful, I added **MiniMessage** parsing and packet-level **PlaceholderAPI** support. That should possibly make it as useful as any other holograms plugin you're already familiar with.
+
+Use with [**Axiom**](https://modrinth.com/mod/axiom) and [**AxiomPaperPlugin**](https://modrinth.com/plugin/axiom-paper-plugin) to make the overall experience **even better**!
+
 
 <br />
 
@@ -28,22 +31,25 @@ To make the plugin a bit more useful, I also added packet-level **PlaceholderAPI
 - **Compatibility**  
   Entities created by the plugin are real entities that can be modified with commands and other plugins.
 
-- **Folia Support**  
+- [**MiniMessage Support**](https://docs.advntr.dev/minimessage/format.html)  
+  Text display entities are capable of parsing MiniMessage formatting.
+
+- [**Folia Support**](https://github.com/PaperMC/Folia)  
   Designed to run on Paper and Folia servers. Folia Scheduler APIs are used when available.
 
-- **PlaceholderAPI Support** (Optional)  
+- [**PlaceholderAPI Support**](https://github.com/PlaceholderAPI/PlaceholderAPI)  
   Placeholders inside text displays are parsed and displayed per-player.  
   <sup>(Requires **[PlaceholderAPI](https://github.com/PlaceholderAPI/PlaceholderAPI)** and **[PacketEvents](https://github.com/retrooper/packetevents)**)</sup>
 
 <br/>
 
 ## Requirements
-Plugin runs only on **Paper 1.21.4** and above, powered by **Java 21** or higher.
+Plugin runs only on **Paper** (or **Folia**) **1.21.4** and above, powered by **Java 21** or higher.
 
 <br/>
 
 ## Compiling
-```bash
+```python
 # Cloning the repository.
 $ git clone https://github.com/Grabsky/DisplayEntities.git
 # Entering the cloned repository.
