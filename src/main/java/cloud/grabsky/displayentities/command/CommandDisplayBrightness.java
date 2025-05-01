@@ -78,7 +78,7 @@ public enum CommandDisplayBrightness {
         final int finalBrightness = Math.clamp(brightness, 0, 15);
         // Creating new Display.Brightness object.
         final Display.Brightness newBrightness = new Display.Brightness(finalBrightness, display.entity().getBrightness() != null ? display.entity().getBrightness().getSkyLight() : 15);
-        // Setting view range on provided display entity.
+        // Updating value of the brightness property of the display entity.
         display.entity().setBrightness(newBrightness);
         // Sending success message to the sender.
         return configuration.messages().commandDisplayEditBrightnessSuccess().repl("{brightness_block}", newBrightness.getBlockLight()).repl("{brightness_sky}", newBrightness.getSkyLight());
@@ -95,7 +95,7 @@ public enum CommandDisplayBrightness {
         final int finalBrightness = Math.clamp(brightness, 0, 15);
         // Creating new Display.Brightness object.
         final Display.Brightness newBrightness = new Display.Brightness(display.entity().getBrightness() != null ? display.entity().getBrightness().getBlockLight() : 15, finalBrightness);
-        // Setting view range on provided display entity.
+        // Updating value of the brightness property of the display entity.
         display.entity().setBrightness(newBrightness);
         // Sending success message to the sender.
         return configuration.messages().commandDisplayEditBrightnessSuccess().repl("{brightness_block}", newBrightness.getBlockLight()).repl("{brightness_sky}", newBrightness.getSkyLight());

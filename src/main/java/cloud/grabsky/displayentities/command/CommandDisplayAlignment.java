@@ -62,7 +62,7 @@ public enum CommandDisplayAlignment {
             final @NotNull DisplayWrapper.Text display,
             final @NotNull TextDisplay.TextAlignment alignment
     ) {
-        // Setting text alignment on provided display entity.
+        // Updating value of the alignment property of the display entity.
         display.entity().setAlignment(alignment);
         // Sending success message to the sender.
         return configuration.messages().commandDisplayEditAlignmentSuccess().repl("{alignment}", alignment.toString().toLowerCase());

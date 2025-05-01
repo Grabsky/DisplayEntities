@@ -48,7 +48,7 @@ public enum CommandDisplayBillboard {
 
     @Command("display edit <display> billboard")
     @CommandPermission("displayentities.command.display.edit.billboard")
-    public String onDisplayBillboard(
+    public String onDefault(
             final @NotNull Player sender,
             final @NotNull DisplayWrapper display
     ) {
@@ -63,7 +63,7 @@ public enum CommandDisplayBillboard {
             final @NotNull DisplayWrapper display,
             final @NotNull Display.Billboard billboard
     ) {
-        // Setting the billboard property of the display entity.
+        // Updating value of the billboard property of the display entity.
         display.entity().setBillboard(billboard);
         // Returning (sending) success message to the sender.
         return configuration.messages().commandDisplayEditBillboardSuccess().repl("{billboard}", billboard.toString().toLowerCase());

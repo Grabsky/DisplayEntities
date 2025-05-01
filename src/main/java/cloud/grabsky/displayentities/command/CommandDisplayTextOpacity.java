@@ -63,7 +63,7 @@ public enum CommandDisplayTextOpacity {
             final @NotNull @Suggest({"100%", "75%", "50%", "25%"}) String opacity
     ) {
         final byte finalOpacity = (byte) Math.round(Math.clamp(Float.parseFloat(opacity.repl("%", "")), 0D, 100D) * 255 / 100);
-        // Setting text see through state on provided display entity.
+        // Updating value of the text_opacity property of the display entity.
         display.entity().setTextOpacity(finalOpacity);
         // Sending success message to the sender.
         return configuration.messages().commandDisplayEditTextOpacitySuccess().repl("{opacity}", opacity);

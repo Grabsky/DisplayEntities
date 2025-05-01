@@ -49,13 +49,13 @@ public enum CommandDisplayTextShadow {
 
     @Command("display edit <display> text_shadow")
     @CommandPermission("displayentities.command.display.edit.text_shadow")
-    public String onDisplaySeeThrough(
+    public String onDisplayTextShadow(
             final @NotNull Player sender,
             final @NotNull DisplayWrapper.Text display,
             final @Nullable @Optional Boolean state
     ) {
         final boolean finalState = (state != null) ? state : !display.entity().isShadowed();
-        // Setting text see through state on provided display entity.
+        // Updating value of the text_shadow property of the display entity.
         display.entity().setShadowed(finalState);
         // Sending success message to the sender.
         return configuration.messages().commandDisplayEditTextShadowSuccess().repl("{state}", finalState);

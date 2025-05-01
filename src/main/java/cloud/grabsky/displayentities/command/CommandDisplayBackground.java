@@ -68,7 +68,7 @@ public enum CommandDisplayBackground {
     ) {
         // Calculating the transparency value if specified. It converts percentage value to an integer between 0 - 255.
         final Color finalColor = (transparency != null) ? color.setAlpha((int) Math.round(Math.clamp(Float.parseFloat(transparency.repl("%", "")), 0D, 100D) * 255 / 100)) : color;
-        // Setting the background color property of the display entity.
+        // Updating value of the background_color property of the display entity.
         display.entity().setBackgroundColor(finalColor);
         // Sending success message to the sender.
         return configuration.messages().commandDisplayEditBackgroundSuccess().repl("{color}", "#" + Integer.toHexString(finalColor.asARGB()).toUpperCase());

@@ -55,7 +55,7 @@ public enum CommandDisplaySeeThrough {
             final @Nullable @Optional Boolean seeThrough
     ) {
         final boolean finalState = (seeThrough != null) ? seeThrough : !display.entity().isSeeThrough();
-        // Setting text see through state on provided display entity.
+        // Updating value of the see_through property of the display entity.
         display.entity().setSeeThrough(finalState);
         // Sending success message to the sender.
         return configuration.messages().commandDisplayEditSeeThroughSuccess().repl("{state}", finalState);

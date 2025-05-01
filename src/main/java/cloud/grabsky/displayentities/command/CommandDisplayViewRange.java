@@ -75,7 +75,7 @@ public enum CommandDisplayViewRange {
     ) {
         // Calculating the view range value. Cannot be less than 0.
         final float finalViewRange = Math.max(0F, viewRange);
-        // Setting view range on provided display entity.
+        // Updating value of the view_range property of the display entity.
         display.entity().setViewRange(finalViewRange);
         // Sending success message to the sender.
         return configuration.messages().commandDisplayEditViewRangeSuccess().repl("{range}", finalViewRange);
