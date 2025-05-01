@@ -36,9 +36,15 @@ dependencies {
     compileOnly("com.github.retrooper:packetevents-spigot:2.8.0-SNAPSHOT")
 }
 
+// Registering runFolia task so that Folia compatibility can be tested more easily.
+runPaper.folia.registerTask()
+
 tasks {
     runServer {
         minecraftVersion("1.21.5")
+    }
+    runFolia {
+        minecraftVersion("1.21.4") // No support for 1.21.5 yet.
     }
     compileJava {
         options.fork = true

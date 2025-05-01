@@ -61,6 +61,18 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
     // Stores entities that have an active task.
     private final Set<Integer> hasActiveTask = ConcurrentHashMap.newKeySet();
 
+    // Stores information of whether the server is Folia or not.
+    private static boolean IS_FOLIA;
+
+    static {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.ThreadedRegionizer");
+            IS_FOLIA = true;
+        } catch (final ClassNotFoundException e) {
+            IS_FOLIA = false;
+        }
+    }
+
     @Override @SuppressWarnings("unchecked")
     public void onPacketSend(final @NotNull PacketSendEvent event) {
         if (event.getPacketType() == PacketType.Play.Server.SPAWN_ENTITY) {
@@ -75,41 +87,48 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
                 // Getting the text contents stored inside PDC.
                 final String text = entity.getPersistentDataContainer().getOrDefault(DisplayEntities.Keys.TEXT_CONTENTS, PersistentDataType.STRING, "");
                 // Checking if text contains PlaceholderAPI placeholders and is tracked by any player.
-                if (PlaceholderAPI.containsPlaceholders(text) == true && entity.getTrackedBy().isEmpty() == false) {
-                    hasActiveTask.add(entityId);
-                    // Logging debug information to the console.
-                    plugin.debug("[E:" + entityId + "] Starting the placeholders refresh task...");
-                    // Scheduling a repeating task to refresh placeholders for all viewers, every N ticks.
-                    entity.getScheduler().runAtFixedRate(plugin, (task) -> {
-                        plugin.debug("[E:" + entityId + "] Running scheduled task action...");
-                        if (entity.getTrackedBy().isEmpty() == true) {
+                if (PlaceholderAPI.containsPlaceholders(text) == true) {
+                    // Scheduling logic to be executed on Folia's EntityScheduler if needed, or on the current thread, which is NOT the main thread.
+                    runWrapped(entity, () -> {
+                        // Continuing only if the entity is being tracked by at least one player.
+                        if (entity.getTrackedBy().isEmpty() == false) {
+                            hasActiveTask.add(entityId);
                             // Logging debug information to the console.
-                            plugin.debug("[E:" + entityId + "] Cancelling the placeholders refresh task... [C:SELF]");
-                            // Cancelling the task.
-                            task.cancel();
-                            // Removing task from the list of active tasks.
-                            hasActiveTask.remove(entityId);
-                            return;
-                        }
-                        // Scheduling further logic to be run off the main thread.
-                        plugin.getServer().getAsyncScheduler().runNow(plugin, (it) -> {
-                            entity.getTrackedBy().forEach(viewer -> {
-                                final var packet = new WrapperPlayServerEntityMetadata(entityId, List.of(
-                                        // Setting text to an empty component. This is intercepted in the entity_metadata listener where all placeholders and colors are applied.
-                                        new EntityData<>(23, EntityDataTypes.ADV_COMPONENT, Component.empty())
-                                ));
-                                // Sending packet to the viewer.
-                                PacketEvents.getAPI().getPlayerManager().sendPacket(viewer, packet);
+                            plugin.debug("[E:" + entityId + "] Starting the placeholders refresh task...");
+                            // Scheduling a repeating task to refresh placeholders for all viewers, every N ticks.
+                            entity.getScheduler().runAtFixedRate(plugin, (task) -> {
+                                // Cancelling the task if nobody is tracking the entity.
+                                if (entity.getTrackedBy().isEmpty() == true) {
+                                    // Logging debug information to the console.
+                                    plugin.debug("[E:" + entityId + "] Cancelling the placeholders refresh task... [C:SELF]");
+                                    // Cancelling the task.
+                                    task.cancel();
+                                    // Removing task from the list of active tasks.
+                                    hasActiveTask.remove(entityId);
+                                    return;
+                                }
+                                plugin.debug("[E:" + entityId + "] Running scheduled task action...");
+                                // Scheduling further logic to be executed off the main thread, or on Folia's EntityScheduler if needed.
+                                runWrappedAsync(entity, () -> {
+                                    entity.getTrackedBy().forEach(viewer -> {
+                                        final var packet = new WrapperPlayServerEntityMetadata(entityId, List.of(
+                                                // Setting text to an empty component. This is intercepted in the entity_metadata listener where all placeholders and colors are applied.
+                                                new EntityData<>(23, EntityDataTypes.ADV_COMPONENT, Component.empty())
+                                        ));
+                                        // Sending packet to the viewer.
+                                        PacketEvents.getAPI().getPlayerManager().sendPacket(viewer, packet);
+                                        // Logging debug information to the console.
+                                        plugin.debug("[E:" + entityId + "] Packet sent to user " + viewer.getName() + "... [P:" + packet.getNativePacketId() + "] [H:" + packet.hashCode() + "]");
+                                    });
+                                });
+                            }, () -> {
                                 // Logging debug information to the console.
-                                plugin.debug("[E:" + entityId + "] Packet sent to user " + viewer.getName() + "... [P:" + packet.getNativePacketId() + "] [H:" + packet.hashCode() + "]");
-                            });
-                        });
-                    }, () -> {
-                        // Logging debug information to the console.
-                        plugin.debug("[E:" + entityId + "] Cancelling the placeholders refresh task... [C:RETIRED]");
-                        // Removing task from the list of active tasks.
-                        hasActiveTask.remove(entityId);
-                    }, plugin.configuration().refreshInterval(), plugin.configuration().refreshInterval());
+                                plugin.debug("[E:" + entityId + "] Cancelling the placeholders refresh task... [C:RETIRED]");
+                                // Removing task from the list of active tasks.
+                                hasActiveTask.remove(entityId);
+                            }, plugin.configuration().refreshInterval(), plugin.configuration().refreshInterval());
+                        }
+                    });
                 }
             }
         }
@@ -132,6 +151,22 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
                 }
             }
         }
+    }
+
+    private void runWrapped(final @NotNull Entity entity, final @NotNull Runnable runnable) {
+        // Executing runnable on EntityScheduler when server is using Folia.
+        if (IS_FOLIA == true)
+            entity.getScheduler().run(plugin, (it) -> runnable.run(), null);
+        // Otherwise, runnable is executed on the current thread.
+        else runnable.run();
+    }
+
+    private void runWrappedAsync(final @NotNull Entity entity, final @NotNull Runnable runnable) {
+        // Executing runnable on EntityScheduler when server is using Folia.
+        if (IS_FOLIA == true)
+            entity.getScheduler().run(plugin, (it) -> runnable.run(), null);
+        // Otherwise, runnable is executed on async scheduler.
+        else plugin.getServer().getAsyncScheduler().runNow(plugin, (it) -> runnable.run());
     }
 
 }

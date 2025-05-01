@@ -342,8 +342,10 @@ public interface PluginConfiguration {
     default void performReload() {
         // Reloading the configuration.
         DisplayEntities.instance().configuration().reload();
-        // Extra logic goes here...
+        // Rebuilding MiniMessage instance.
         DisplayEntities.instance().rebuildMiniMessage();
+        // Updating debug mode. It's stored as a field value to prevent calling debugMode() through the proxy each time debug message is about to be sent.
+        DisplayEntities.instance().isDebugEnabled(debugMode());
     }
 
     /* IMPLEMENTED BY SPEC */

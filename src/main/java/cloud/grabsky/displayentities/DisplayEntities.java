@@ -87,12 +87,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Accessors(fluent = true)
@@ -112,6 +114,10 @@ public final class DisplayEntities extends JavaPlugin {
 
     @Getter(AccessLevel.PUBLIC)
     private MiniMessage miniMessage = MiniMessage.miniMessage();
+
+    @Getter(AccessLevel.PUBLIC)
+    @Setter(value = AccessLevel.PUBLIC, onMethod_ = @Internal)
+    private boolean isDebugEnabled = false;
 
     private static final ThreadLocal<Yaml> YAML = ThreadLocal.withInitial(() -> {
         final DumperOptions options = new DumperOptions();
@@ -209,7 +215,7 @@ public final class DisplayEntities extends JavaPlugin {
     }
 
     public void debug(final String message) {
-        if (this.configuration.debugMode() == true)
+        if (this.isDebugEnabled == true)
             this.getLogger().warning("[DEBUG] " + message);
     }
 
