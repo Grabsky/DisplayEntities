@@ -311,6 +311,19 @@ public interface PluginConfiguration {
             return "<dark_gray>› <gray>Display brightness has been modified. (B: <primary>{brightness_block}<gray>, S: <primary>{brightness_sky}<gray>)";
         }
 
+        // Display > Edit > Line Width
+
+        @Order(38) @Key("command.display.edit.line_width.usage")
+        @Comment("Display > Edit > Line Width")
+        default String commandDisplayEditLineWidthUsage() {
+            return "<dark_gray>› <gray>Usage: <primary>/display edit <secondary>(display) <primary>line_width <secondary>(width)";
+        }
+
+        @Order(39) @Key("command.display.edit.line_width.success")
+        default String commandDisplayEditLineWidthSuccess() {
+            return "<dark_gray>› <gray>Display line width has been set to <primary>{width}<gray>.";
+        }
+
     }
 
     /**
