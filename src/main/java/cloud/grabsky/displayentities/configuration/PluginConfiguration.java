@@ -324,6 +324,37 @@ public interface PluginConfiguration {
             return "<dark_gray>› <gray>Display line width has been set to <primary>{width}<gray>.";
         }
 
+        // Display > Edit > Refresh Interval
+
+        @Order(40) @Key("command.display.edit.refresh_interval.usage")
+        @Comment("Display > Edit > Line Width")
+        default String commandDisplayEditRefreshIntervalUsage() {
+            return "<dark_gray>› <gray>Usage: <primary>/display edit <secondary>(display) <primary>refresh_interval <secondary>(ticks)";
+        }
+
+        @Order(41) @Key("command.display.edit.refresh_interval.success")
+        default String commandDisplayEditRefreshIntervalSuccess() {
+            return "<dark_gray>› <gray>Display refresh interval has been set to <primary>{ticks}<gray> ticks. It's not an immediate operation and may require respawning the entity.";
+        }
+
+        @Order(41) @Key("command.display.edit.refresh_interval.failure")
+        default String commandDisplayEditRefreshIntervalFailure() {
+            return "<dark_gray>› <red>Refresh interval must be either <yellow>default<red> or a positive integer value.";
+        }
+
+        // Display > Respawn
+
+        @Order(42) @Key("command.display.respawn.usage")
+        @Comment("Display > Edit > Line Width")
+        default String commandDisplayRespawnUsage() {
+            return "<dark_gray>› <gray>Usage: <primary>/display respawn <secondary>(display)";
+        }
+
+        @Order(43) @Key("command.display.respawn.success")
+        default String commandDisplayRespawnSuccess() {
+            return "<dark_gray>› <gray>Display <primary>{name} <gray>has been respawned.";
+        }
+
     }
 
     /**

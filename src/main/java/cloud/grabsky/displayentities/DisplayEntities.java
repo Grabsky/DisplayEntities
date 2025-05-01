@@ -35,7 +35,9 @@ import cloud.grabsky.displayentities.command.CommandDisplayDelete;
 import cloud.grabsky.displayentities.command.CommandDisplayItem;
 import cloud.grabsky.displayentities.command.CommandDisplayLineWidth;
 import cloud.grabsky.displayentities.command.CommandDisplayMoveTo;
+import cloud.grabsky.displayentities.command.CommandDisplayRefreshInterval;
 import cloud.grabsky.displayentities.command.CommandDisplayReload;
+import cloud.grabsky.displayentities.command.CommandDisplayRespawn;
 import cloud.grabsky.displayentities.command.CommandDisplayScale;
 import cloud.grabsky.displayentities.command.CommandDisplaySeeThrough;
 import cloud.grabsky.displayentities.command.CommandDisplayTextManipulation;
@@ -194,12 +196,14 @@ public final class DisplayEntities extends JavaPlugin {
         lamp.register(CommandDisplayCreate.INSTANCE);
         lamp.register(CommandDisplayDelete.INSTANCE);
         lamp.register(CommandDisplayReload.INSTANCE);
+        lamp.register(CommandDisplayRespawn.INSTANCE);
         // Editing (Common)
         lamp.register(CommandDisplayScale.INSTANCE);
         lamp.register(CommandDisplayMoveTo.INSTANCE);
         lamp.register(CommandDisplayBillboard.INSTANCE);
         lamp.register(CommandDisplayViewRange.INSTANCE);
         lamp.register(CommandDisplayBrightness.INSTANCE);
+        lamp.register(CommandDisplayRefreshInterval.INSTANCE);
         // Editing (Block)
         lamp.register(CommandDisplayBlock.INSTANCE);
         // Editing (Item)
@@ -247,6 +251,9 @@ public final class DisplayEntities extends JavaPlugin {
 
         /** Used to store and retrieve the string content associated with a persistent text display entity. */
         public static final NamespacedKey TEXT_CONTENTS = new NamespacedKey("display_entities", "text_contents");
+
+        /** Used to store override for refresh interval time. */
+        public static final NamespacedKey REFRESH_INTERVAL = new NamespacedKey("display_entities", "refresh_interval");
 
     }
 

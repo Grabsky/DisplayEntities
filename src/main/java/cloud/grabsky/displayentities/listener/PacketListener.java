@@ -93,8 +93,10 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
                         // Continuing only if the entity is being tracked by at least one player.
                         if (entity.getTrackedBy().isEmpty() == false) {
                             hasActiveTask.add(entityId);
+                            // Getting refresh interval from the entity. Defaults to the configured value.
+                            final int refreshInterval = entity.getPersistentDataContainer().getOrDefault(DisplayEntities.Keys.REFRESH_INTERVAL, PersistentDataType.INTEGER, plugin.configuration().refreshInterval());
                             // Logging debug information to the console.
-                            plugin.debug("[E:" + entityId + "] Starting the placeholders refresh task...");
+                            plugin.debug("[E:" + entityId + "] Starting the placeholders refresh task... [RI:" + refreshInterval + "]");
                             // Scheduling a repeating task to refresh placeholders for all viewers, every N ticks.
                             entity.getScheduler().runAtFixedRate(plugin, (task) -> {
                                 // Cancelling the task if nobody is tracking the entity.
@@ -107,7 +109,6 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
                                     hasActiveTask.remove(entityId);
                                     return;
                                 }
-                                plugin.debug("[E:" + entityId + "] Running scheduled task action...");
                                 // Scheduling further logic to be executed off the main thread, or on Folia's EntityScheduler if needed.
                                 runWrappedAsync(entity, () -> {
                                     entity.getTrackedBy().forEach(viewer -> {
@@ -126,7 +127,7 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
                                 plugin.debug("[E:" + entityId + "] Cancelling the placeholders refresh task... [C:RETIRED]");
                                 // Removing task from the list of active tasks.
                                 hasActiveTask.remove(entityId);
-                            }, plugin.configuration().refreshInterval(), plugin.configuration().refreshInterval());
+                            }, 10, refreshInterval);
                         }
                     });
                 }

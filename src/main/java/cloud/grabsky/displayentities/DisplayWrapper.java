@@ -116,6 +116,14 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Text, Display
 
 
     /**
+     * Removes persistent data of the entity.
+     */
+    public <P, C> @NotNull DisplayWrapper remove(final @NotNull NamespacedKey key) {
+        entity.getPersistentDataContainer().remove(key);
+        return this;
+    }
+
+    /**
      * Sets persistent data of the entity.
      */
     public <P, C> @NotNull DisplayWrapper set(final @NotNull NamespacedKey key, final @NotNull PersistentDataType<P, C> type, @NotNull C value) {
