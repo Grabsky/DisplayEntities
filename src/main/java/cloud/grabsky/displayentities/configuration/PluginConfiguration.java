@@ -298,6 +298,19 @@ public interface PluginConfiguration {
             return "<dark_gray>› <gray>Display has been moved to <primary>{x}<gray>, <primary>{y}<gray>, <primary>{z}<gray>.";
         }
 
+        // Display > Edit > Brightness
+
+        @Order(36) @Key("command.display.edit.brightness.usage")
+        @Comment("Display > Edit > Brightness")
+        default String commandDisplayEditBrightnessUsage() {
+            return "<dark_gray>› <gray>Usage: <primary>/display edit <secondary>(display) <primary>brightness <secondary>(block | sky) (brightness)";
+        }
+
+        @Order(37) @Key("command.display.edit.brightness.success")
+        default String commandDisplayEditBrightnessSuccess() {
+            return "<dark_gray>› <gray>Display brightness has been modified. (B: <primary>{brightness_block}<gray>, S: <primary>{brightness_sky}<gray>)";
+        }
+
     }
 
     /**
