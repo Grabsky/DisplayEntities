@@ -52,7 +52,7 @@ public enum CommandDisplayAlignment {
             final @NotNull Player sender,
             final @NotNull DisplayWrapper.Text display
     ) {
-        return configuration.messages().commandDisplayEditAlignmentUsage().repl("{alignment}", "center");
+        return configuration.messages().commandDisplayEditAlignmentUsage();
     }
 
     @Command("display edit <display> alignment")
