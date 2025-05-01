@@ -77,7 +77,7 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
     public void onPacketSend(final @NotNull PacketSendEvent event) {
         if (event.getPacketType() == PacketType.Play.Server.SPAWN_ENTITY) {
             // Getting the the entity from it's int id. Can be null.
-            final @Nullable Entity entity = SpigotConversionUtil.getEntityById(((Player)event.getPlayer()).getWorld(), new WrapperPlayServerSpawnEntity(event).getEntityId());
+            final @Nullable Entity entity = SpigotConversionUtil.getEntityById(((Player) event.getPlayer()).getWorld(), new WrapperPlayServerSpawnEntity(event).getEntityId());
             // Checking if entity with this id exists on the server and is a text display entity.
             if (entity instanceof TextDisplay && entity.getPersistentDataContainer().has(DisplayEntities.Keys.NAME) == true) {
                 final int entityId = entity.getEntityId();

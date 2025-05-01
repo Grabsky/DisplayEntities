@@ -30,7 +30,7 @@ dependencies {
     // Plugin libraries and other runtime dependencies. Downloading and loading handled by Paper's Plugin Loader API.
     paperLibrary("io.github.revxrsal:lamp.common:4.0.0-rc.11")
     paperLibrary("io.github.revxrsal:lamp.bukkit:4.0.0-rc.11")
-    paperLibrary("io.github.revxrsal:spec:1.4")
+    paperLibrary("io.github.revxrsal:spec:1.5")
     // Plugin runtime dependencies.
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("com.github.retrooper:packetevents-spigot:2.8.0-SNAPSHOT")

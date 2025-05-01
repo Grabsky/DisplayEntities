@@ -140,9 +140,9 @@ public final class DisplayEntities extends JavaPlugin {
                 new CommentedConfiguration(this.configurationFile.toPath(), CommentedConfiguration.GSON, ArrayCommentStyle.COMMENT_FIRST_ELEMENT, YAML.get())
         );
         // Saving default contents to the configuration file.
-        this.configuration.performSave();
+        this.configuration.save();
         // Reloading and mapping configuration file contents to the PluginConfiguration instance.
-        this.configuration.performReload();
+        this.configuration.reload();
         // Printing warning to the console if PacketEvents is not installed.
         if (this.getServer().getPluginManager().getPlugin("packetevents") == null)
             if (this.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)
@@ -203,7 +203,6 @@ public final class DisplayEntities extends JavaPlugin {
         lamp.register(CommandDisplayBillboard.INSTANCE);
         lamp.register(CommandDisplayViewRange.INSTANCE);
         lamp.register(CommandDisplayBrightness.INSTANCE);
-        lamp.register(CommandDisplayRefreshInterval.INSTANCE);
         // Editing (Block)
         lamp.register(CommandDisplayBlock.INSTANCE);
         // Editing (Item)
@@ -215,6 +214,7 @@ public final class DisplayEntities extends JavaPlugin {
         lamp.register(CommandDisplaySeeThrough.INSTANCE);
         lamp.register(CommandDisplayTextShadow.INSTANCE);
         lamp.register(CommandDisplayTextOpacity.INSTANCE);
+        lamp.register(CommandDisplayRefreshInterval.INSTANCE);
         lamp.register(CommandDisplayTextManipulation.INSTANCE);
     }
 

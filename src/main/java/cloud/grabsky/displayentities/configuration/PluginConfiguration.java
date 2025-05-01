@@ -357,40 +357,23 @@ public interface PluginConfiguration {
 
     }
 
+    /* IMPLEMENTED BY SPEC */
+
     /**
      * Saves default configuration to the file.
      */
-    @IgnoreMethod
-    default void performSave() {
-        // Saving the configuration.
-        DisplayEntities.instance().configuration().save();
-    }
+    @Save
+    void save();
 
     /**
      * Loads configuration from the file.
      */
-    @IgnoreMethod
-    default void performReload() {
-        // Reloading the configuration.
-        DisplayEntities.instance().configuration().reload();
+    @Reload
+    default void reload() {
         // Rebuilding MiniMessage instance.
         DisplayEntities.instance().rebuildMiniMessage();
         // Updating debug mode. It's stored as a field value to prevent calling debugMode() through the proxy each time debug message is about to be sent.
         DisplayEntities.instance().isDebugEnabled(debugMode());
     }
-
-    /* IMPLEMENTED BY SPEC */
-
-    /**
-     * @apiNote This is for internal use only. Please use {@link #performSave() PluginConfiguration.performSave()} method instead.
-     */
-    @Save @Deprecated @SuppressWarnings("DeprecatedIsStillUsed")
-    void save();
-
-    /**
-     * @apiNote This is for internal use only. Please use {@link #performReload() PluginConfiguration.performReload()} method instead.
-     */
-    @Reload @Deprecated @SuppressWarnings("DeprecatedIsStillUsed")
-    void reload();
 
 }

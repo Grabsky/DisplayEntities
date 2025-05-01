@@ -35,7 +35,7 @@ Use with [**Axiom**](https://modrinth.com/mod/axiom) and [**AxiomPaperPlugin**](
   Text display entities are capable of parsing MiniMessage formatting.
 
 - [**Folia Support**](https://github.com/PaperMC/Folia)  
-  Designed to run on Paper and Folia servers. Folia Scheduler APIs are used when available.
+  Designed to run on Paper and Folia servers. Folia Scheduler APIs are used when needed.
 
 - [**PlaceholderAPI Support**](https://github.com/PlaceholderAPI/PlaceholderAPI)  
   Placeholders inside text displays are parsed and displayed per-player.  

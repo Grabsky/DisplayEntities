@@ -55,9 +55,9 @@ public enum CommandDisplayReload {
     ) {
         // Saving default contents if file does not exist.
         if (plugin.configurationFile().exists() == false)
-            plugin.configuration().performSave();
+            plugin.configuration().save();
         // Reloading configuration.
-        plugin.configuration().performReload();
+        plugin.configuration().reload();
         // Sending success message to the sender.ea
         return configuration.messages().commandDisplayReload();
     }
