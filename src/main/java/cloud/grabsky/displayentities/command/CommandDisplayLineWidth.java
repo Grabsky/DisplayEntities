@@ -48,7 +48,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.ExtensionMethod;
 
-@SuppressWarnings("UnstableApiUsage") // @SuggestWith
 @ExtensionMethod(LombokExtensions.class)
 public enum CommandDisplayLineWidth {
     INSTANCE; // SINGLETON

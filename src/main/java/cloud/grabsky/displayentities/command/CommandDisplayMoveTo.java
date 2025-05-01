@@ -50,7 +50,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.ExtensionMethod;
 
-@SuppressWarnings("UnstableApiUsage") // Position, @SuggestWith
+@SuppressWarnings("UnstableApiUsage") // Position
 @ExtensionMethod(LombokExtensions.class)
 public enum CommandDisplayMoveTo {
     INSTANCE; // SINGLETON

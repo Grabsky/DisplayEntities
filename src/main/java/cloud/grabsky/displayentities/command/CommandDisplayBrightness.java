@@ -50,7 +50,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.ExtensionMethod;
 
-@SuppressWarnings("UnstableApiUsage") // @SuggestWith
 @ExtensionMethod(LombokExtensions.class)
 public enum CommandDisplayBrightness {
     INSTANCE; // SINGLETON
