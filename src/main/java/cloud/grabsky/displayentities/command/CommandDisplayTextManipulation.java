@@ -55,6 +55,7 @@ import lombok.experimental.ExtensionMethod;
 
 import static cloud.grabsky.displayentities.util.Conditions.inRange;
 
+@SuppressWarnings("UnstableApiUsage") // @SuggestWith
 @ExtensionMethod(LombokExtensions.class)
 public enum CommandDisplayTextManipulation {
     INSTANCE; // SINGLETON
