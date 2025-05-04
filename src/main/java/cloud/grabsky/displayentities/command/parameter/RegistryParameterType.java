@@ -57,7 +57,7 @@ public final class RegistryParameterType<T extends Keyed> implements ParameterTy
     public RegistryParameterType(final @NotNull Class<T> registryType, final Supplier<Registry<T>> registryAccess) {
         this.registryType = registryType;
         this.registryAccess = registryAccess;
-        // Pre-computing list of suggestions. (Paper 1.21.5 #36 and above)
+        // Pre-computing list of suggestions.
         this.suggestions = registryAccess.get().stream().map(Keyed::getKey).map(Key::asString).toList();
     }
 
@@ -88,7 +88,7 @@ public final class RegistryParameterType<T extends Keyed> implements ParameterTy
      * a specific registry type during the parsing process in parameter handling.
      */
     @Accessors(fluent = true)
-    private static final class Exception extends InvalidValueException {
+    public static final class Exception extends InvalidValueException {
 
         /**
          * Represents the type of registry associated with the specific key.

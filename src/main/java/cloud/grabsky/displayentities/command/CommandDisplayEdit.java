@@ -28,13 +28,11 @@ package cloud.grabsky.displayentities.command;
 import cloud.grabsky.displayentities.DisplayWrapper;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.util.LombokExtensions;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
+import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
-
-import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
@@ -42,38 +40,19 @@ import org.jetbrains.annotations.UnknownNullability;
 import lombok.experimental.ExtensionMethod;
 
 @ExtensionMethod(LombokExtensions.class)
-public enum CommandDisplayCreate {
+public enum CommandDisplayEdit {
     INSTANCE; // SINGLETON
 
     @Dependency
     private @UnknownNullability PluginConfiguration configuration;
 
-    private static final Pattern NAME_FORMAT = Pattern.compile("^[a-zA-Z0-9_/:.-]{1,32}$");
-
-    @Command("display create")
-    @CommandPermission("displayentities.command.display.create")
-    public @NotNull String onDefault(
-            final @NotNull Player sender
+    @Command("display edit")
+    @CommandPermission("displayentities.command.display.edit")
+    public String onDefault(
+            final @NotNull CommandSender sender,
+            final @NotNull @Optional DisplayWrapper display
     ) {
-        return configuration.messages().commandDisplayCreateUsage();
-    }
-
-    @Command("display create")
-    @CommandPermission("displayentities.command.display.create")
-    public @NotNull String onDisplayCreate(
-            final @NotNull Player sender,
-            final @NotNull DisplayWrapper.Type type,
-            final @NotNull String name
-    ) {
-        // Sending error message if specified name does not does not match the format.
-        if (NAME_FORMAT.matcher(name).matches() == false)
-            return configuration.messages().commandDisplayCreateFailureInvalidFormat();
-        // Getting player's location and stripping pitch and yaw from it.
-        final Location location = sender.getLocation().withPitch(0F).withYaw(0F);
-        // Creating, spawning and configuring new display entity.
-        final DisplayWrapper display = type.create(location, name).initialConfiguration();
-        // Sending success message to the sender.
-        return configuration.messages().commandDisplayCreateSuccess().repl("{name}", display.name());
+        return configuration.messages().commandDisplayEditUsage();
     }
 
 }

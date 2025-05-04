@@ -27,13 +27,16 @@ package cloud.grabsky.displayentities;
 
 import cloud.grabsky.displayentities.util.LombokExtensions;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.Display;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.TextDisplay;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -209,6 +212,25 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Text, Display
             this.entity().setBillboard(Display.Billboard.FIXED);
             this.entity().setBlock(DEFAULT_BLOCK_DATA);
             return this;
+        }
+
+    }
+
+
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+    public enum Type {
+        TEXT(EntityType.TEXT_DISPLAY),
+        ITEM(EntityType.ITEM_DISPLAY),
+        BLOCK(EntityType.BLOCK_DISPLAY);
+
+        @Getter(AccessLevel.PUBLIC)
+        private final EntityType type;
+
+        public DisplayWrapper create(final @NotNull Location location, final @NotNull String name) {
+            // Spawning new entity of this type at specified location.
+            final Display entity = (Display) location.getWorld().spawnEntity(location, type, CreatureSpawnEvent.SpawnReason.COMMAND);
+            // Wrapping and returning...
+            return DisplayWrapper.create(entity, name);
         }
 
     }

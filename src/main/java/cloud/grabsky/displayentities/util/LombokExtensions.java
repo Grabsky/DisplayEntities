@@ -29,11 +29,25 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Location;
 import org.bukkit.entity.TextDisplay;
 
+import org.jetbrains.annotations.NotNull;
+
 public enum LombokExtensions {
     INSTANCE; // SINGLETON
 
-    public static String repl(final String self, final CharSequence text, final Object replacement) {
-        return self.replace(text, String.valueOf(replacement));
+    public static String repl(final @NotNull String self, @NotNull Object... replacements) {
+        // Returning the original string if no replacements were specified.
+        if (replacements == null)
+            return self;
+        // Throwing exception when
+        if (replacements.length % 2 != 0)
+            throw new IllegalArgumentException("Invalid arguments. Replacements must be in key-value pairs.");
+        // Preparing the result string.
+        String result = self;
+        // Iterating over specified replacements key-value pairs and replacing them in the string.
+        for (int index = 0; index < replacements.length; index += 2)
+            result = result.replace(String.valueOf(replacements[index]), String.valueOf(replacements[index + 1]));
+        // Returning the result.
+        return result;
     }
 
     public static void setRichText(final TextDisplay display, final String text) {

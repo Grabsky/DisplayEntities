@@ -54,8 +54,10 @@ public enum CommandDisplayReload {
             final @NotNull CommandSender sender
     ) {
         // Saving default contents if file does not exist.
-        if (plugin.configurationFile().exists() == false)
+        if (plugin.configurationFile().exists() == false) {
+            plugin.configuration().reset();
             plugin.configuration().save();
+        }
         // Reloading configuration.
         plugin.configuration().reload();
         // Sending success message to the sender.ea

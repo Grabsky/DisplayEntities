@@ -32,6 +32,7 @@ import cloud.grabsky.displayentities.command.CommandDisplayBlock;
 import cloud.grabsky.displayentities.command.CommandDisplayBrightness;
 import cloud.grabsky.displayentities.command.CommandDisplayCreate;
 import cloud.grabsky.displayentities.command.CommandDisplayDelete;
+import cloud.grabsky.displayentities.command.CommandDisplayEdit;
 import cloud.grabsky.displayentities.command.CommandDisplayItem;
 import cloud.grabsky.displayentities.command.CommandDisplayLineWidth;
 import cloud.grabsky.displayentities.command.CommandDisplayMoveTo;
@@ -44,28 +45,21 @@ import cloud.grabsky.displayentities.command.CommandDisplayTextManipulation;
 import cloud.grabsky.displayentities.command.CommandDisplayTextOpacity;
 import cloud.grabsky.displayentities.command.CommandDisplayTextShadow;
 import cloud.grabsky.displayentities.command.CommandDisplayViewRange;
-import cloud.grabsky.displayentities.command.parameter.ColorParameterType;
-import cloud.grabsky.displayentities.command.parameter.DisplayWrapperParameterType;
-import cloud.grabsky.displayentities.command.parameter.PositionParameterType;
-import cloud.grabsky.displayentities.command.parameter.RegistryParameterType;
+import cloud.grabsky.displayentities.command.visitor.BuilderVisitor;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.listener.PacketListener;
+import cloud.grabsky.displayentities.util.LombokExtensions;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.google.gson.Gson;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
-import io.papermc.paper.math.Position;
 import io.papermc.paper.plugin.loader.PluginClasspathBuilder;
 import io.papermc.paper.plugin.loader.library.impl.MavenLibraryResolver;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import org.bukkit.Color;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
-import org.bukkit.block.BlockType;
-import org.bukkit.inventory.ItemType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.graph.Dependency;
@@ -98,8 +92,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.experimental.ExtensionMethod;
 
 @Accessors(fluent = true)
+@ExtensionMethod(LombokExtensions.class)
 public final class DisplayEntities extends JavaPlugin {
 
     @Getter(AccessLevel.PUBLIC)
@@ -158,22 +154,12 @@ public final class DisplayEntities extends JavaPlugin {
                 .build();
         // Initializing BukkitLamp instance.
         this.lamp = BukkitLamp.builder(config)
-                // Registering @Dependency dependencies...
+                // Registering @Dependency dependencies.
                 .dependency(DisplayEntities.class, this)
                 .dependency(PluginConfiguration.class, this.configuration)
-                // Registering custom parameter types.
-                .parameterTypes(it -> {
-                    it.addParameterType(Color.class, ColorParameterType.INSTANCE);
-                    it.addParameterType(Position.class, PositionParameterType.INSTANCE);
-                    it.addParameterType(ItemType.class, new RegistryParameterType<>(ItemType.class, () -> Registry.ITEM));
-                    it.addParameterType(BlockType.class, new RegistryParameterType<>(BlockType.class, () -> Registry.BLOCK));
-                    it.addParameterTypeFactory(DisplayWrapperParameterType.INSTANCE);
-                })
-                // Registering command response handler for String object.
-                .responseHandler(String.class, (message, context) -> {
-                    if (message.isEmpty() == false)
-                        context.actor().reply(miniMessage.deserialize(message));
-                })
+                // Accepting the BuilderVisitor, which applies further customizations to the builder.
+                .accept(new BuilderVisitor(this))
+                // Building the instance.
                 .build();
         // Registering plugin commands.
         this.registerCommands(this.lamp);
@@ -198,6 +184,7 @@ public final class DisplayEntities extends JavaPlugin {
         lamp.register(CommandDisplayReload.INSTANCE);
         lamp.register(CommandDisplayRespawn.INSTANCE);
         // Editing (Common)
+        lamp.register(CommandDisplayEdit.INSTANCE);
         lamp.register(CommandDisplayScale.INSTANCE);
         lamp.register(CommandDisplayMoveTo.INSTANCE);
         lamp.register(CommandDisplayBillboard.INSTANCE);

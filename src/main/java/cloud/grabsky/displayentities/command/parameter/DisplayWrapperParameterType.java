@@ -67,15 +67,17 @@ public enum DisplayWrapperParameterType implements ParameterType.Factory<BukkitC
                 final @Nullable Display display = (Display) context.actor().requirePlayer().getNearbyEntities(64, 64, 64).stream()
                         .filter(it -> (it instanceof Display) && (it.getTrackedBy().contains(sender) == true) && it.getPersistentDataContainer().getOrDefault(DisplayEntities.Keys.NAME, PersistentDataType.STRING, "").equals(value) == true)
                         .findFirst().orElse(null);
-                // Returning 'null' if no entities were found.
-                if (display == null)
-                    return null;
+                // Throwing exception if not found.
+                if (display == null) {
+                    throw new Exception(value);
+                }
                 // Creating DisplayWrapper from the found entity.
                 final DisplayWrapper wrapper = DisplayWrapper.existing(display);
                 // Throwing exception if the entity is not of the expected type.
                 // This filters proceeding command suggestions and ensures command will not be executed when unsupported type is used.
-                if (clazz.isInstance(wrapper) == false)
+                if (clazz.isInstance(wrapper) == false) {
                     throw new Exception(value);
+                }
                 // Otherwise, returning the wrapper instance.
                 return wrapper;
             }

@@ -32,9 +32,11 @@ import io.papermc.paper.datacomponent.DataComponentTypes;
 import org.bukkit.block.BlockType;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
-import revxrsal.commands.annotation.Optional;
+import revxrsal.commands.annotation.Suggest;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import org.jetbrains.annotations.NotNull;
@@ -53,23 +55,71 @@ public enum CommandDisplayBlock {
 
     @Command("display edit <display> block")
     @CommandPermission("displayentities.command.display.edit.block")
+    public String onDefault(
+            final @NotNull Player sender,
+            final @NotNull DisplayWrapper.Block display
+    ) {
+        return configuration.messages().commandDisplayEditBlockUsage();
+    }
+
+    @Command("display edit <display> block")
+    @CommandPermission("displayentities.command.display.edit.block")
+    public String onDisplayBlock(
+            final @NotNull Player sender,
+            final @NotNull DisplayWrapper.Block display
+    ) {
+        return configuration.messages().commandDisplayEditBlockUsage();
+    }
+
+    @Command("display edit <display> block")
+    @CommandPermission("displayentities.command.display.edit.block")
     public String onDisplayBlock(
             final @NotNull Player sender,
             final @NotNull DisplayWrapper.Block display,
-            final @Nullable @Optional BlockType blockType
+            final @NotNull BlockType blockType
     ) {
-        // Creating instance of BlockData from provided BlockType, or item held by the player.
-        final BlockData data = (blockType != null)
-                ? blockType.createBlockData()
-                // Making sure currently held item is (1) of block type (2) have block_data component.
-                : (sender.getInventory().getItemInMainHand().getType().asBlockType() != null) && (sender.getInventory().getItemInMainHand().getData(DataComponentTypes.BLOCK_DATA) != null)
-                        // Returning new block data from the currently held item.
-                        ? sender.getInventory().getItemInMainHand().getData(DataComponentTypes.BLOCK_DATA).createBlockData(sender.getInventory().getItemInMainHand().getType().asBlockType())
-                        // Otherwise, returning null.
-                        : null;
+        // Creating instance of BlockData from provided BlockType.
+        final BlockData data = blockType.createBlockData();
+        // Sending error message if BlockData ended up being null.
+        if (data.getMaterial().asBlockType() == BlockType.AIR)
+            return configuration.messages().commandDisplayEditBlockFailureSpecifiedInvalidType();
+        // Updating entity with new block data.
+        display.as(DisplayWrapper.Block.class).entity().setBlock(data);
+        // Sending success message to the sender.
+        return configuration.messages().commandDisplayEditBlockSuccess().repl("{type}", data.getMaterial().key().asString());
+    }
+
+    @Command("display edit <display> block")
+    @CommandPermission("displayentities.command.display.edit.block")
+    public String onDisplayBlock(
+            final @NotNull Player sender,
+            final @NotNull DisplayWrapper.Block display,
+            final @NotNull @Suggest({"@main_hand", "@off_hand"}) String selector
+    ) {
+        // Getting the specified slot.
+        final @Nullable EquipmentSlot slot = switch (selector) {
+            case "@main_hand" -> EquipmentSlot.HAND;
+            case "@off_hand" -> EquipmentSlot.OFF_HAND;
+            default -> null;
+        };
+        // Sending error message if specified value is invalid.
+        if (slot == null)
+            return configuration.messages().errorInvalidRegistryValueBlockType().repl("{input}", selector);
+        // Getting the item at specified slot.
+        final ItemStack item = sender.getInventory().getItem(slot);
+        // Creating instance of BlockData from item at specified slot.
+        final BlockData data = (item.getType().asBlockType() != null)
+                // Returning new block data from the currently held item.
+                ? (item.hasData(DataComponentTypes.BLOCK_DATA) == true)
+                        // Checking for custom BlockData and creating from that if exists.
+                        ? item.getData(DataComponentTypes.BLOCK_DATA).createBlockData(item.getType().asBlockType())
+                        // Otherwise, creating from the block type.
+                        : item.getType().asBlockType().createBlockData()
+                // Otherwise, returning null.
+                : null;
         // Sending error message if BlockData ended up being null.
         if (data == null || data.getMaterial().asBlockType() == BlockType.AIR)
-            return configuration.messages().commandDisplayEditBlockFailure();
+            return configuration.messages().commandDisplayEditBlockFailureHoldingInvalidType();
         // Updating entity with new block data.
         display.as(DisplayWrapper.Block.class).entity().setBlock(data);
         // Sending success message to the sender.
