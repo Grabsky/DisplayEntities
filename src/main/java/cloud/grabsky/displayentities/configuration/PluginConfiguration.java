@@ -49,9 +49,9 @@ public interface PluginConfiguration {
     }
 
     @Order(1) @Key("refresh_interval")
-    @Comment("Placeholders refresh interval in ticks. (Default: 100)")
+    @Comment("Placeholders refresh interval in ticks. (Default: 200)")
     default int refreshInterval() {
-        return 100;
+        return 200;
     }
 
     @Order(2) @Key("predefined_colors")
