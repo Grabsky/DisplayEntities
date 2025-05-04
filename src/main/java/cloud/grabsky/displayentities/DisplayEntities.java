@@ -216,18 +216,16 @@ public final class DisplayEntities extends JavaPlugin {
     public void rebuildMiniMessage() {
         this.miniMessage = MiniMessage.builder()
                 .tags(TagResolver.standard())
-                .editTags(it -> {
-                    this.configuration.predefinedColors().forEach((key, value) -> {
-                        final @Nullable TextColor color = TextColor.fromHexString(value);
-                        // Logging invalid invalid color definitions.
-                        if (color == null) {
-                            this.getLogger().warning("Color '" + key + "' with value '" + value + "' is not a valid hex color.");
-                            return;
-                        }
-                        // Adding new tag.
-                        it.tag(key, Tag.styling(color));
-                    });
-                })
+                .editTags(it -> this.configuration.predefinedColors().forEach((key, value) -> {
+                    final @Nullable TextColor color = TextColor.fromHexString(value);
+                    // Logging invalid invalid color definitions.
+                    if (color == null) {
+                        this.getLogger().warning("Color '" + key + "' with value '" + value + "' is not a valid hex color.");
+                        return;
+                    }
+                    // Adding new tag.
+                    it.tag(key, Tag.styling(color));
+                }))
                 .build();
     }
 

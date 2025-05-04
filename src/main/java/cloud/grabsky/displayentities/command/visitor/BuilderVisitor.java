@@ -136,6 +136,16 @@ public final class BuilderVisitor implements LampBuilderVisitor<BukkitCommandAct
         }
 
         @HandleException
+        public void onInvalidPosition(final @NotNull PositionParameterType.NumberException e, final @NotNull BukkitCommandActor actor) {
+            actor.reply(plugin.miniMessage().deserialize(plugin.configuration().messages().errorInvalidPosition().repl("{input}", e.input())));
+        }
+
+        @HandleException
+        public void onInvalidColor(final @NotNull ColorParameterType.Exception e, final @NotNull BukkitCommandActor actor) {
+            actor.reply(plugin.miniMessage().deserialize(plugin.configuration().messages().errorInvalidColor().repl("{input}", e.input())));
+        }
+
+        @HandleException
         public void onInvalidDisplayWrapper(final @NotNull DisplayWrapperParameterType.Exception e, final @NotNull BukkitCommandActor actor) {
             actor.reply(plugin.miniMessage().deserialize(plugin.configuration().messages().errorInvalidDisplay().repl("{input}", e.input())));
         }

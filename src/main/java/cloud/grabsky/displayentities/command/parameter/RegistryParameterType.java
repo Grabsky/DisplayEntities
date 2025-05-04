@@ -84,8 +84,8 @@ public final class RegistryParameterType<T extends Keyed> implements ParameterTy
     }
 
     /**
-     * Represents a specialized exception used to denote invalid values associated with
-     * a specific registry type during the parsing process in parameter handling.
+     * Represents an exception that is thrown when an invalid registry value is provided
+     * while parsing a {@link RegistryParameterType} argument.
      */
     @Accessors(fluent = true)
     public static final class Exception extends InvalidValueException {
