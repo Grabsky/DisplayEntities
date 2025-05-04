@@ -137,12 +137,12 @@ public interface PluginConfiguration {
         @Order(9) @Key("command.display.help.header")
         @Comment("Display > Help")
         default List<String> commandDisplayHelpHeader() {
-            return List.of("<dark_gray>------------------ <gray>Plugin Help <dark_gray>------------------", "");
+            return List.of("<dark_gray><st>                              </st>   <gray>Plugin Help   <dark_gray><st>                              </st>-", "");
         }
 
         @Order(9) @Key("command.display.help.footer")
         default List<String> commandDisplayHelpFooter() {
-            return List.of("", "<gray>Use <primary>/display help <secondary>(page) <gray>command to navigate between pages.");
+            return List.of("", "<dark_gray><st>                              </st>    <gray>Page {page}/{max_page}    <dark_gray><st>                              </st>");
         }
 
         @Order(9) @Key("command.display.help.contents")
