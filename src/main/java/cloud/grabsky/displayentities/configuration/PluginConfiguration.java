@@ -60,6 +60,14 @@ public interface PluginConfiguration {
         return new LinkedHashMap<>() {{
             put("primary", "#65D85F");
             put("secondary", "#C7F1C5");
+            put("common_primary", "#1AD5FF");
+            put("common_secondary", "#80E8FF");
+            put("text_primary", "#FFAE19");
+            put("text_secondary", "#FFD280");
+            put("block_primary", "#FF19A3");
+            put("block_secondary", "#FF80CC");
+            put("item_primary", "#FF441A");
+            put("item_secondary", "#FF9680");
         }};
     }
 
@@ -126,10 +134,43 @@ public interface PluginConfiguration {
 
         // Display > Help
 
-        @Order(9) @Key("command.display.help")
+        @Order(9) @Key("command.display.help.header")
         @Comment("Display > Help")
-        default List<String> commandDisplayHelp() {
-            return List.of("TO-DO");
+        default List<String> commandDisplayHelpHeader() {
+            return List.of("<dark_gray>------------------ <gray>Plugin Help <dark_gray>------------------", "");
+        }
+
+        @Order(9) @Key("command.display.help.footer")
+        default List<String> commandDisplayHelpFooter() {
+            return List.of("", "<gray>Use <primary>/display help <secondary>(page) <gray>command to navigate between pages.");
+        }
+
+        @Order(9) @Key("command.display.help.contents")
+        default List<String> commandDisplayHelpContents() {
+            return List.of(
+                    "<dark_gray>› <primary>/display reload<dark_gray> - <gray>Reloads the plugin.",
+                    "<dark_gray>› <primary>/display help <secondary>[page]<dark_gray> - <gray>Shows list of available commands.",
+                    "<dark_gray>› <primary>/display create <secondary>(type) (name)<dark_gray> - <gray>Creates a new display.",
+                    "<dark_gray>› <primary>/display delete <secondary>(name)<dark_gray> - <gray>Deletes specified display.",
+                    "<dark_gray>› <primary>/display respawn <secondary>(display)<dark_gray> - <gray>Respawns specified display.",
+                    "<dark_gray>› <common_primary>/display edit <common_secondary>(display) <common_primary>scale <common_secondary>(x) (y) (z)",
+                    "<dark_gray>› <common_primary>/display edit <common_secondary>(display) <common_primary>view_range <common_secondary>(range)",
+                    "<dark_gray>› <common_primary>/display edit <common_secondary>(display) <common_primary>move_to <common_secondary>(x) (y) (z)",
+                    "<dark_gray>› <common_primary>/display edit <common_secondary>(display) <common_primary>billboard <common_secondary>(billboard)",
+                    "<dark_gray>› <common_primary>/display edit <common_secondary>(display) <common_primary>brightness <common_secondary>(block | sky) (brightness)",
+                    "<dark_gray>› <text_primary>/display edit <text_secondary>(display) <text_primary>add_line <text_secondary>(text)",
+                    "<dark_gray>› <text_primary>/display edit <text_secondary>(display) <text_primary>remove_line <text_secondary>(line)",
+                    "<dark_gray>› <text_primary>/display edit <text_secondary>(display) <text_primary>set_line <text_secondary>(line) (text)",
+                    "<dark_gray>› <text_primary>/display edit <text_secondary>(display) <text_primary>refresh_interval <text_secondary>(ticks)",
+                    "<dark_gray>› <text_primary>/display edit <text_secondary>(display) <text_primary>alignment <text_secondary>(alignment)",
+                    "<dark_gray>› <text_primary>/display edit <text_secondary>(display) <text_primary>background <text_secondary>(color) [opacity]",
+                    "<dark_gray>› <text_primary>/display edit <text_secondary>(display) <text_primary>line_width <text_secondary>(width)",
+                    "<dark_gray>› <text_primary>/display edit <text_secondary>(display) <text_primary>see_through <text_secondary>(true | false)",
+                    "<dark_gray>› <text_primary>/display edit <text_secondary>(display) <text_primary>text_shadow <text_secondary>(true | false)",
+                    "<dark_gray>› <text_primary>/display edit <text_secondary>(display) <text_primary>text_opacity <text_secondary>(opacity)",
+                    "<dark_gray>› <block_primary>/display edit <block_secondary>(display) <block_primary>block <block_secondary>(@main_hand | @off_hand | type)",
+                    "<dark_gray>› <item_primary>/display edit <item_secondary>(display) <item_primary>item <item_secondary>(@main_hand | @off_hand | type)"
+            );
         }
 
         // Display > Create
@@ -236,7 +277,7 @@ public interface PluginConfiguration {
         @Order(24) @Key("command.display.edit.scale.usage")
         @Comment("Display > Edit > Scale")
         default String commandDisplayEditScaleUsage() {
-            return "<dark_gray>› <gray>Usage: <primary>/display edit <secondary>(display) <primary>scale <secondary>(x) [y] [z]";
+            return "<dark_gray>› <gray>Usage: <primary>/display edit <secondary>(display) <primary>scale <secondary>(x) (y) (z)";
         }
 
         @Order(25) @Key("command.display.edit.scale.success")

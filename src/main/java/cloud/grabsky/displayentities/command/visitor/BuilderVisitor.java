@@ -69,7 +69,7 @@ public final class BuilderVisitor implements LampBuilderVisitor<BukkitCommandAct
     @Getter(AccessLevel.PUBLIC)
     private final DisplayEntities plugin;
 
-    @Override @SuppressWarnings("UnstableApiUsage") // Position, ItemType, BlockType
+    @Override @SuppressWarnings({"unchecked", "UnstableApiUsage"}) // Position, ItemType, BlockType
     public void visit(final @NotNull Lamp.Builder<BukkitCommandActor> builder) {
         // Registering custom parameter types.
         builder.parameterTypes(it -> {
@@ -87,6 +87,15 @@ public final class BuilderVisitor implements LampBuilderVisitor<BukkitCommandAct
         builder.responseHandler(String.class, (message, context) -> {
             if (message.isEmpty() == false)
                 context.actor().reply(plugin.miniMessage().deserialize(message));
+        });
+        // Registering command response handler for String object.
+        builder.responseHandler(List.class, (list, context) -> {
+            if (list.isEmpty() == false && list.getFirst() instanceof String) {
+                // Should be safe to assume it's a list of String objects.
+                final List<String> messages = (List<String>) list;
+                // Joining on <newline> and sending.
+                context.actor().reply(plugin.miniMessage().deserialize(String.join("<newline>", messages)));
+            }
         });
     }
 
