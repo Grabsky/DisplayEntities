@@ -43,6 +43,7 @@ import java.util.Collection;
 import java.util.stream.IntStream;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -62,12 +63,12 @@ public enum CommandDisplayHelp {
     @CommandPermission("displayentities.command.display.help")
     public void onDefault(
             final @NotNull CommandSender sender,
-            final @NotNull @Optional @Default("1") @SuggestWith(PageSuggestionProvider.class) Integer page
+            final @Nullable @Optional @SuggestWith(PageSuggestionProvider.class) Integer page
             ) {
         // Calculating max page number.
         final int maxPage = configuration.messages().commandDisplayHelpContents().size() / 6 + 1;
         // Getting the requested page. Defaults to 1 for invalid input and is capped by number of the last page.
-        final int finalPage = Math.clamp(page, 1, maxPage);
+        final int finalPage = (page != null) ? Math.clamp(page, 1, maxPage) : 1;
         // Sending help header.
         if (configuration.messages().commandDisplayHelpHeader().isEmpty() == false)
             sender.sendMessage(plugin.miniMessage().deserialize(String.join("<newline>", configuration.messages().commandDisplayHelpHeader()).repl("{page}", finalPage, "{max_page}", maxPage)));
