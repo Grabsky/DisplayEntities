@@ -25,6 +25,7 @@
  */
 package cloud.grabsky.displayentities;
 
+import cloud.grabsky.bstats.Metrics;
 import cloud.grabsky.displayentities.command.CommandDisplayAlignment;
 import cloud.grabsky.displayentities.command.CommandDisplayBackground;
 import cloud.grabsky.displayentities.command.CommandDisplayBillboard;
@@ -164,6 +165,8 @@ public final class DisplayEntities extends JavaPlugin {
                 .build();
         // Registering plugin commands.
         this.registerCommands(this.lamp);
+        // Connecting to bStats.
+        new Metrics(this, 25686);
     }
 
     @Override
