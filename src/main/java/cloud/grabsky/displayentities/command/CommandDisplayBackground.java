@@ -54,10 +54,10 @@ public enum CommandDisplayBackground {
             final @NotNull Player sender,
             final @NotNull DisplayWrapper.Text display,
             final @NotNull Color color,
-            final @Nullable @Optional @Suggest({"100%", "50%", "25%", "0%"}) String opacity
+            final @Nullable @Optional @Suggest({"0%", "25%", "50%", "75%"}) String opacity
     ) {
         // Calculating the opacity value if specified. It converts percentage value to an integer between 0 - 255.
-        final Color finalColor = (opacity != null) ? color.setAlpha((int) Math.round(Math.clamp(Float.parseFloat(opacity.repl("%", "")), 0D, 100D) * 255 / 100)) : color;
+        final Color finalColor = (opacity != null) ? color.setAlpha(Math.min(255, Math.round(Float.parseFloat(opacity.replace("%", "")) * 2.55F))) : color;
         // Updating value of the background_color property of the display entity.
         display.entity().setBackgroundColor(finalColor);
         // Sending success message to the sender.

@@ -50,9 +50,9 @@ public enum CommandDisplayTextOpacity {
     public String onDisplaySeeThrough(
             final @NotNull Player sender,
             final @NotNull DisplayWrapper.Text display,
-            final @NotNull @Suggest({"100%", "75%", "50%", "25%"}) String opacity
+            final @NotNull @Suggest({"0%", "25%", "50%", "75%"}) String opacity
     ) {
-        final byte finalOpacity = (byte) Math.round(Math.clamp(Float.parseFloat(opacity.repl("%", "")), 0D, 100D) * 255 / 100);
+        final byte finalOpacity = (byte) Math.min(255, Math.round(Float.parseFloat(opacity.replace("%", "")) * 2.55F));
         // Updating value of the text_opacity property of the display entity.
         display.entity().setTextOpacity(finalOpacity);
         // Sending success message to the sender.
