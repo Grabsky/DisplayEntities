@@ -28,9 +28,7 @@ package cloud.grabsky.displayentities.command;
 import cloud.grabsky.displayentities.DisplayWrapper;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.util.LombokExtensions;
-import io.papermc.paper.datacomponent.DataComponentTypes;
 import org.bukkit.block.BlockType;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -41,7 +39,6 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -51,16 +48,7 @@ public enum CommandDisplayItem {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
-
-    @Command("display edit <display> item")
-    @CommandPermission("displayentities.command.display.edit.item")
-    public String onDefault(
-            final @NotNull Player sender,
-            final @NotNull DisplayWrapper.Item display
-    ) {
-        return configuration.messages().commandDisplayEditItemUsage();
-    }
+    private PluginConfiguration configuration;
 
     @Command("display edit <display> item")
     @CommandPermission("displayentities.command.display.edit.item")

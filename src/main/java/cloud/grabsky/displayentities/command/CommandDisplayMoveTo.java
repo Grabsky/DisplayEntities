@@ -44,7 +44,6 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -56,17 +55,7 @@ public enum CommandDisplayMoveTo {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
-
-    @Command("display edit <display> move_to")
-    @CommandPermission("displayentities.command.display.edit.move_to")
-    public String onDisplayMoveToDefault(
-            final @NotNull Player sender,
-            final @NotNull DisplayWrapper display
-    ) {
-        return configuration.messages().commandDisplayEditMoveToUsage();
-    }
-
+    private PluginConfiguration configuration;
 
     @Command("display edit <display> move_to")
     @CommandPermission("displayentities.command.display.edit.move_to")

@@ -41,7 +41,6 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -51,25 +50,7 @@ public enum CommandDisplayBlock {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
-
-    @Command("display edit <display> block")
-    @CommandPermission("displayentities.command.display.edit.block")
-    public String onDefault(
-            final @NotNull Player sender,
-            final @NotNull DisplayWrapper.Block display
-    ) {
-        return configuration.messages().commandDisplayEditBlockUsage();
-    }
-
-    @Command("display edit <display> block")
-    @CommandPermission("displayentities.command.display.edit.block")
-    public String onDisplayBlock(
-            final @NotNull Player sender,
-            final @NotNull DisplayWrapper.Block display
-    ) {
-        return configuration.messages().commandDisplayEditBlockUsage();
-    }
+    private PluginConfiguration configuration;
 
     @Command("display edit <display> block")
     @CommandPermission("displayentities.command.display.edit.block")

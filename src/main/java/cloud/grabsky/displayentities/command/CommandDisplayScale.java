@@ -45,12 +45,9 @@ import java.util.Collections;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.ExtensionMethod;
 
 @SuppressWarnings("UnstableApiUsage") // Position
@@ -59,16 +56,7 @@ public enum CommandDisplayScale {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
-
-    @Command("display edit <display> scale")
-    @CommandPermission("displayentities.command.display.edit.scale")
-    public String onDefault(
-            final @NotNull Player sender,
-            final @NotNull DisplayWrapper display
-    ) {
-        return configuration.messages().commandDisplayEditScaleUsage();
-    }
+    private PluginConfiguration configuration;
 
     @Command("display edit <display> scale")
     @CommandPermission("displayentities.command.display.edit.scale")

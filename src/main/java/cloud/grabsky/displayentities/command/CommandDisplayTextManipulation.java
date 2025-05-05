@@ -47,7 +47,6 @@ import java.util.stream.IntStream;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -60,18 +59,9 @@ public enum CommandDisplayTextManipulation {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
+    private PluginConfiguration configuration;
 
     // Display > Edit > Add Line
-
-    @Command("display edit <display> add_line")
-    @CommandPermission("displayentities.command.display.edit.add_line")
-    public String onDisplayAddLineDefault(
-            final @NotNull Player sender,
-            final @NotNull DisplayWrapper.Text display
-    ) {
-        return configuration.messages().commandDisplayEditAddLineUsage();
-    }
 
     @Command("display edit <display> add_line <text>")
     @CommandPermission("displayentities.command.display.edit.add_line")
@@ -95,15 +85,6 @@ public enum CommandDisplayTextManipulation {
     }
 
     // Display > Edit > Remove Line
-
-    @Command("display edit <display> remove_line")
-    @CommandPermission("displayentities.command.display.edit.remove_line")
-    public String onDisplayRemoveLineDefault(
-            final @NotNull Player sender,
-            final @NotNull DisplayWrapper.Text display
-    ) {
-        return configuration.messages().commandDisplayEditRemoveLineUsage();
-    }
 
     @Command("display edit <display> remove_line <number>")
     @CommandPermission("displayentities.command.display.edit.remove_line")
@@ -132,15 +113,6 @@ public enum CommandDisplayTextManipulation {
     }
 
     // Display > Edit > Set Line
-
-    @Command("display edit <display> set_line")
-    @CommandPermission("displayentities.command.display.edit.set_line")
-    public String onDisplaySetLineDefault(
-            final @NotNull Player sender,
-            final @NotNull DisplayWrapper.Text display
-    ) {
-        return configuration.messages().commandDisplayEditSetLineUsage();
-    }
 
     @Command("display edit <display> set_line")
     @CommandPermission("displayentities.command.display.edit.set_line")

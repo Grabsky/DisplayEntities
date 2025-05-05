@@ -36,7 +36,6 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -45,7 +44,7 @@ public enum CommandDisplayTextShadow {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
+    private PluginConfiguration configuration;
 
     @Command("display edit <display> text_shadow")
     @CommandPermission("displayentities.command.display.edit.text_shadow")

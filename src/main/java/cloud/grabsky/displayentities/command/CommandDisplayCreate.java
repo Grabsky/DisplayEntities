@@ -37,7 +37,6 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -46,17 +45,9 @@ public enum CommandDisplayCreate {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
+    private PluginConfiguration configuration;
 
     private static final Pattern NAME_FORMAT = Pattern.compile("^[a-zA-Z0-9_/:.-]{1,32}$");
-
-    @Command("display create")
-    @CommandPermission("displayentities.command.display.create")
-    public @NotNull String onDefault(
-            final @NotNull Player sender
-    ) {
-        return configuration.messages().commandDisplayCreateUsage();
-    }
 
     @Command("display create")
     @CommandPermission("displayentities.command.display.create")

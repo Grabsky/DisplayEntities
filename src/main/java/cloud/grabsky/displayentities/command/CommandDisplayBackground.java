@@ -38,7 +38,6 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -47,16 +46,7 @@ public enum CommandDisplayBackground {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
-
-    @Command("display edit <display> background")
-    @CommandPermission("displayentities.command.display.edit.background")
-    public String onDefault(
-            final @NotNull Player sender,
-            final @NotNull DisplayWrapper.Text display
-    ) {
-        return configuration.messages().commandDisplayEditBackgroundUsage();
-    }
+    private PluginConfiguration configuration;
 
     @Command("display edit <display> background")
     @CommandPermission("displayentities.command.display.edit.background")

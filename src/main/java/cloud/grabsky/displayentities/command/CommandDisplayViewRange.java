@@ -31,7 +31,6 @@ import cloud.grabsky.displayentities.util.LombokExtensions;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
-
 import revxrsal.commands.annotation.SuggestWith;
 import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
@@ -43,7 +42,6 @@ import java.util.Collections;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -54,16 +52,7 @@ public enum CommandDisplayViewRange {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
-
-    @Command("display edit <display> view_range")
-    @CommandPermission("displayentities.command.display.edit.view_range")
-    public String onDefault(
-            final @NotNull Player sender,
-            final @NotNull DisplayWrapper display
-    ) {
-        return configuration.messages().commandDisplayEditViewRangeUsage();
-    }
+    private PluginConfiguration configuration;
 
     @Command("display edit <display> view_range")
     @CommandPermission("displayentities.command.display.edit.view_range")

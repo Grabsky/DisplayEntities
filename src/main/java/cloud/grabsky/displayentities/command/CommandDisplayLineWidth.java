@@ -42,7 +42,6 @@ import java.util.Collections;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -53,16 +52,7 @@ public enum CommandDisplayLineWidth {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
-
-    @Command("display edit <display> line_width")
-    @CommandPermission("displayentities.command.display.edit.line_width")
-    public String onDefault(
-            final @NotNull Player sender,
-            final @NotNull DisplayWrapper.Text display
-    ) {
-        return configuration.messages().commandDisplayEditLineWidthUsage();
-    }
+    private PluginConfiguration configuration;
 
     @Command("display edit <display> line_width")
     @CommandPermission("displayentities.command.display.edit.line_width")

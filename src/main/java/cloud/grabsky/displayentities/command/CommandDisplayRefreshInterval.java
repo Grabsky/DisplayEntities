@@ -45,7 +45,6 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -54,19 +53,10 @@ public enum CommandDisplayRefreshInterval {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability DisplayEntities plugin;
+    private DisplayEntities plugin;
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
-
-    @Command("display edit <display> refresh_interval")
-    @CommandPermission("displayentities.command.display.edit.refresh_interval")
-    public String onDefault(
-            final @NotNull Player sender,
-            final @NotNull DisplayWrapper.Text display
-    ) {
-        return configuration.messages().commandDisplayEditRefreshIntervalUsage();
-    }
+    private PluginConfiguration configuration;
 
     @Command("display edit <display> refresh_interval")
     @CommandPermission("displayentities.command.display.edit.refresh_interval")

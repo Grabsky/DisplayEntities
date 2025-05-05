@@ -33,7 +33,6 @@ import cloud.grabsky.displayentities.command.CommandDisplayBlock;
 import cloud.grabsky.displayentities.command.CommandDisplayBrightness;
 import cloud.grabsky.displayentities.command.CommandDisplayCreate;
 import cloud.grabsky.displayentities.command.CommandDisplayDelete;
-import cloud.grabsky.displayentities.command.CommandDisplayEdit;
 import cloud.grabsky.displayentities.command.CommandDisplayHelp;
 import cloud.grabsky.displayentities.command.CommandDisplayItem;
 import cloud.grabsky.displayentities.command.CommandDisplayLineWidth;
@@ -51,6 +50,7 @@ import cloud.grabsky.displayentities.command.visitor.BuilderVisitor;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.listener.PacketListener;
 import cloud.grabsky.displayentities.util.LombokExtensions;
+import cloud.grabsky.displayentities.util.MapFlattener;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.google.gson.Gson;
@@ -107,6 +107,9 @@ public final class DisplayEntities extends JavaPlugin {
     private File configurationFile;
 
     @Getter(AccessLevel.PUBLIC)
+    private CommentedConfiguration commentedConfiguration;
+
+    @Getter(AccessLevel.PUBLIC)
     private PluginConfiguration configuration;
 
     @Getter(AccessLevel.PUBLIC)
@@ -132,11 +135,10 @@ public final class DisplayEntities extends JavaPlugin {
         instance = this;
         // Initializing instance File representing config.yml file of this plugin.
         this.configurationFile = new File(this.getDataFolder(), "config.yml");
+        // Initializing instance of CommentedConfiguration.
+        this.commentedConfiguration = new CommentedConfiguration(this.configurationFile.toPath(), CommentedConfiguration.GSON, ArrayCommentStyle.COMMENT_FIRST_ELEMENT, YAML.get());
         // Loading configuration file.
-        this.configuration = Specs.fromConfig(
-                PluginConfiguration.class,
-                new CommentedConfiguration(this.configurationFile.toPath(), CommentedConfiguration.GSON, ArrayCommentStyle.COMMENT_FIRST_ELEMENT, YAML.get())
-        );
+        this.configuration = Specs.fromConfig(PluginConfiguration.class, commentedConfiguration);
         // Saving default contents to the configuration file.
         this.configuration.save();
         // Reloading and mapping configuration file contents to the PluginConfiguration instance.
@@ -189,7 +191,6 @@ public final class DisplayEntities extends JavaPlugin {
         lamp.register(CommandDisplayReload.INSTANCE);
         lamp.register(CommandDisplayRespawn.INSTANCE);
         // Editing (Common)
-        lamp.register(CommandDisplayEdit.INSTANCE);
         lamp.register(CommandDisplayScale.INSTANCE);
         lamp.register(CommandDisplayMoveTo.INSTANCE);
         lamp.register(CommandDisplayBillboard.INSTANCE);
@@ -217,8 +218,12 @@ public final class DisplayEntities extends JavaPlugin {
 
     @SuppressWarnings("PatternValidation")
     public void rebuildMiniMessage() {
+        // Flattening the configuration file data for use with the <spec:...> tag.
+        final Map<String, Object> flattened = MapFlattener.flatten(commentedConfiguration().getData());
+        // Building new MiniMessage instance.
         this.miniMessage = MiniMessage.builder()
                 .tags(TagResolver.standard())
+                // Creating and registering configured color tags.
                 .editTags(it -> this.configuration.predefinedColors().forEach((key, value) -> {
                     final @Nullable TextColor color = TextColor.fromHexString(value);
                     // Logging invalid invalid color definitions.
@@ -226,8 +231,18 @@ public final class DisplayEntities extends JavaPlugin {
                         this.getLogger().warning("Color '" + key + "' with value '" + value + "' is not a valid hex color.");
                         return;
                     }
-                    // Adding new tag.
+                    // Adding new styling tag.
                     it.tag(key, Tag.styling(color));
+                }))
+                // Creating <spec:config.value.path> tag which acts like a placeholder for specific.
+                .editTags(it -> it.tag("spec", (queue, context) -> {
+                    if (flattened.isEmpty() == false && queue.hasNext() == true) {
+                        final String key = queue.pop().value();
+                        if (flattened.containsKey(key) == true)
+                            // NOTE: This can possibly lead to infinite recursion if tag points the path of processed key.
+                            return Tag.preProcessParsed((String) flattened.get(key));
+                    }
+                    return null;
                 }))
                 .build();
     }

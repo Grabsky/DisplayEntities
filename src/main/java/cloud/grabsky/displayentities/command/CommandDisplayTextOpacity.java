@@ -35,7 +35,6 @@ import revxrsal.commands.annotation.Suggest;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -44,16 +43,7 @@ public enum CommandDisplayTextOpacity {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
-
-    @Command("display edit <display> text_opacity")
-    @CommandPermission("displayentities.command.display.edit.text_opacity")
-    public String onDefault(
-            final @NotNull Player sender,
-            final @NotNull DisplayWrapper.Text display
-    ) {
-        return configuration.messages().commandDisplayEditTextOpacityUsage();
-    }
+    private PluginConfiguration configuration;
 
     @Command("display edit <display> text_opacity")
     @CommandPermission("displayentities.command.display.edit.text_opacity")

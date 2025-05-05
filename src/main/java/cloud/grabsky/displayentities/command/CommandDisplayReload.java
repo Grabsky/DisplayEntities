@@ -34,7 +34,6 @@ import revxrsal.commands.annotation.Dependency;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -43,10 +42,10 @@ public enum CommandDisplayReload {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability DisplayEntities plugin;
+    private DisplayEntities plugin;
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
+    private PluginConfiguration configuration;
 
     @Command("display reload")
     @CommandPermission("displayentities.command.display.reload")

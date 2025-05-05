@@ -36,6 +36,7 @@ import io.papermc.paper.math.Position;
 import org.bukkit.Color;
 import org.bukkit.Registry;
 import org.bukkit.block.BlockType;
+import org.bukkit.entity.Display;
 import org.bukkit.inventory.ItemType;
 import revxrsal.commands.Lamp;
 import revxrsal.commands.LampBuilderVisitor;
@@ -48,11 +49,14 @@ import revxrsal.commands.exception.ExpectedLiteralException;
 import revxrsal.commands.exception.InvalidBooleanException;
 import revxrsal.commands.exception.InvalidDecimalException;
 import revxrsal.commands.exception.InvalidIntegerException;
+import revxrsal.commands.exception.MissingArgumentException;
 import revxrsal.commands.exception.NoPermissionException;
 import revxrsal.commands.node.FailureHandler;
+import revxrsal.commands.node.ParameterNode;
 import revxrsal.commands.stream.StringStream;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -104,6 +108,21 @@ public final class BuilderVisitor implements LampBuilderVisitor<BukkitCommandAct
     // Anything that isn't handled here will revert to Lamp defaults.
     public final class CustomExceptionHandler extends BukkitExceptionHandler {
 
+        // Pattern responsible for finding all occurrences of <argument> and [argument] within a string.
+        private static final Pattern PATTERN = Pattern.compile("[<\\[].*?[>\\]]");
+
+        @Override
+        public void onMissingArgument(@NotNull final MissingArgumentException e, @NotNull final BukkitCommandActor actor, @NotNull final ParameterNode<BukkitCommandActor, ?> parameter) {
+            // Getting the configuration path pointing to the usage message for this command.
+            final String usagePath = PATTERN.matcher("messages.command_usages." + e.command().path()).replaceAll("").trim().replace("  ", " ").replace(" ", ".");
+            // Getting the message at specified path.
+            final String message = plugin.configuration().messages().commandUsageFormat().repl("{usage}", "<spec:" + usagePath + ">");
+            // Checking if the message is not empty. Empty messages should not be sent.
+            if (message.isEmpty() == false)
+                // Parsing and replying with the retrieved message.
+                actor.reply(plugin.miniMessage().deserialize(message));
+        }
+
         @Override
         public void onNoPermission(final @NotNull NoPermissionException e, final @NotNull BukkitCommandActor actor) {
             actor.reply(plugin.miniMessage().deserialize(plugin.configuration().messages().errorMissingPermission()));
@@ -118,6 +137,9 @@ public final class BuilderVisitor implements LampBuilderVisitor<BukkitCommandAct
         public void onEnumNotFound(final @NotNull EnumNotFoundException e, final @NotNull BukkitCommandActor actor) {
             if (e.enumType() == DisplayWrapper.Type.class)
                 actor.reply(plugin.miniMessage().deserialize(plugin.configuration().messages().errorEnumNotFoundDisplayType().repl("{input}", e.input())));
+            else if (e.enumType() == Display.Billboard.class)
+                actor.reply(plugin.miniMessage().deserialize(plugin.configuration().messages().errorEnumNotFoundBillboard().repl("{input}", e.input())));
+            else super.onEnumNotFound(e, actor);
         }
 
         @Override
@@ -180,10 +202,24 @@ public final class BuilderVisitor implements LampBuilderVisitor<BukkitCommandAct
                 failedAttempts.getFirst().handleException();
                 return;
             }
+            // Splitting the input string.
+            final String[] parts = input.source().split(" ");
             // Filtering ExpectedLiteralException to make errors a bit more accurate.
-            final var filteredExceptions = failedAttempts.stream().filter(failedAttempt -> failedAttempt instanceof ExpectedLiteralException == false).toList();
+            final var filteredExceptions = failedAttempts.stream()
+                    .filter(failedAttempt -> !(failedAttempt.error() instanceof ExpectedLiteralException))
+                    .filter(failedAttempt -> {
+                        if (failedAttempt.error() instanceof DisplayWrapperParameterType.Exception) {
+                            // Keeping the DisplayWrapperParameterType.Exception only for these patterns:
+                            //   display edit (display), display delete (display), display respawn (display)
+                            return (parts.length == 3 && parts[0].equalsIgnoreCase("display") == true)
+                                    && (parts[1].equalsIgnoreCase("edit") == true || parts[1].equalsIgnoreCase("respawn") == true || parts[1].equalsIgnoreCase("delete") == true);
+                        }
+                        // Otherwise, filtering it out.
+                        return true;
+                    })
+                    .toList();
             // Replying with generic error for all non-existent commands.
-            if (filteredExceptions.isEmpty() == true)
+            if (filteredExceptions.isEmpty() == true || (parts.length == 2 && parts[1].equalsIgnoreCase("edit") == true) == true)
                 actor.reply(plugin.miniMessage().deserialize(plugin.configuration().messages().errorInvalidCommand()));
             // Otherwise, letting exception handler do it's thing.
             else filteredExceptions.getFirst().handleException();

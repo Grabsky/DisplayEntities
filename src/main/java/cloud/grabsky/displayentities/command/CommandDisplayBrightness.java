@@ -44,7 +44,6 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -55,16 +54,7 @@ public enum CommandDisplayBrightness {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
-
-    @Command("display edit <display> brightness")
-    @CommandPermission("displayentities.command.display.edit.brightness")
-    public String onDefault(
-            final @NotNull Player sender,
-            final @NotNull DisplayWrapper display
-    ) {
-        return configuration.messages().commandDisplayEditBrightnessUsage();
-    }
+    private PluginConfiguration configuration;
 
     @Command("display edit <display> brightness block")
     @CommandPermission("displayentities.command.display.edit.brightness")

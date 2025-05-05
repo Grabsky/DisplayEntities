@@ -35,7 +35,6 @@ import revxrsal.commands.annotation.Dependency;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -44,16 +43,7 @@ public enum CommandDisplayAlignment {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
-
-    @Command("display edit <display> alignment")
-    @CommandPermission("displayentities.command.display.edit.alignment")
-    public String onDefault(
-            final @NotNull Player sender,
-            final @NotNull DisplayWrapper.Text display
-    ) {
-        return configuration.messages().commandDisplayEditAlignmentUsage();
-    }
+    private PluginConfiguration configuration;
 
     @Command("display edit <display> alignment")
     @CommandPermission("displayentities.command.display.edit.alignment")

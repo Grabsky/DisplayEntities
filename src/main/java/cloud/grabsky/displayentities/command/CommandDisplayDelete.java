@@ -34,7 +34,6 @@ import revxrsal.commands.annotation.Dependency;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -43,13 +42,7 @@ public enum CommandDisplayDelete {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
-
-    @Command("display delete")
-    @CommandPermission("displayentities.command.display.delete")
-    public @NotNull String onDefault(final Player sender) {
-        return configuration.messages().commandDisplayDeleteUsage();
-    }
+    private PluginConfiguration configuration;
 
     @Command("display delete")
     @CommandPermission("displayentities.command.display.delete")

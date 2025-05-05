@@ -37,7 +37,6 @@ import revxrsal.commands.annotation.Dependency;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -46,16 +45,10 @@ public enum CommandDisplayRespawn {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability DisplayEntities plugin;
+    private DisplayEntities plugin;
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
-
-    @Command("display respawn")
-    @CommandPermission("displayentities.command.display.respawn")
-    public @NotNull String onDefault(final Player sender) {
-        return configuration.messages().commandDisplayRespawnUsage();
-    }
+    private PluginConfiguration configuration;
 
     @Command("display respawn")
     @CommandPermission("displayentities.command.display.respawn")

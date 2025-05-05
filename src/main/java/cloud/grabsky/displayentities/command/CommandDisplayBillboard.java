@@ -31,11 +31,11 @@ import cloud.grabsky.displayentities.util.LombokExtensions;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.CommandPriority;
 import revxrsal.commands.annotation.Dependency;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnknownNullability;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -44,18 +44,9 @@ public enum CommandDisplayBillboard {
     INSTANCE; // SINGLETON
 
     @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
+    private PluginConfiguration configuration;
 
-    @Command("display edit <display> billboard")
-    @CommandPermission("displayentities.command.display.edit.billboard")
-    public String onDefault(
-            final @NotNull Player sender,
-            final @NotNull DisplayWrapper display
-    ) {
-        return configuration.messages().commandDisplayEditBillboardUsage();
-    }
-
-
+    @CommandPriority(0)
     @Command("display edit <display> billboard")
     @CommandPermission("displayentities.command.display.edit.billboard")
     public String onDisplayBillboard(

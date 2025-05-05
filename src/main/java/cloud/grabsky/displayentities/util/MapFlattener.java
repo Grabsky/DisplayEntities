@@ -23,36 +23,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package cloud.grabsky.displayentities.command;
+package cloud.grabsky.displayentities.util;
 
-import cloud.grabsky.displayentities.DisplayWrapper;
-import cloud.grabsky.displayentities.configuration.PluginConfiguration;
-import cloud.grabsky.displayentities.util.LombokExtensions;
-import org.bukkit.command.CommandSender;
-import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.Dependency;
-import revxrsal.commands.annotation.Optional;
-import revxrsal.commands.bukkit.annotation.CommandPermission;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnknownNullability;
 
-import lombok.experimental.ExtensionMethod;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-@ExtensionMethod(LombokExtensions.class)
-public enum CommandDisplayEdit {
-    INSTANCE; // SINGLETON
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class MapFlattener {
 
-    @Dependency
-    private @UnknownNullability PluginConfiguration configuration;
+    /**
+     * Flattens a nested map structure into a single-level map.
+     * Nested keys are combined using a dot notation to represent their hierarchy.
+     */
+    public static Map<String, Object> flatten(final @NotNull Map<String, Object> map) {
+        final Map<String, Object> flatMap = new HashMap<>();
+        flattenRecursive("", map, flatMap);
+        return flatMap;
+    }
 
-    @Command("display edit")
-    @CommandPermission("displayentities.command.display.edit")
-    public String onDefault(
-            final @NotNull CommandSender sender,
-            final @NotNull @Optional DisplayWrapper display
-    ) {
-        return configuration.messages().commandDisplayEditUsage();
+    @SuppressWarnings("unchecked")
+    private static void flattenRecursive(final @NotNull String prefix, final @NotNull Map<String, Object> map, final @NotNull Map<String, Object> flatMap) {
+        map.forEach((key, value) -> {
+            key = (prefix.isEmpty() == false) ? prefix + "." + key : key;
+            // Forwarding to the flattener if the value is a map.
+            if (value instanceof Map<?, ?>)
+                flattenRecursive(key, (Map<String, Object>) value, flatMap);
+            // Otherwise, putting the flattened value in the map.
+            else flatMap.put(key, value);
+        });
     }
 
 }
