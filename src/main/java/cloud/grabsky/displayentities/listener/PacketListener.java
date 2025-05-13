@@ -75,9 +75,9 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
 
     @Override @SuppressWarnings("unchecked")
     public void onPacketSend(final @NotNull PacketSendEvent event) {
-        if (event.getPacketType() == PacketType.Play.Server.SPAWN_ENTITY) {
+        if (event.getPacketType() == PacketType.Play.Server.SPAWN_ENTITY && event.getPlayer() instanceof Player player) {
             // Getting the the entity from it's int id. Can be null.
-            final @Nullable Entity entity = SpigotConversionUtil.getEntityById(((Player) event.getPlayer()).getWorld(), new WrapperPlayServerSpawnEntity(event).getEntityId());
+            final @Nullable Entity entity = SpigotConversionUtil.getEntityById(player.getWorld(), new WrapperPlayServerSpawnEntity(event).getEntityId());
             // Checking if entity with this id exists on the server and is a text display entity.
             if (entity instanceof TextDisplay && entity.getPersistentDataContainer().has(DisplayEntities.Keys.NAME) == true) {
                 final int entityId = entity.getEntityId();
@@ -133,10 +133,10 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
                 }
             }
         }
-        else if (event.getPacketType() == PacketType.Play.Server.ENTITY_METADATA) {
+        else if (event.getPacketType() == PacketType.Play.Server.ENTITY_METADATA && event.getPlayer() instanceof Player player) {
             final var packet = new WrapperPlayServerEntityMetadata(event);
             // Getting the the entity from it's int id. Can be null.
-            final @Nullable Entity entity = SpigotConversionUtil.getEntityById(((Player) event.getPlayer()).getWorld(), packet.getEntityId());
+            final @Nullable Entity entity = SpigotConversionUtil.getEntityById(player.getWorld(), packet.getEntityId());
             // Checking if entity with this id exists on the server and is a text display entity.
             if (entity instanceof TextDisplay) {
                 // Getting the text contents stored inside PDC.
@@ -147,7 +147,7 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
                     for (final EntityData<?> data : packet.getEntityMetadata()) {
                         if (data.getType() == EntityDataTypes.ADV_COMPONENT)
                             // Overriding with parsed component.
-                            ((EntityData<Component>) data).setValue(MiniMessage.miniMessage().deserialize(PlaceholderAPI.setPlaceholders(event.getPlayer(), text)));
+                            ((EntityData<Component>) data).setValue(MiniMessage.miniMessage().deserialize(PlaceholderAPI.setPlaceholders(player, text)));
                     }
                 }
             }
