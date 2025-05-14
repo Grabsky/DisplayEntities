@@ -47,7 +47,7 @@ public enum CommandDisplayCreate {
     @Dependency
     private PluginConfiguration configuration;
 
-    private static final Pattern NAME_FORMAT = Pattern.compile("^[a-zA-Z0-9_/:.-]{1,32}$");
+    private static final Pattern NAME_FORMAT = Pattern.compile("^[a-zA-Z0-9_/:.-]{1,48}$");
 
     @Command("display create")
     @CommandPermission("displayentities.command.display.create")
