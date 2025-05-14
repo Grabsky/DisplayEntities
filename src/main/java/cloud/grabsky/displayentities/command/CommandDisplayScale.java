@@ -28,17 +28,19 @@ package cloud.grabsky.displayentities.command;
 import cloud.grabsky.displayentities.DisplayWrapper;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.util.LombokExtensions;
-import io.papermc.paper.math.Position;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Transformation;
 import org.joml.Vector3f;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
+import revxrsal.commands.annotation.ParseWith;
 import revxrsal.commands.annotation.SuggestWith;
 import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 import revxrsal.commands.node.ExecutionContext;
+import revxrsal.commands.parameter.ParameterType;
+import revxrsal.commands.stream.MutableStringStream;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -50,7 +52,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.experimental.ExtensionMethod;
 
-@SuppressWarnings("UnstableApiUsage") // Position
 @ExtensionMethod(LombokExtensions.class)
 public enum CommandDisplayScale {
     INSTANCE; // SINGLETON
@@ -63,8 +64,7 @@ public enum CommandDisplayScale {
     public String onDisplayScale(
             final @NotNull Player sender,
             final @NotNull DisplayWrapper display,
-            // Not really a Position, but it can be easily re-used for this.
-            final @NotNull @SuggestWith(ScaleSuggestionProvider.class) Position scale
+            final @NotNull @ParseWith(ScaleParameterType.class) @SuggestWith(ScaleParameterType.class) Vector3f scale
     ) {
         // Getting current transformation of the display.
         final Transformation transformation = display.entity().getTransformation();
@@ -72,19 +72,39 @@ public enum CommandDisplayScale {
         final Transformation modifiedTransformation = new Transformation(
                 transformation.getTranslation(),
                 transformation.getLeftRotation(),
-                new Vector3f((float) scale.x(), (float) scale.y(), (float) scale.z()),
+                scale,
                 transformation.getRightRotation()
         );
         // Updating entity with new transformation.
         display.entity().setTransformation(modifiedTransformation);
         // Sending success message to the sender.
-        return configuration.messages().commandDisplayEditScaleSuccess().repl("{x}", scale.x()).repl("{y}", scale.y()).repl("{z}", scale.z());
+        return configuration.messages().commandDisplayEditScaleSuccess().repl("{x}", scale.x).repl("{y}", scale.y).repl("{z}", scale.z);
     }
 
-    /* SUGGESTION PROVIDERS */
+    /* PARAMETER PARSER */
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static class ScaleSuggestionProvider implements SuggestionProvider<BukkitCommandActor> {
+    public static class ScaleParameterType implements ParameterType<BukkitCommandActor, Vector3f>, SuggestionProvider<BukkitCommandActor> {
+
+        @Override
+        public Vector3f parse(final @NotNull MutableStringStream input, final @NotNull ExecutionContext<BukkitCommandActor> context) {
+            // Getting the DisplayWrapper argument.
+            final @Nullable DisplayWrapper wrapper = context.getResolvedArgumentOrNull(DisplayWrapper.class);
+            if (wrapper == null)
+                return null;
+            // Getting the scale around X axis. Consuming next space if exists.
+            final float x = (input.hasRemaining() == true) ? input.readFloat() : wrapper.entity().getTransformation().getScale().x;
+            if (input.hasRemaining() == true && input.peek() == ' ')
+                input.moveForward();
+            // Getting the scale around Y axis. Consuming next space if exists.
+            final float y = (input.hasRemaining() == true) ? input.readFloat() : wrapper.entity().getTransformation().getScale().y;
+            if (input.hasRemaining() == true && input.peek() == ' ')
+                input.moveForward();
+            // Getting the scale around Z axis.
+            final float z = (input.hasRemaining() == true) ? input.readFloat() : wrapper.entity().getTransformation().getScale().z;
+            // Returning the value.
+            return new Vector3f(x, y, z);
+        }
 
         @Override
         public @NotNull Collection<String> getSuggestions(@NotNull final ExecutionContext<BukkitCommandActor> context) {
