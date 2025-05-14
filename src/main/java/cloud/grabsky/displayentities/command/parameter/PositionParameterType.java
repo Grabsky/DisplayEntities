@@ -29,6 +29,7 @@ import io.papermc.paper.math.Position;
 import revxrsal.commands.autocomplete.SuggestionProvider;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 import revxrsal.commands.exception.InvalidValueException;
+import revxrsal.commands.exception.MissingArgumentException;
 import revxrsal.commands.node.ExecutionContext;
 import revxrsal.commands.parameter.ParameterType;
 import revxrsal.commands.stream.MutableStringStream;
@@ -64,7 +65,7 @@ public enum PositionParameterType implements ParameterType<BukkitCommandActor, P
     }
 
     private static void consumeSpace(final @NotNull MutableStringStream input) {
-        if (input.peek() == ' ')
+        if (input.hasRemaining() == true && input.peek() == ' ')
             input.moveForward();
     }
 
