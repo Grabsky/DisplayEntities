@@ -61,18 +61,6 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
     // Stores entities that have an active task.
     private final Set<Integer> hasActiveTask = ConcurrentHashMap.newKeySet();
 
-    // Stores information of whether the server is Folia or not.
-    private static boolean IS_FOLIA;
-
-    static {
-        try {
-            Class.forName("io.papermc.paper.threadedregions.ThreadedRegionizer");
-            IS_FOLIA = true;
-        } catch (final ClassNotFoundException e) {
-            IS_FOLIA = false;
-        }
-    }
-
     @Override @SuppressWarnings("unchecked")
     public void onPacketSend(final @NotNull PacketSendEvent event) {
         if (event.getPacketType() == PacketType.Play.Server.SPAWN_ENTITY && event.getPlayer() instanceof Player player) {
@@ -156,7 +144,7 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
 
     private void runWrapped(final @NotNull Entity entity, final @NotNull Runnable runnable) {
         // Executing runnable on EntityScheduler when server is using Folia.
-        if (IS_FOLIA == true)
+        if (DisplayEntities.isFolia() == true)
             entity.getScheduler().run(plugin, (it) -> runnable.run(), null);
         // Otherwise, runnable is executed on the current thread.
         else runnable.run();
@@ -164,7 +152,7 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
 
     private void runWrappedAsync(final @NotNull Entity entity, final @NotNull Runnable runnable) {
         // Executing runnable on EntityScheduler when server is using Folia.
-        if (IS_FOLIA == true)
+        if (DisplayEntities.isFolia() == true)
             entity.getScheduler().run(plugin, (it) -> runnable.run(), null);
         // Otherwise, runnable is executed on async scheduler.
         else plugin.getServer().getAsyncScheduler().runNow(plugin, (it) -> runnable.run());

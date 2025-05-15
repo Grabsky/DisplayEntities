@@ -50,6 +50,7 @@ import cloud.grabsky.displayentities.command.CommandDisplayViewRange;
 import cloud.grabsky.displayentities.command.visitor.BuilderVisitor;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.listener.PacketListener;
+import cloud.grabsky.displayentities.listener.ResourcePackListener;
 import cloud.grabsky.displayentities.util.LombokExtensions;
 import cloud.grabsky.displayentities.util.MapFlattener;
 import com.github.retrooper.packetevents.PacketEvents;
@@ -123,6 +124,18 @@ public final class DisplayEntities extends JavaPlugin {
     @Setter(value = AccessLevel.PUBLIC, onMethod_ = @Internal)
     private boolean isDebugEnabled = false;
 
+    @Getter(AccessLevel.PUBLIC)
+    private static boolean isFolia;
+
+    static {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.ThreadedRegionizer");
+            isFolia = true;
+        } catch (final ClassNotFoundException e) {
+            isFolia = false;
+        }
+    }
+
     private static final ThreadLocal<Yaml> YAML = ThreadLocal.withInitial(() -> {
         final DumperOptions options = new DumperOptions();
         options.setSplitLines(false);
@@ -168,6 +181,8 @@ public final class DisplayEntities extends JavaPlugin {
                 .build();
         // Registering plugin commands.
         this.registerCommands(this.lamp);
+        // Registering event listeners.
+        this.getServer().getPluginManager().registerEvents(new ResourcePackListener(this), this);
         // Connecting to bStats.
         new Metrics(this, 25686);
     }
