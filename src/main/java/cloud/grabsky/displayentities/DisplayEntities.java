@@ -255,9 +255,11 @@ public final class DisplayEntities extends JavaPlugin {
                 .editTags(it -> it.tag("spec", (queue, context) -> {
                     if (flattened.isEmpty() == false && queue.hasNext() == true) {
                         final String key = queue.pop().value();
-                        if (flattened.containsKey(key) == true)
+                        if (flattened.containsKey(key) == true) {
                             // NOTE: This can possibly lead to infinite recursion if tag points the path of processed key.
                             return Tag.preProcessParsed((String) flattened.get(key));
+                        }
+                        return Tag.preProcessParsed("<red>Key '" + key + "' is missing from the the configuration file. Reset the file or manually add missing key.");
                     }
                     return null;
                 }))
