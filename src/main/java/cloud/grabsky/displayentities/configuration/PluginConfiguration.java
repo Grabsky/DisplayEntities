@@ -379,7 +379,6 @@ public interface PluginConfiguration {
         }
 
         @Order(39) @Key("command.display.edit.remove_line.success")
-        @Comment("Display > Edit > Remove Line")
         default String commandDisplayEditRemoveLineSuccess() {
             return "<dark_gray>› <gray>Line <primary>{number} <gray>has been removed from the display.";
         }
