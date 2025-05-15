@@ -31,7 +31,6 @@ import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.util.LombokExtensions;
 import org.bukkit.Location;
 import org.bukkit.entity.Display;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
@@ -44,7 +43,7 @@ import org.jetbrains.annotations.NotNull;
 import lombok.experimental.ExtensionMethod;
 
 @ExtensionMethod(LombokExtensions.class)
-public enum CommandDisplayCopy {
+public enum CommandDisplayClone {
     INSTANCE; // SINGLETON
 
     @Dependency
@@ -55,26 +54,26 @@ public enum CommandDisplayCopy {
 
     private static final Pattern NAME_FORMAT = Pattern.compile("^[a-zA-Z0-9_/:.-]{1,48}$");
 
-    @Command("display copy")
-    @CommandPermission("displayentities.command.display.copy")
-    public String onDisplayCopy(
+    @Command("display clone")
+    @CommandPermission("displayentities.command.display.clone")
+    public String onDisplayClone(
             final @NotNull Player sender,
             final @NotNull DisplayWrapper display,
             final @NotNull String name
     ) {
         // Sending error message if specified name does not does not match the format.
         if (NAME_FORMAT.matcher(name).matches() == false)
-            return configuration.messages().commandDisplayCopyFailureInvalidFormat();
-        // Copying the display entity.
-        final Display copy = (Display) display.entity().copy();
+            return configuration.messages().commandDisplayCloneFailureInvalidFormat();
+        // Cloning the display entity.
+        final Display clone = (Display) display.entity().copy();
         // Creating location for entity to be spawned at. This is sender's location but with yaw and pitch kept from the original entity.
-        final Location location = sender.getLocation().withYaw(copy.getYaw()).withPitch(copy.getPitch());
-        // Spawning a copy of display entity.
-        sender.getScheduler().run(plugin, (it) -> copy.spawnAt(location), null);
+        final Location location = sender.getLocation().withYaw(clone.getYaw()).withPitch(clone.getPitch());
+        // Spawning a clone of display entity.
+        sender.getScheduler().run(plugin, (it) -> clone.spawnAt(location), null);
         // Creating a DisplayWrapper instance for the copied entity. This method should override the ID stored in PDC.
-        DisplayWrapper.create(copy, name);
+        DisplayWrapper.create(clone, name);
         // Returning (sending) message to the sender.
-        return configuration.messages().commandDisplayCopySuccess().repl("{original_name}", display.name(), "{copied_name}", name);
+        return configuration.messages().commandDisplayCloneSuccess().repl("{original_name}", display.name(), "{copied_name}", name);
     }
 
 }

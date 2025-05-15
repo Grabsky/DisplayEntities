@@ -158,7 +158,7 @@ public interface PluginConfiguration {
         default LinkedHashMap<String, String> commandUsages() {
             return new LinkedHashMap<>() {{
                 put("display.help",                  "<primary>/display help <secondary>[page]");
-                put("display.copy",                  "<primary>/display copy <secondary>(display) (name)");
+                put("display.clone",                 "<primary>/display clone <secondary>(display) (name)");
                 put("display.create",                "<primary>/display create <secondary>(type) (name)");
                 put("display.delete",                "<primary>/display delete <secondary>(name)");
                 put("display.respawn",               "<primary>/display respawn <secondary>(display)");
@@ -202,7 +202,7 @@ public interface PluginConfiguration {
             return List.of(
                     "<dark_gray>› <primary>/display reload<dark_gray> - <gray>Shows list of available commands.",
                     "<dark_gray>› <spec:messages.command_usages.display.help><dark_gray> - <gray>Shows list of available commands.",
-                    "<dark_gray>› <spec:messages.command_usages.display.copy><dark_gray> - <gray>Copies specified display.",
+                    "<dark_gray>› <spec:messages.command_usages.display.clone><dark_gray> - <gray>Copies specified display.",
                     "<dark_gray>› <spec:messages.command_usages.display.create><dark_gray> - <gray>Creates a new display.",
                     "<dark_gray>› <spec:messages.command_usages.display.delete><dark_gray> - <gray>Deletes specified display.",
                     "<dark_gray>› <spec:messages.command_usages.display.respawn><dark_gray> - <gray>Respawns specified display.",
@@ -257,16 +257,16 @@ public interface PluginConfiguration {
             return "<dark_gray>› <gray>Display <primary>{name} <gray>has been respawned.";
         }
 
-        // Display > Copy
+        // Display > Clone
 
-        @Order(22) @Key("command.display.copy.success")
-        @Comment("Display > Copy")
-        default String commandDisplayCopySuccess() {
-            return "<dark_gray>› <gray>Display <primary>{original_name}<gray> duplicated as <primary>{copied_name}<gray>.";
+        @Order(22) @Key("command.display.clone.success")
+        @Comment("Display > Clone")
+        default String commandDisplayCloneSuccess() {
+            return "<dark_gray>› <gray>Display <primary>{original_name}<gray> cloned as <primary>{copied_name}<gray>.";
         }
 
-        @Order(23) @Key("command.display.copy.failure.invalid_format")
-        default String commandDisplayCopyFailureInvalidFormat() {
+        @Order(23) @Key("command.display.clone.failure.invalid_format")
+        default String commandDisplayCloneFailureInvalidFormat() {
             return "<dark_gray>› <red>Specified name does not match format: [<yellow>0-9 A-Z / . - _<red>]";
         }
 

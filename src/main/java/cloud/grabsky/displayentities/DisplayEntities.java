@@ -31,7 +31,7 @@ import cloud.grabsky.displayentities.command.CommandDisplayBackground;
 import cloud.grabsky.displayentities.command.CommandDisplayBillboard;
 import cloud.grabsky.displayentities.command.CommandDisplayBlock;
 import cloud.grabsky.displayentities.command.CommandDisplayBrightness;
-import cloud.grabsky.displayentities.command.CommandDisplayCopy;
+import cloud.grabsky.displayentities.command.CommandDisplayClone;
 import cloud.grabsky.displayentities.command.CommandDisplayCreate;
 import cloud.grabsky.displayentities.command.CommandDisplayDelete;
 import cloud.grabsky.displayentities.command.CommandDisplayHelp;
@@ -187,7 +187,7 @@ public final class DisplayEntities extends JavaPlugin {
     private void registerCommands(final @NotNull Lamp<BukkitCommandActor> lamp) {
         // Management
         lamp.register(CommandDisplayHelp.INSTANCE);
-        lamp.register(CommandDisplayCopy.INSTANCE);
+        lamp.register(CommandDisplayClone.INSTANCE);
         lamp.register(CommandDisplayCreate.INSTANCE);
         lamp.register(CommandDisplayDelete.INSTANCE);
         lamp.register(CommandDisplayReload.INSTANCE);
