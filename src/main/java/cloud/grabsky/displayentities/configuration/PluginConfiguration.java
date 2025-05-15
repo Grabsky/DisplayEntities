@@ -158,6 +158,7 @@ public interface PluginConfiguration {
         default LinkedHashMap<String, String> commandUsages() {
             return new LinkedHashMap<>() {{
                 put("display.help",                  "<primary>/display help <secondary>[page]");
+                put("display.copy",                  "<primary>/display copy <secondary>(display) (name)");
                 put("display.create",                "<primary>/display create <secondary>(type) (name)");
                 put("display.delete",                "<primary>/display delete <secondary>(name)");
                 put("display.respawn",               "<primary>/display respawn <secondary>(display)");
@@ -170,6 +171,7 @@ public interface PluginConfiguration {
                 put("display.edit.add_line",         "<text_primary>/display edit <text_secondary>(display) <text_primary>add_line <text_secondary>(text)");
                 put("display.edit.remove_line",      "<text_primary>/display edit <text_secondary>(display) <text_primary>remove_line <text_secondary>(line)");
                 put("display.edit.set_line",         "<text_primary>/display edit <text_secondary>(display) <text_primary>set_line <text_secondary>(line) (text)");
+                put("display.edit.insert_line",      "<text_primary>/display edit <text_secondary>(display) <text_primary>insert_line <text_secondary>(line) (text)");
                 put("display.edit.refresh_interval", "<text_primary>/display edit <text_secondary>(display) <text_primary>refresh_interval <text_secondary>(ticks)");
                 put("display.edit.alignment",        "<text_primary>/display edit <text_secondary>(display) <text_primary>alignment <text_secondary>(alignment)");
                 put("display.edit.background",       "<text_primary>/display edit <text_secondary>(display) <text_primary>background <text_secondary>(color) [opacity]");
@@ -200,6 +202,7 @@ public interface PluginConfiguration {
             return List.of(
                     "<dark_gray>› <primary>/display reload<dark_gray> - <gray>Shows list of available commands.",
                     "<dark_gray>› <spec:messages.command_usages.display.help><dark_gray> - <gray>Shows list of available commands.",
+                    "<dark_gray>› <spec:messages.command_usages.display.copy><dark_gray> - <gray>Copies specified display.",
                     "<dark_gray>› <spec:messages.command_usages.display.create><dark_gray> - <gray>Creates a new display.",
                     "<dark_gray>› <spec:messages.command_usages.display.delete><dark_gray> - <gray>Deletes specified display.",
                     "<dark_gray>› <spec:messages.command_usages.display.respawn><dark_gray> - <gray>Respawns specified display.",
@@ -212,6 +215,7 @@ public interface PluginConfiguration {
                     "<dark_gray>› <spec:messages.command_usages.display.edit.add_line>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.remove_line>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.set_line>",
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.insert_line>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.refresh_interval>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.alignment>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.background>",
@@ -353,15 +357,28 @@ public interface PluginConfiguration {
             return "<dark_gray>› <gray>Line <primary>{number} <gray>has been added to the display.";
         }
 
+        // Display > Edit > Insert Line
+
+        @Order(36) @Key("command.display.edit.insert_line.failure.out_of_bounds")
+        default String commandDisplayEditInsertLineFailureOutOfBounds() {
+            return "<dark_gray>› <red>Line <yellow>{number} <red>is out of bounds. (Max: {max})";
+        }
+
+        @Order(37) @Key("command.display.edit.insert_line.success")
+        @Comment("Display > Edit > Insert Line")
+        default String commandDisplayEditInsertLineSuccess() {
+            return "<dark_gray>› <gray>Line <primary>{number} <gray>has been added to the display. Remaining entries were shifted downwards.";
+        }
+
         // Display > Edit > Remove Line
 
-        @Order(36) @Key("command.display.edit.remove_line.failure.out_of_bounds")
+        @Order(38) @Key("command.display.edit.remove_line.failure.out_of_bounds")
         @Comment("Display > Edit > Remove Line")
         default String commandDisplayEditRemoveLineFailureOutOfBounds() {
             return "<dark_gray>› <red>Line <yellow>{number} <red>is out of bounds. (Max: {max})";
         }
 
-        @Order(37) @Key("command.display.edit.remove_line.success")
+        @Order(39) @Key("command.display.edit.remove_line.success")
         @Comment("Display > Edit > Remove Line")
         default String commandDisplayEditRemoveLineSuccess() {
             return "<dark_gray>› <gray>Line <primary>{number} <gray>has been removed from the display.";
@@ -369,20 +386,20 @@ public interface PluginConfiguration {
 
         // Display > Edit > Set Line
 
-        @Order(38) @Key("command.display.edit.set_line.success")
+        @Order(40) @Key("command.display.edit.set_line.success")
         @Comment("Display > Edit > Set Line")
         default String commandDisplayEditSetLineSuccess() {
             return "<dark_gray>› <gray>Line <primary>{number} <gray>has been modified.";
         }
 
-        @Order(39) @Key("command.display.edit.set_line.failure.out_of_bounds")
+        @Order(41) @Key("command.display.edit.set_line.failure.out_of_bounds")
         default String commandDisplayEditSetLineFailureOutOfBounds() {
             return "<dark_gray>› <red>Line <yellow>{number} <red>is out of bounds. (Max: {max})";
         }
 
         // Display > Edit > See Through
 
-        @Order(40) @Key("command.display.edit.see_through.success")
+        @Order(42) @Key("command.display.edit.see_through.success")
         @Comment("Display > Edit > See Through")
         default String commandDisplayEditSeeThroughSuccess() {
             return "<dark_gray>› <gray>Display see through has been set to <primary>{state}<gray>.";
@@ -390,7 +407,7 @@ public interface PluginConfiguration {
 
         // Display > Edit > Text Shadow
 
-        @Order(41) @Key("command.display.edit.text_shadow.success")
+        @Order(43) @Key("command.display.edit.text_shadow.success")
         @Comment("Display > Edit > Text Shadow")
         default String commandDisplayEditTextShadowSuccess() {
             return "<dark_gray>› <gray>Display text shadow has been set to <primary>{state}<gray>.";
@@ -398,7 +415,7 @@ public interface PluginConfiguration {
 
         // Display > Edit > Text Opacity
 
-        @Order(42) @Key("command.display.edit.text_opacity.success")
+        @Order(44) @Key("command.display.edit.text_opacity.success")
         @Comment("Display > Edit > Text Opacity")
         default String commandDisplayEditTextOpacitySuccess() {
             return "<dark_gray>› <gray>Display text opacity has been set to <primary>{opacity}<gray>.";
@@ -406,7 +423,7 @@ public interface PluginConfiguration {
 
         // Display > Edit > Move To
 
-        @Order(43) @Key("command.display.edit.move_to.success")
+        @Order(45) @Key("command.display.edit.move_to.success")
         @Comment("Display > Edit > Move To")
         default String commandDisplayEditMoveToSuccess() {
             return "<dark_gray>› <gray>Display has been moved to <primary>{x}<gray>, <primary>{y}<gray>, <primary>{z}<gray>.";
@@ -414,7 +431,7 @@ public interface PluginConfiguration {
 
         // Display > Edit > Brightness
 
-        @Order(44) @Key("command.display.edit.brightness.success")
+        @Order(46) @Key("command.display.edit.brightness.success")
         @Comment("Display > Edit > Brightness")
         default String commandDisplayEditBrightnessSuccess() {
             return "<dark_gray>› <gray>Display brightness has been modified. (B: <primary>{brightness_block}<gray>, S: <primary>{brightness_sky}<gray>)";
@@ -422,7 +439,7 @@ public interface PluginConfiguration {
 
         // Display > Edit > Line Width
 
-        @Order(45) @Key("command.display.edit.line_width.success")
+        @Order(47) @Key("command.display.edit.line_width.success")
         @Comment("Display > Edit > Line Width")
         default String commandDisplayEditLineWidthSuccess() {
             return "<dark_gray>› <gray>Display line width has been set to <primary>{width}<gray>.";
@@ -430,13 +447,13 @@ public interface PluginConfiguration {
 
         // Display > Edit > Refresh Interval
 
-        @Order(46) @Key("command.display.edit.refresh_interval.success")
+        @Order(48) @Key("command.display.edit.refresh_interval.success")
         @Comment("Display > Edit > Refresh Interval")
         default String commandDisplayEditRefreshIntervalSuccess() {
             return "<dark_gray>› <gray>Display refresh interval has been set to <primary>{ticks}<gray> ticks. It's not an immediate operation and may require respawning the entity.";
         }
 
-        @Order(47) @Key("command.display.edit.refresh_interval.failure")
+        @Order(49) @Key("command.display.edit.refresh_interval.failure")
         default String commandDisplayEditRefreshIntervalFailure() {
             return "<dark_gray>› <red>Refresh interval must be either <yellow>default<red> or a positive integer value.";
         }

@@ -141,6 +141,32 @@ public enum CommandDisplayTextManipulation {
         return configuration.messages().commandDisplayEditSetLineSuccess().repl("{number}", number);
     }
 
+    @Command("display edit <display> insert_line")
+    @CommandPermission("displayentities.command.display.edit.insert_line")
+    public String onDisplayInsertLine(
+            final @NotNull Player sender,
+            final @NotNull DisplayWrapper.Text display,
+            final @NotNull @SuggestWith(LineNumberSuggestionProvider.class) Integer number,
+            final @NotNull String text
+    ) {
+        // Getting text contents stored inside PDC of the entity.
+        final List<String> contents = getTextContents(display);
+        // Sending error message if user specified index that is out of bounds for the element list.
+        if (inRange(number, 1, contents.size()) == false)
+            return configuration.messages().commandDisplayEditInsertLineFailureOutOfBounds().repl("{number}", number).repl("{max}", contents.size());
+        // Setting element at specified index to the provided text.
+        if (contents.isEmpty() == true)
+            contents.add(text);
+        else contents.add(number - 1, text);
+        // Joining contents to a single string with elements separated using '<newline>' delimiter.
+        final String contentsJoined = String.join("<newline>", contents);
+        // Updating contents stored in the PDC.
+        display.set(DisplayEntities.Keys.TEXT_CONTENTS, PersistentDataType.STRING, contentsJoined);
+        // Updating contents on the entity.
+        display.as(DisplayWrapper.Text.class).entity().setRichText(contentsJoined);
+        // Sending success message to the sender.
+        return configuration.messages().commandDisplayEditInsertLineSuccess().repl("{number}", number);
+    }
 
     /* HELPER METHODS */
 
