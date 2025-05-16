@@ -17,6 +17,136 @@ To make the plugin a bit more useful, I added **MiniMessage** parsing and packet
 
 Use with [**Axiom**](https://modrinth.com/mod/axiom) and [**AxiomPaperPlugin**](https://modrinth.com/plugin/axiom-paper-plugin) to make the overall experience **even better**!
 
+<br/>
+
+<details>
+  <summary><strong>(Click here to expand list of available commands)</strong></summary>
+
+```yml
+# () - Required Argument, [] - Optional Argument
+
+=== Management ===
+
+# Shows list of available commands.
+Command: /display help [page]
+Permission: displayentities.command.display.help
+
+# Clones specified display.
+Command: /display clone (display) (name)
+Permission: displayentities.command.display.clone
+
+# Creates a new display of specified type.
+Command: /display create (type) (name)
+Permission: displayentities.command.display.create
+
+# Permanently deletes specified display.
+Command: /display delete (type) (name)
+Permission: displayentities.command.display.delete
+
+# Respawns specified display for all viewers.
+# Use it after adding placeholders or modifying placeholder refresh interval.
+Command: /display respawn (type) (name)
+Permission: displayentities.command.display.respawn
+
+=== Editing (Common) ===
+
+# Modifies scale of specified display.
+Command: /display edit (display) scale (x) (y) (z)
+Permission: displayentities.command.display.edit.scale
+
+# Modifies view range of specified display.
+# Range must be between 0.0 and 1.0 as this is how it is scaled internally.
+Command: /display edit (display) view_range (range)
+Permission: displayentities.command.display.edit.view_range
+
+# Moves entity to specified coordinates.
+# Character ~ can be used and is replaced with sender's current coordinate.
+Command: /display edit (display) move_to (x) (y) (Z)
+Permission: displayentities.command.display.edit.move_to
+
+# Modifies billboard of specified display.
+# Billboard can be fixed, center, horizontal or vertical.
+Command: /display edit (display) billboard (billboard)
+Permission: displayentities.command.display.edit.billboard
+
+# Modifies brightness of specified display.
+# Brightness is an integer between 0 and 15.
+Command: /display edit (display) brightness (block | sky) (brightness)
+Permission: displayentities.command.display.edit.brightness
+
+=== Editing (Text) ===
+
+# Adds new line to text contents of specified text display.
+# Supports MiniMessage formatting and PlaceholderAPI.
+Command: /display edit (display) add_line (text)
+Permission: displayentities.command.display.edit.add_line
+
+# Removes specified line, from specified text display.
+Command: /display edit (display) remove_line (line)
+Permission: displayentities.command.display.edit.remove_line
+
+# Sets contents of specified line, to specified text.
+# Supports MiniMessage formatting and PlaceholderAPI.
+Command: /display edit (display) set_line (line) (text)
+Permission: displayentities.command.display.edit.set_line
+
+# Inserts new line before the specified line number.
+# Supports MiniMessage formatting and PlaceholderAPI.
+Command: /display edit (display) insert_line (line) (text)
+Permission: displayentities.command.display.edit.insert_line
+
+# Modifies ticks interval at which this text display will be refreshed to all viewers.
+# Interval can be number of ticks, where 20 ticks is equal to 1 second.
+# Interval can also be set to 'default' which makes it use a value specified in configuration file.
+Command: /display edit (display) refresh_interval (ticks) (text)
+Permission: displayentities.command.display.edit.refresh_interval
+
+# Modifies text alignment of specified text display.
+# Alignment can be left, center or right.
+Command: /display edit (display) alignment (alignment)
+Permission: displayentities.command.display.edit.alignment
+
+# Modifies background color of specified text display.
+# Color can be either named (like cyan) or any hex value (like #00FF00).
+# Opacity is specified in percentage, where 0% is fully transparent, and 100% is fully opaque.
+# Opacity, if unspecified, defaults to fully opaque.
+Command: /display edit (display) background (color) [opacity]
+Permission: displayentities.command.display.edit.background
+
+# Modifies line width of specified text display.
+Command: /display edit (display) line_width (width)
+Permission: displayentities.command.display.edit.line_width
+
+# Modifies see through state of specified text display.
+Command: /display edit (display) see_through (true / false)
+Permission: displayentities.command.display.edit.see_through
+
+# Modifies text shadow state of specified text display.
+Command: /display edit (display) text_shadow (true / false)
+Permission: displayentities.command.display.edit.text_shadow
+
+# Modifies text opacity of specified text display.
+# Opacity is specified in percentage, where 0% is fully transparent, and 100% is fully opaque.
+Command: /display edit (display) text_opacity (opacity)
+Permission: displayentities.command.display.edit.text_opacity
+
+=== Editing (Block) ===
+
+# Modifies the block that is represented by specified block display.
+# Block can be a predefined block type, or currently held block. Latter can be set with @main_hand or @off_hand selector.
+Command: /display edit (display) block (@main_hand | @off_hand | type)
+Permission: displayentities.command.display.edit.block
+
+=== Editing (Item) ===
+
+# Modifies the item that is represented by specified item display.
+# Item can be a predefined item type, or currently held item. Latter can be set with @main_hand or @off_hand selector.
+Command: /display edit (display) item (@main_hand | @off_hand | type)
+Permission: displayentities.command.display.edit.item
+```
+
+</details>
+
 
 <br />
 
