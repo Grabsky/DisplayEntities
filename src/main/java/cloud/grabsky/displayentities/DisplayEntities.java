@@ -49,14 +49,10 @@ import cloud.grabsky.displayentities.command.CommandDisplayTextShadow;
 import cloud.grabsky.displayentities.command.CommandDisplayViewRange;
 import cloud.grabsky.displayentities.command.visitor.BuilderVisitor;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
-import cloud.grabsky.displayentities.listener.PacketListener;
-import cloud.grabsky.displayentities.listener.ResourcePackListener;
+import cloud.grabsky.displayentities.hook.PacketEventsHook;
 import cloud.grabsky.displayentities.util.LombokExtensions;
 import cloud.grabsky.displayentities.util.MapFlattener;
-import com.github.retrooper.packetevents.PacketEvents;
-import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import com.google.gson.Gson;
-import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import io.papermc.paper.plugin.loader.PluginClasspathBuilder;
 import io.papermc.paper.plugin.loader.library.impl.MavenLibraryResolver;
 import net.kyori.adventure.text.format.TextColor;
@@ -127,6 +123,8 @@ public final class DisplayEntities extends JavaPlugin {
     @Getter(AccessLevel.PUBLIC)
     private static boolean isFolia;
 
+    private @Nullable PacketEventsHook packetEventsHook;
+
     static {
         try {
             Class.forName("io.papermc.paper.threadedregions.ThreadedRegionizer");
@@ -158,11 +156,14 @@ public final class DisplayEntities extends JavaPlugin {
         // Reloading and mapping configuration file contents to the PluginConfiguration instance.
         this.configuration.reload();
         // Printing warning to the console if PacketEvents is not installed.
-        if (this.getServer().getPluginManager().getPlugin("packetevents") == null)
-            if (this.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null)
+        if (this.getServer().getPluginManager().getPlugin("packetevents") == null) {
+            if (this.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
                 this.getLogger().warning("PacketEvents is not installed. Placeholders in text displays will not be refreshed automatically.");
+            }
         // Otherwise, initializing it's API.
-        else PacketEvents.getAPI().init();
+        } else {
+            this.packetEventsHook = new PacketEventsHook().init();
+        }
         // Customizing BukkitLamp instance.
         final BukkitLampConfig<BukkitCommandActor> config = BukkitLampConfig.builder(this)
                 // Brigadier must be disabled for completions filtering to work properly.
@@ -181,22 +182,14 @@ public final class DisplayEntities extends JavaPlugin {
                 .build();
         // Registering plugin commands.
         this.registerCommands(this.lamp);
-        // Registering event listeners.
-        this.getServer().getPluginManager().registerEvents(new ResourcePackListener(this), this);
         // Connecting to bStats.
         new Metrics(this, 25686);
     }
 
     @Override
     public void onLoad() {
-        if (this.getServer().getPluginManager().getPlugin("packetevents") != null || this.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            // Initializing PacketEvents API.
-            PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
-            // Loading PacketEvents.
-            PacketEvents.getAPI().load();
-            // Registering event listeners.
-            PacketEvents.getAPI().getEventManager().registerListener(new PacketListener(this), PacketListenerPriority.HIGHEST);
-        }
+        if (this.packetEventsHook != null)
+            this.packetEventsHook.load(this);
     }
 
     private void registerCommands(final @NotNull Lamp<BukkitCommandActor> lamp) {
