@@ -168,6 +168,8 @@ public interface PluginConfiguration {
                 put("display.edit.billboard",        "<common_primary>/display edit <common_secondary>(display) <common_primary>billboard <common_secondary>(billboard)");
                 put("display.edit.brightness.block", "<common_primary>/display edit <common_secondary>(display) <common_primary>brightness block <common_secondary>(brightness)");
                 put("display.edit.brightness.sky",   "<common_primary>/display edit <common_secondary>(display) <common_primary>brightness sky <common_secondary>(brightness)");
+                put("display.edit.rotate_x",         "<common_primary>/display edit <common_secondary>(display) <common_primary>rotate_x <common_secondary>(degrees)");
+                put("display.edit.rotate_y",         "<common_primary>/display edit <common_secondary>(display) <common_primary>rotate_y <common_secondary>(degrees)");
                 put("display.edit.add_line",         "<text_primary>/display edit <text_secondary>(display) <text_primary>add_line <text_secondary>(text)");
                 put("display.edit.remove_line",      "<text_primary>/display edit <text_secondary>(display) <text_primary>remove_line <text_secondary>(line)");
                 put("display.edit.set_line",         "<text_primary>/display edit <text_secondary>(display) <text_primary>set_line <text_secondary>(line) (text)");
@@ -212,6 +214,8 @@ public interface PluginConfiguration {
                     "<dark_gray>› <spec:messages.command_usages.display.edit.billboard>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.brightness.block>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.brightness.sky>",
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.rotate_x",
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.rotate_y",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.add_line>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.remove_line>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.set_line>",
@@ -455,6 +459,22 @@ public interface PluginConfiguration {
         @Order(49) @Key("command.display.edit.refresh_interval.failure")
         default String commandDisplayEditRefreshIntervalFailure() {
             return "<dark_gray>› <red>Refresh interval must be either <yellow>default<red> or a positive integer value.";
+        }
+
+        // Display > Edit > Rotate X
+
+        @Order(50) @Key("command.display.edit.rotate_x.success")
+        @Comment("Display > Edit > Rotate X")
+        default String commandDisplayEditRotateXSuccess() {
+            return "<dark_gray>› <gray>Display has been rotated. (Pitch: <primary>{pitch}°<gray>)";
+        }
+
+        // Display > Edit > Rotate X
+
+        @Order(51) @Key("command.display.edit.rotate_y.success")
+        @Comment("Display > Edit > Rotate Y")
+        default String commandDisplayEditRotateYSuccess() {
+            return "<dark_gray>› <gray>Display has been rotated. (Yaw: <primary>{yaw}°<gray>)";
         }
 
     }
