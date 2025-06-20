@@ -54,7 +54,6 @@ import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.hook.PacketEventsHook;
 import cloud.grabsky.displayentities.util.LombokExtensions;
 import cloud.grabsky.displayentities.util.MapFlattener;
-import com.github.retrooper.packetevents.protocol.world.states.enums.South;
 import com.google.gson.Gson;
 import io.papermc.paper.plugin.loader.PluginClasspathBuilder;
 import io.papermc.paper.plugin.loader.library.impl.MavenLibraryResolver;
@@ -62,7 +61,6 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.eclipse.aether.artifact.DefaultArtifact;
@@ -161,13 +159,14 @@ public final class DisplayEntities extends JavaPlugin {
         // Reloading and mapping configuration file contents to the PluginConfiguration instance.
         this.configuration.reload();
         // Printing warning to the console if PacketEvents is not installed.
-        if (this.getServer().getPluginManager().getPlugin("packetevents") == null) {
-            if (this.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-                this.getLogger().warning("PacketEvents is not installed. Placeholders in text displays will not be refreshed automatically.");
+        if (this.getServer().getPluginManager().getPlugin("packetevents") != null && this.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            // Enabling PacketEvents hook.
+            if (this.packetEventsHook != null) {
+                this.packetEventsHook.enable();
             }
-        // Otherwise, initializing it's API.
         } else {
-            this.packetEventsHook = new PacketEventsHook().init();
+            // Otherwise, logging warning to the console.
+            this.getLogger().warning("Placeholders support not initialized. This integration requires PacketEvents and PlaceholderAPI.");
         }
         // Customizing BukkitLamp instance.
         final BukkitLampConfig<BukkitCommandActor> config = BukkitLampConfig.builder(this)
@@ -193,8 +192,9 @@ public final class DisplayEntities extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        if (this.packetEventsHook != null)
-            this.packetEventsHook.load(this);
+        if (this.getServer().getPluginManager().getPlugin("packetevents") != null && this.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            this.packetEventsHook = new PacketEventsHook(this).init();
+        }
     }
 
     private void registerCommands(final @NotNull Lamp<BukkitCommandActor> lamp) {
