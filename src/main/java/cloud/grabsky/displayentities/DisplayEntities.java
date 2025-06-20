@@ -54,6 +54,7 @@ import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.hook.PacketEventsHook;
 import cloud.grabsky.displayentities.util.LombokExtensions;
 import cloud.grabsky.displayentities.util.MapFlattener;
+import com.github.retrooper.packetevents.protocol.world.states.enums.South;
 import com.google.gson.Gson;
 import io.papermc.paper.plugin.loader.PluginClasspathBuilder;
 import io.papermc.paper.plugin.loader.library.impl.MavenLibraryResolver;
@@ -61,11 +62,13 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.repository.RemoteRepository;
+import org.slf4j.Logger;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import revxrsal.commands.Lamp;
@@ -290,7 +293,7 @@ public final class DisplayEntities extends JavaPlugin {
             try (final InputStream in = getClass().getResourceAsStream("/paper-libraries.json")) {
                 final PluginLibraries libraries = new Gson().fromJson(new InputStreamReader(in, StandardCharsets.UTF_8), PluginLibraries.class);
                 // Adding repositories to the maven library resolver.
-                libraries.asRepositories().forEach(resolver::addRepository);
+                libraries.asRepositories(classpathBuilder.getContext().getLogger()).forEach(resolver::addRepository);
                 // Adding dependencies to the maven library resolver.
                 libraries.asDependencies().forEach(resolver::addDependency);
                 // Adding library resolver to the classpath builder.
@@ -301,13 +304,24 @@ public final class DisplayEntities extends JavaPlugin {
         }
 
         @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
-        private static final class PluginLibraries {
+        private static class PluginLibraries {
 
             private final Map<String, String> repositories;
             private final List<String> dependencies;
 
-            public Stream<RemoteRepository> asRepositories() {
-                return repositories.entrySet().stream().map(entry -> new RemoteRepository.Builder(entry.getKey(), "default", entry.getValue()).build());
+            public Stream<RemoteRepository> asRepositories(final @NotNull Logger logger) {
+                return repositories.entrySet().stream().map(entry -> {
+                    try {
+                        // Replacing Maven Central repository with a pre-configured mirror.
+                        // See: https://docs.papermc.io/paper/dev/getting-started/paper-plugins/#loaders
+                        if (entry.getValue().contains("maven.org") == true || entry.getValue().contains("maven.apache.org") == true) {
+                            return new RemoteRepository.Builder(entry.getKey(), "default", MavenLibraryResolver.MAVEN_CENTRAL_DEFAULT_MIRROR).build();
+                        }
+                        return new RemoteRepository.Builder(entry.getKey(), "default", entry.getValue()).build();
+                    } catch (final NoSuchFieldError e) {
+                        return new RemoteRepository.Builder(entry.getKey(), "default", "https://maven-central.storage-download.googleapis.com/maven2").build();
+                    }
+                });
             }
 
             public Stream<Dependency> asDependencies() {
