@@ -54,18 +54,6 @@ public enum LombokExtensions {
         display.text(MiniMessage.miniMessage().deserialize(text));
     }
 
-    public static Location withX(final Location location, final double x) {
-        return location.clone().set(x, location.y(), location.z());
-    }
-
-    public static Location withY(final Location location, final double y) {
-        return location.clone().set(location.x(), y, location.z());
-    }
-
-    public static Location withZ(final Location location, final double z) {
-        return location.clone().set(location.x(), location.y(), z);
-    }
-
     public static Location withPitch(final Location location, final float pitch) {
         final Location copied = location.clone();
         copied.setPitch(pitch);

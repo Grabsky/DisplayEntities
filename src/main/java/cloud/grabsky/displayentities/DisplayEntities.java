@@ -66,7 +66,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.repository.RemoteRepository;
-import org.slf4j.Logger;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import revxrsal.commands.Lamp;
@@ -293,7 +292,7 @@ public final class DisplayEntities extends JavaPlugin {
             try (final InputStream in = getClass().getResourceAsStream("/paper-libraries.json")) {
                 final PluginLibraries libraries = new Gson().fromJson(new InputStreamReader(in, StandardCharsets.UTF_8), PluginLibraries.class);
                 // Adding repositories to the maven library resolver.
-                libraries.asRepositories(classpathBuilder.getContext().getLogger()).forEach(resolver::addRepository);
+                libraries.asRepositories().forEach(resolver::addRepository);
                 // Adding dependencies to the maven library resolver.
                 libraries.asDependencies().forEach(resolver::addDependency);
                 // Adding library resolver to the classpath builder.
@@ -309,7 +308,7 @@ public final class DisplayEntities extends JavaPlugin {
             private final Map<String, String> repositories;
             private final List<String> dependencies;
 
-            public Stream<RemoteRepository> asRepositories(final @NotNull Logger logger) {
+            public Stream<RemoteRepository> asRepositories() {
                 return repositories.entrySet().stream().map(entry -> {
                     try {
                         // Replacing Maven Central repository with a pre-configured mirror.
