@@ -34,6 +34,7 @@ import cloud.grabsky.displayentities.command.CommandDisplayBrightness;
 import cloud.grabsky.displayentities.command.CommandDisplayClone;
 import cloud.grabsky.displayentities.command.CommandDisplayCreate;
 import cloud.grabsky.displayentities.command.CommandDisplayDelete;
+import cloud.grabsky.displayentities.command.CommandDisplayHeight;
 import cloud.grabsky.displayentities.command.CommandDisplayHelp;
 import cloud.grabsky.displayentities.command.CommandDisplayItem;
 import cloud.grabsky.displayentities.command.CommandDisplayLineWidth;
@@ -41,6 +42,7 @@ import cloud.grabsky.displayentities.command.CommandDisplayMoveTo;
 import cloud.grabsky.displayentities.command.CommandDisplayRefreshInterval;
 import cloud.grabsky.displayentities.command.CommandDisplayReload;
 import cloud.grabsky.displayentities.command.CommandDisplayRespawn;
+import cloud.grabsky.displayentities.command.CommandDisplayResponse;
 import cloud.grabsky.displayentities.command.CommandDisplayRotateX;
 import cloud.grabsky.displayentities.command.CommandDisplayRotateY;
 import cloud.grabsky.displayentities.command.CommandDisplayScale;
@@ -49,6 +51,7 @@ import cloud.grabsky.displayentities.command.CommandDisplayTextManipulation;
 import cloud.grabsky.displayentities.command.CommandDisplayTextOpacity;
 import cloud.grabsky.displayentities.command.CommandDisplayTextShadow;
 import cloud.grabsky.displayentities.command.CommandDisplayViewRange;
+import cloud.grabsky.displayentities.command.CommandDisplayWidth;
 import cloud.grabsky.displayentities.command.visitor.BuilderVisitor;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.hook.PacketEventsHook;
@@ -204,9 +207,10 @@ public final class DisplayEntities extends JavaPlugin {
         lamp.register(CommandDisplayDelete.INSTANCE);
         lamp.register(CommandDisplayReload.INSTANCE);
         lamp.register(CommandDisplayRespawn.INSTANCE);
-        // Editing (Common)
-        lamp.register(CommandDisplayScale.INSTANCE);
+        // Editing (Common / All)
         lamp.register(CommandDisplayMoveTo.INSTANCE);
+        // Editing (Strict / Display Entities)
+        lamp.register(CommandDisplayScale.INSTANCE);
         lamp.register(CommandDisplayBillboard.INSTANCE);
         lamp.register(CommandDisplayViewRange.INSTANCE);
         lamp.register(CommandDisplayBrightness.INSTANCE);
@@ -225,6 +229,10 @@ public final class DisplayEntities extends JavaPlugin {
         lamp.register(CommandDisplayTextOpacity.INSTANCE);
         lamp.register(CommandDisplayRefreshInterval.INSTANCE);
         lamp.register(CommandDisplayTextManipulation.INSTANCE);
+        // Editing (Interaction)
+        lamp.register(CommandDisplayWidth.INSTANCE);
+        lamp.register(CommandDisplayHeight.INSTANCE);
+        lamp.register(CommandDisplayResponse.INSTANCE);
     }
 
     public void debug(final String message) {

@@ -28,61 +28,36 @@ package cloud.grabsky.displayentities.command;
 import cloud.grabsky.displayentities.DisplayWrapper;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.util.LombokExtensions;
-import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
-import revxrsal.commands.annotation.SuggestWith;
-import revxrsal.commands.autocomplete.SuggestionProvider;
-import revxrsal.commands.bukkit.actor.BukkitCommandActor;
+import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
-import revxrsal.commands.node.ExecutionContext;
-
-import java.util.Collection;
-import java.util.Collections;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.experimental.ExtensionMethod;
 
 @ExtensionMethod(LombokExtensions.class)
-public enum CommandDisplayViewRange {
+public enum CommandDisplayResponse {
     INSTANCE; // SINGLETON
 
     @Dependency
     private PluginConfiguration configuration;
 
-    @Command("display edit <display> view_range")
-    @CommandPermission("displayentities.command.display.edit.view_range")
-    public String onDisplayViewRange(
+    @Command("display edit <display> response")
+    @CommandPermission("displayentities.command.display.edit.response")
+    public String onDisplayResponse(
             final @NotNull Player sender,
-            final @NotNull DisplayWrapper.Strict display,
-            final @NotNull @SuggestWith(ViewDistanceSuggestionProvider.class) Float viewRange
+            final @NotNull DisplayWrapper.Interaction display,
+            final @Nullable @Optional Boolean response
     ) {
-        // Calculating the view range value. Cannot be less than 0.
-        final float finalViewRange = Math.max(0F, viewRange);
-        // Updating value of the view_range property of the display entity.
-        display.entity(Display.class).setViewRange(finalViewRange);
+        final boolean finalState = (response != null) ? response : !display.entity().isResponsive();
+        // Updating value of the response property of the display entity.
+        display.entity().setResponsive(finalState);
         // Sending success message to the sender.
-        return configuration.messages().commandDisplayEditViewRangeSuccess().repl("{range}", finalViewRange);
-    }
-
-    /* SUGGESTION PROVIDERS */
-
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static final class ViewDistanceSuggestionProvider implements SuggestionProvider<BukkitCommandActor> {
-
-        @Override
-        public @NotNull Collection<String> getSuggestions(@NotNull final ExecutionContext<BukkitCommandActor> context) {
-            // Getting the DisplayWrapper argument.
-            final @Nullable DisplayWrapper wrapper = context.getResolvedArgumentOrNull(DisplayWrapper.class);
-            // Generating and returning suggestions.
-            return (wrapper != null) ? Collections.singletonList(String.format("%.2f", wrapper.entity(Display.class).getViewRange())) : Collections.emptyList();
-        }
-
+        return configuration.messages().commandDisplayEditResponseSuccess().repl("{state}", finalState);
     }
 
 }

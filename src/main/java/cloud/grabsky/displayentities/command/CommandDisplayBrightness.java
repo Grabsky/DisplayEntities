@@ -60,15 +60,15 @@ public enum CommandDisplayBrightness {
     @CommandPermission("displayentities.command.display.edit.brightness")
     public String onDisplayBrightnessBlock(
             final @NotNull Player sender,
-            final @NotNull DisplayWrapper display,
+            final @NotNull DisplayWrapper.Strict display,
             final @NotNull @SuggestWith(BrightnessSuggestionProvider.Block.class) Integer brightness
     ) {
         // Calculating the brightness value. Must be in between 0 and 15.
         final int finalBrightness = Math.clamp(brightness, 0, 15);
         // Creating new Display.Brightness object.
-        final Display.Brightness newBrightness = new Display.Brightness(finalBrightness, display.entity().getBrightness() != null ? display.entity().getBrightness().getSkyLight() : 15);
+        final Display.Brightness newBrightness = new Display.Brightness(finalBrightness, display.entity(Display.class).getBrightness() != null ? display.entity(Display.class).getBrightness().getSkyLight() : 15);
         // Updating value of the brightness property of the display entity.
-        display.entity().setBrightness(newBrightness);
+        display.entity(Display.class).setBrightness(newBrightness);
         // Sending success message to the sender.
         return configuration.messages().commandDisplayEditBrightnessSuccess().repl("{brightness_block}", newBrightness.getBlockLight()).repl("{brightness_sky}", newBrightness.getSkyLight());
     }
@@ -77,15 +77,15 @@ public enum CommandDisplayBrightness {
     @CommandPermission("displayentities.command.display.edit.brightness")
     public String onDisplayBrightnessSky(
             final @NotNull Player sender,
-            final @NotNull DisplayWrapper display,
+            final @NotNull DisplayWrapper.Strict display,
             final @NotNull @SuggestWith(BrightnessSuggestionProvider.Sky.class) Integer brightness
     ) {
         // Calculating the brightness value. Must be in between 0 and 15.
         final int finalBrightness = Math.clamp(brightness, 0, 15);
         // Creating new Display.Brightness object.
-        final Display.Brightness newBrightness = new Display.Brightness(display.entity().getBrightness() != null ? display.entity().getBrightness().getBlockLight() : 15, finalBrightness);
+        final Display.Brightness newBrightness = new Display.Brightness(display.entity(Display.class).getBrightness() != null ? display.entity(Display.class).getBrightness().getBlockLight() : 15, finalBrightness);
         // Updating value of the brightness property of the display entity.
-        display.entity().setBrightness(newBrightness);
+        display.entity(Display.class).setBrightness(newBrightness);
         // Sending success message to the sender.
         return configuration.messages().commandDisplayEditBrightnessSuccess().repl("{brightness_block}", newBrightness.getBlockLight()).repl("{brightness_sky}", newBrightness.getSkyLight());
     }
@@ -105,7 +105,7 @@ public enum CommandDisplayBrightness {
             if (wrapper == null)
                 return Collections.emptyList();
             // Getting current brightness.
-            final @Nullable Display.Brightness brightness = wrapper.entity().getBrightness();
+            final @Nullable Display.Brightness brightness = wrapper.entity(Display.class).getBrightness();
             // Generating and returning suggestions.
             return (brightness != null)
                     ? Collections.singletonList("" + (isBlockBrightness == true ? brightness.getBlockLight() : brightness.getSkyLight()))

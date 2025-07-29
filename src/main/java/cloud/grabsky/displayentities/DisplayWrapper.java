@@ -33,7 +33,9 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Interaction;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -54,15 +56,15 @@ import lombok.experimental.ExtensionMethod;
 @Accessors(fluent = true)
 @ExtensionMethod(LombokExtensions.class)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public sealed abstract class DisplayWrapper permits DisplayWrapper.Text, DisplayWrapper.Item, DisplayWrapper.Block {
+public sealed abstract class DisplayWrapper permits DisplayWrapper.Strict, DisplayWrapper.Interaction {
 
     @Getter(AccessLevel.PUBLIC)
-    protected final Class<? extends Display> type;
+    protected final Class<? extends Entity> type;
 
     @Getter(AccessLevel.PUBLIC)
     protected final @NotNull String name;
 
-    protected final @NotNull Display entity;
+    protected final @NotNull Entity entity;
 
     /**
      * Initial configuration of display entity, called the moment after it has been spawned.
@@ -72,13 +74,18 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Text, Display
     /**
      * Returns entity held by this wrapper.
      */
-    public abstract <T extends Display> T entity();
+    public abstract <T extends Entity> T entity();
+
+    @SuppressWarnings("unchecked")
+    public <T extends Entity> T entity(final Class<T> type) throws ClassCastException {
+        return (T) this.entity;
+    }
 
     /**
      * Creates new instance of {@link DisplayWrapper}
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Display, W extends DisplayWrapper> @NotNull W create(final @NotNull T entity, final @NotNull String name) {
+    public static <T extends Entity, W extends DisplayWrapper> @NotNull W create(final @NotNull T entity, final @NotNull String name) {
         // Setting name of the display.
         entity.getPersistentDataContainer().set(DisplayEntities.Keys.NAME, PersistentDataType.STRING, name);
         // Returning new instance of DisplayWrapper containing provided entity.
@@ -88,6 +95,8 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Text, Display
             return (W) new Item(display, name);
         else if (entity instanceof BlockDisplay display)
             return (W) new Block(display, name);
+        else if (entity instanceof org.bukkit.entity.Interaction display)
+            return (W) new Interaction(display, name);
         // ...
         throw new IllegalArgumentException("UNSUPPORTED_ENTITY_TYPE");
     }
@@ -96,14 +105,15 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Text, Display
      * Creates new instance of {@link DisplayWrapper}
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Display, W extends DisplayWrapper> @NotNull W existing(final @NotNull T entity) {
+    public static <T extends Entity, W extends DisplayWrapper> @NotNull W existing(final @NotNull T entity) {
         // Getting name of the display.
         final @NotNull String name = Objects.requireNonNull(entity.getPersistentDataContainer().get(DisplayEntities.Keys.NAME, PersistentDataType.STRING), "NAME_NOT_SET");
         // Returning new instance of DisplayWrapper containing provided entity.
         return switch (entity) {
-            case TextDisplay  it -> (W) new Text(it, name);
-            case ItemDisplay  it -> (W) new Item(it, name);
+            case TextDisplay it -> (W) new Text(it, name);
+            case ItemDisplay it -> (W) new Item(it, name);
             case BlockDisplay it -> (W) new Block(it, name);
+            case org.bukkit.entity.Interaction it -> (W) new Interaction(it, name);
             default -> throw new IllegalArgumentException("UNSUPPORTED_ENTITY_TYPE");
         };
     }
@@ -148,8 +158,18 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Text, Display
         return entity.getPersistentDataContainer().getOrDefault(key, type, def);
     }
 
+    /**
+     * Strict wrapper is a super class for all entities that inherit from display entities.
+     * Ever since introduction of {@link org.bukkit.entity.Interaction} entity type, it must be handled that way.
+     */
+    public static abstract non-sealed class Strict extends DisplayWrapper {
 
-    public static final class Text extends DisplayWrapper {
+        private Strict(final @NotNull Class<? extends Entity> type, @NotNull final String name, @NotNull final Entity entity) {
+            super(type, name, entity);
+        }
+    }
+
+    public static final class Text extends DisplayWrapper.Strict {
 
         private Text(final @NotNull TextDisplay entity, final @NotNull String name) {
             super(TextDisplay.class, name, entity);
@@ -171,7 +191,7 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Text, Display
     }
 
 
-    public static final class Item extends DisplayWrapper {
+    public static final class Item extends DisplayWrapper.Strict {
 
         private static final ItemStack DEFAULT_ITEM_STACK = new ItemStack(Material.DIAMOND);
 
@@ -194,7 +214,7 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Text, Display
     }
 
 
-    public static final class Block extends DisplayWrapper {
+    public static final class Block extends DisplayWrapper.Strict {
 
         private static final BlockData DEFAULT_BLOCK_DATA = Material.GRASS_BLOCK.createBlockData();
 
@@ -216,19 +236,40 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Text, Display
 
     }
 
+    public static final class Interaction extends DisplayWrapper {
+
+        private Interaction(final @NotNull org.bukkit.entity.Interaction entity, final @NotNull String name) {
+            super(org.bukkit.entity.Interaction.class, name, entity);
+        }
+
+        @Override @SuppressWarnings("unchecked")
+        public @NotNull org.bukkit.entity.Interaction entity() {
+            return (org.bukkit.entity.Interaction) this.entity;
+        }
+
+        @Override @SuppressWarnings("unchecked")
+        public @NotNull DisplayWrapper.Interaction initialConfiguration() {
+            this.entity().setInteractionWidth(1);
+            this.entity().setInteractionHeight(1);
+            return this;
+        }
+
+    }
+
 
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     public enum Type {
         TEXT(EntityType.TEXT_DISPLAY),
         ITEM(EntityType.ITEM_DISPLAY),
-        BLOCK(EntityType.BLOCK_DISPLAY);
+        BLOCK(EntityType.BLOCK_DISPLAY),
+        INTERACTION(EntityType.INTERACTION);
 
         @Getter(AccessLevel.PUBLIC)
         private final EntityType type;
 
         public DisplayWrapper create(final @NotNull Location location, final @NotNull String name) {
             // Spawning new entity of this type at specified location.
-            final Display entity = (Display) location.getWorld().spawnEntity(location, type, CreatureSpawnEvent.SpawnReason.COMMAND);
+            final Entity entity = location.getWorld().spawnEntity(location, type, CreatureSpawnEvent.SpawnReason.COMMAND);
             // Wrapping and returning...
             return DisplayWrapper.create(entity, name);
         }

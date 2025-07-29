@@ -68,6 +68,8 @@ public interface PluginConfiguration {
             put("block_secondary", "#FF80CC");
             put("item_primary", "#FF441A");
             put("item_secondary", "#FF9680");
+            put("interaction_primary", "#FFFFFF");
+            put("interaction_secondary", "#999999");
         }};
     }
 
@@ -183,6 +185,9 @@ public interface PluginConfiguration {
                 put("display.edit.text_opacity",     "<text_primary>/display edit <text_secondary>(display) <text_primary>text_opacity <text_secondary>(opacity)");
                 put("display.edit.block",            "<block_primary>/display edit <block_secondary>(display) <block_primary>block <block_secondary>(hand | type)");
                 put("display.edit.item",             "<item_primary>/display edit <item_secondary>(display) <item_primary>item <item_secondary>(hand | type)");
+                put("display.edit.width",            "<interaction_primary>/display edit <interaction_secondary>(display) <interaction_primary>width <interaction_secondary>(width)");
+                put("display.edit.height",           "<interaction_primary>/display edit <interaction_secondary>(display) <interaction_primary>height <interaction_secondary>(height)");
+                put("display.edit.response",         "<interaction_primary>/display edit <interaction_secondary>(display) <interaction_primary>response <interaction_secondary>(true | false)");
             }};
         }
         
@@ -228,7 +233,10 @@ public interface PluginConfiguration {
                     "<dark_gray>› <spec:messages.command_usages.display.edit.text_shadow>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.text_opacity>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.block>",
-                    "<dark_gray>› <spec:messages.command_usages.display.edit.item>"
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.item>",
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.width>",
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.height>",
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.response>"
             );
         }
 
@@ -475,6 +483,30 @@ public interface PluginConfiguration {
         @Comment("Display > Edit > Rotate Y")
         default String commandDisplayEditRotateYSuccess() {
             return "<dark_gray>› <gray>Display has been rotated. (Yaw: <primary>{yaw}°<gray>)";
+        }
+
+        // Display > Edit > Width (Interaction)
+
+        @Order(52) @Key("command.display.edit.width.success")
+        @Comment("Display > Edit > Width")
+        default String commandDisplayEditWidthSuccess() {
+            return "<dark_gray>› <gray>Interaction width has been set to <primary>{width}<gray>.";
+        }
+
+        // Display > Edit > Height (Interaction)
+
+        @Order(53) @Key("command.display.edit.height.success")
+        @Comment("Display > Edit > Height")
+        default String commandDisplayEditHeightSuccess() {
+            return "<dark_gray>› <gray>Interaction height has been set to <primary>{height}<gray>.";
+        }
+
+        // Display > Edit > Response (Interaction)
+
+        @Order(42) @Key("command.display.edit.response.success")
+        @Comment("Display > Edit > Response")
+        default String commandDisplayEditResponseSuccess() {
+            return "<dark_gray>› <gray>Interaction response has been set to <primary>{state}<gray>.";
         }
 
     }

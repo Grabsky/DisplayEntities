@@ -28,7 +28,6 @@ package cloud.grabsky.displayentities.command;
 import cloud.grabsky.displayentities.DisplayWrapper;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.util.LombokExtensions;
-import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
@@ -49,38 +48,38 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.ExtensionMethod;
 
 @ExtensionMethod(LombokExtensions.class)
-public enum CommandDisplayViewRange {
+public enum CommandDisplayWidth {
     INSTANCE; // SINGLETON
 
     @Dependency
     private PluginConfiguration configuration;
 
-    @Command("display edit <display> view_range")
-    @CommandPermission("displayentities.command.display.edit.view_range")
-    public String onDisplayViewRange(
+    @Command("display edit <display> width")
+    @CommandPermission("displayentities.command.display.edit.width")
+    public String onDisplayWidth(
             final @NotNull Player sender,
-            final @NotNull DisplayWrapper.Strict display,
-            final @NotNull @SuggestWith(ViewDistanceSuggestionProvider.class) Float viewRange
+            final @NotNull DisplayWrapper.Interaction display,
+            final @NotNull @SuggestWith(WidthSuggestionProvider.class) Float width
     ) {
-        // Calculating the view range value. Cannot be less than 0.
-        final float finalViewRange = Math.max(0F, viewRange);
-        // Updating value of the view_range property of the display entity.
-        display.entity(Display.class).setViewRange(finalViewRange);
+        // Calculating the final width value.
+        final float finalWidth = Math.max(0, width);
+        // Setting width of the interaction entity.
+        display.entity().setInteractionWidth(finalWidth);
         // Sending success message to the sender.
-        return configuration.messages().commandDisplayEditViewRangeSuccess().repl("{range}", finalViewRange);
+        return configuration.messages().commandDisplayEditWidthSuccess().repl("{width}", finalWidth);
     }
 
     /* SUGGESTION PROVIDERS */
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    public static final class ViewDistanceSuggestionProvider implements SuggestionProvider<BukkitCommandActor> {
+    public static final class WidthSuggestionProvider implements SuggestionProvider<BukkitCommandActor> {
 
         @Override
         public @NotNull Collection<String> getSuggestions(@NotNull final ExecutionContext<BukkitCommandActor> context) {
             // Getting the DisplayWrapper argument.
-            final @Nullable DisplayWrapper wrapper = context.getResolvedArgumentOrNull(DisplayWrapper.class);
+            final @Nullable DisplayWrapper.Interaction wrapper = context.getResolvedArgumentOrNull(DisplayWrapper.Interaction.class);
             // Generating and returning suggestions.
-            return (wrapper != null) ? Collections.singletonList(String.format("%.2f", wrapper.entity(Display.class).getViewRange())) : Collections.emptyList();
+            return (wrapper != null) ? Collections.singletonList(wrapper.entity().getInteractionWidth() + "") : Collections.emptyList();
         }
 
     }
