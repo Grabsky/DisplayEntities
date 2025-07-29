@@ -48,7 +48,7 @@ public enum CommandDisplayRotateY {
     @CommandPermission("displayentities.command.display.edit.rotate_y")
     public String onDisplayRotateY(
             final @NotNull Player sender,
-            final @NotNull DisplayWrapper display,
+            final @NotNull DisplayWrapper.Strict display,
             final @NotNull Float degrees
     ) {
         // Teleporting entity to desired location.
