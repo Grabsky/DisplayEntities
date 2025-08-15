@@ -185,6 +185,7 @@ public interface PluginConfiguration {
                 put("display.edit.text_opacity",     "<text_primary>/display edit <text_secondary>(display) <text_primary>text_opacity <text_secondary>(opacity)");
                 put("display.edit.block",            "<block_primary>/display edit <block_secondary>(display) <block_primary>block <block_secondary>(hand | type)");
                 put("display.edit.item",             "<item_primary>/display edit <item_secondary>(display) <item_primary>item <item_secondary>(hand | type)");
+                put("display.edit.transform",        "<item_primary>/display edit <item_secondary>(display) <item_primary>transform <item_secondary>(transform)");
                 put("display.edit.width",            "<interaction_primary>/display edit <interaction_secondary>(display) <interaction_primary>width <interaction_secondary>(width)");
                 put("display.edit.height",           "<interaction_primary>/display edit <interaction_secondary>(display) <interaction_primary>height <interaction_secondary>(height)");
                 put("display.edit.response",         "<interaction_primary>/display edit <interaction_secondary>(display) <interaction_primary>response <interaction_secondary>(true | false)");
@@ -234,6 +235,7 @@ public interface PluginConfiguration {
                     "<dark_gray>› <spec:messages.command_usages.display.edit.text_opacity>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.block>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.item>",
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.transform>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.width>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.height>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.response>"
@@ -503,10 +505,18 @@ public interface PluginConfiguration {
 
         // Display > Edit > Response (Interaction)
 
-        @Order(42) @Key("command.display.edit.response.success")
+        @Order(54) @Key("command.display.edit.response.success")
         @Comment("Display > Edit > Response")
         default String commandDisplayEditResponseSuccess() {
             return "<dark_gray>› <gray>Interaction response has been set to <primary>{state}<gray>.";
+        }
+
+        // Display > Edit > Transform (Item)
+
+        @Order(55) @Key("command.display.edit.transform.success")
+        @Comment("Display > Edit > Transform")
+        default String commandDisplayEditTransformSuccess() {
+            return "<dark_gray>› <gray>Display transform has been set to <primary>{transform}<gray>.";
         }
 
     }

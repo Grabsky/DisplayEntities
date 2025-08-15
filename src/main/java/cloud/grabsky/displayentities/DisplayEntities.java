@@ -50,6 +50,7 @@ import cloud.grabsky.displayentities.command.CommandDisplaySeeThrough;
 import cloud.grabsky.displayentities.command.CommandDisplayTextManipulation;
 import cloud.grabsky.displayentities.command.CommandDisplayTextOpacity;
 import cloud.grabsky.displayentities.command.CommandDisplayTextShadow;
+import cloud.grabsky.displayentities.command.CommandDisplayTransform;
 import cloud.grabsky.displayentities.command.CommandDisplayViewRange;
 import cloud.grabsky.displayentities.command.CommandDisplayWidth;
 import cloud.grabsky.displayentities.command.visitor.BuilderVisitor;
@@ -220,6 +221,7 @@ public final class DisplayEntities extends JavaPlugin {
         lamp.register(CommandDisplayBlock.INSTANCE);
         // Editing (Item)
         lamp.register(CommandDisplayItem.INSTANCE);
+        lamp.register(CommandDisplayTransform.INSTANCE);
         // Editing (Text)
         lamp.register(CommandDisplayAlignment.INSTANCE);
         lamp.register(CommandDisplayLineWidth.INSTANCE);
