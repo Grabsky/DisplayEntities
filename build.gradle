@@ -44,7 +44,7 @@ tasks {
         minecraftVersion("1.21.8")
     }
     runFolia {
-        minecraftVersion("1.21.6")
+        minecraftVersion("1.21.8")
     }
     compileJava {
         options.fork = true
