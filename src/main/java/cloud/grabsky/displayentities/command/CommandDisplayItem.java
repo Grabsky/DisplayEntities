@@ -35,6 +35,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ItemType;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
+import revxrsal.commands.annotation.Suggest;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import org.jetbrains.annotations.NotNull;
@@ -73,7 +74,7 @@ public enum CommandDisplayItem {
     public String onDisplayItem(
             final @NotNull Player sender,
             final @NotNull DisplayWrapper.Item display,
-            final @NotNull String selector
+            final @NotNull @Suggest({"@main_hand", "@off_hand"}) String selector
     ) {
         // Getting the specified slot.
         final @Nullable EquipmentSlot slot = switch (selector) {
