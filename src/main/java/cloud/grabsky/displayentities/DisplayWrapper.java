@@ -35,7 +35,6 @@ import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Interaction;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -164,9 +163,16 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Strict, Displ
      */
     public static abstract non-sealed class Strict extends DisplayWrapper {
 
-        private Strict(final @NotNull Class<? extends Entity> type, @NotNull final String name, @NotNull final Entity entity) {
+        private Strict(final @NotNull Class<? extends Display> type, @NotNull final String name, @NotNull final Display entity) {
             super(type, name, entity);
         }
+
+        @Override @SuppressWarnings("unchecked")
+        public @NotNull Display entity() {
+            return (Display) this.entity;
+        }
+
+
     }
 
     public static final class Text extends DisplayWrapper.Strict {
@@ -175,7 +181,7 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Strict, Displ
             super(TextDisplay.class, name, entity);
         }
 
-        @Override @SuppressWarnings("unchecked")
+        @Override
         public @NotNull TextDisplay entity() {
             return (TextDisplay) this.entity;
         }
@@ -199,7 +205,7 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Strict, Displ
             super(ItemDisplay.class, name, entity);
         }
 
-        @Override @SuppressWarnings("unchecked")
+        @Override
         public @NotNull ItemDisplay entity() {
             return (ItemDisplay) this.entity;
         }
@@ -222,7 +228,7 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Strict, Displ
             super(BlockDisplay.class, name, entity);
         }
 
-        @Override @SuppressWarnings("unchecked")
+        @Override
         public @NotNull BlockDisplay entity() {
             return (BlockDisplay) this.entity;
         }

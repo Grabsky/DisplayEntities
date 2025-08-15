@@ -184,11 +184,15 @@ public interface PluginConfiguration {
                 put("display.edit.text_shadow",      "<text_primary>/display edit <text_secondary>(display) <text_primary>text_shadow <text_secondary>(true | false)");
                 put("display.edit.text_opacity",     "<text_primary>/display edit <text_secondary>(display) <text_primary>text_opacity <text_secondary>(opacity)");
                 put("display.edit.block",            "<block_primary>/display edit <block_secondary>(display) <block_primary>block <block_secondary>(hand | type)");
+                put("display.edit.block.glow",    "<block_primary>/display edit <block_secondary>(display) <block_primary>glow <block_secondary>(@none | color)");
                 put("display.edit.item",             "<item_primary>/display edit <item_secondary>(display) <item_primary>item <item_secondary>(hand | type)");
                 put("display.edit.transform",        "<item_primary>/display edit <item_secondary>(display) <item_primary>transform <item_secondary>(transform)");
+                put("display.edit.item.glow",     "<item_primary>/display edit <item_secondary>(display) <item_primary>glow <item_secondary>(@none | color)");
                 put("display.edit.width",            "<interaction_primary>/display edit <interaction_secondary>(display) <interaction_primary>width <interaction_secondary>(width)");
                 put("display.edit.height",           "<interaction_primary>/display edit <interaction_secondary>(display) <interaction_primary>height <interaction_secondary>(height)");
                 put("display.edit.response",         "<interaction_primary>/display edit <interaction_secondary>(display) <interaction_primary>response <interaction_secondary>(true | false)");
+                // Additional glow entry for in-game 'invalid-usage' message. The reason why it is needed is because the glow command only available for item and block displays.
+                put("display.edit.glow",          "<common_primary>/display edit <common_secondary>(display) <common_primary>glow <common_secondary>(@none | color)");
             }};
         }
         
@@ -234,8 +238,10 @@ public interface PluginConfiguration {
                     "<dark_gray>› <spec:messages.command_usages.display.edit.text_shadow>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.text_opacity>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.block>",
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.block.glow>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.item>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.transform>",
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.item.glow>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.width>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.height>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.response>"
@@ -517,6 +523,19 @@ public interface PluginConfiguration {
         @Comment("Display > Edit > Transform")
         default String commandDisplayEditTransformSuccess() {
             return "<dark_gray>› <gray>Display transform has been set to <primary>{transform}<gray>.";
+        }
+
+        // Display > Edit > Glow (Common)
+
+        @Order(56) @Key("command.display.edit.glow.color_change.success")
+        @Comment("Display > Edit > Glow")
+        default String commandDisplayEditGlowColorChangeSuccess() {
+            return "<dark_gray>› <gray>Display glow color has been set to <primary>{color}<gray>.";
+        }
+
+        @Order(57) @Key("command.display.edit.glow.disabled.success")
+        default String commandDisplayEditGlowDisabledSuccess() {
+            return "<dark_gray>› <gray>Display glow has been disabled.";
         }
 
     }
