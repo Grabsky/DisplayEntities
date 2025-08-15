@@ -48,6 +48,7 @@ import cloud.grabsky.displayentities.command.CommandDisplayRotateX;
 import cloud.grabsky.displayentities.command.CommandDisplayRotateY;
 import cloud.grabsky.displayentities.command.CommandDisplayScale;
 import cloud.grabsky.displayentities.command.CommandDisplaySeeThrough;
+import cloud.grabsky.displayentities.command.CommandDisplayTeleport;
 import cloud.grabsky.displayentities.command.CommandDisplayTextManipulation;
 import cloud.grabsky.displayentities.command.CommandDisplayTextOpacity;
 import cloud.grabsky.displayentities.command.CommandDisplayTextShadow;
@@ -209,6 +210,7 @@ public final class DisplayEntities extends JavaPlugin {
         lamp.register(CommandDisplayDelete.INSTANCE);
         lamp.register(CommandDisplayReload.INSTANCE);
         lamp.register(CommandDisplayRespawn.INSTANCE);
+        lamp.register(CommandDisplayTeleport.INSTANCE);
         // Editing (Common / All)
         lamp.register(CommandDisplayMoveTo.INSTANCE);
         // Editing (Strict / Display Entities)
