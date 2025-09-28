@@ -1,154 +1,32 @@
 <div align="center">
-  
-  ![](https://i.imgur.com/aziwQIL.png)
 
-  [![GitHub Release](https://img.shields.io/github/v/release/Grabsky/DisplayEntities?logo=github&labelColor=%2324292F&color=%23454F5A)](https://github.com/Grabsky/DisplayEntities/releases/latest)
-  [![Modrinth Downloads](https://img.shields.io/modrinth/dt/display-entities?logo=modrinth&logoColor=white&label=downloads&labelColor=%23139549&color=%2318c25f)](https://modrinth.com/plugin/display-entities)
-  [![Discord](https://img.shields.io/discord/1366851451208601783?cacheSeconds=3600&logo=discord&logoColor=white&label=%20&labelColor=%235865F2&color=%23707BF4)](https://discord.com/invite/PuzqF2Yd5q)
-  [![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/Grabsky/DisplayEntities?logo=codefactor&logoColor=white&label=%20)](https://www.codefactor.io/repository/github/grabsky/displayentities/issues/main)
+![](https://i.imgur.com/aziwQIL.png)
+
+[![GitHub Release](https://img.shields.io/github/v/release/Grabsky/DisplayEntities?logo=github&labelColor=%2324292F&color=%23454F5A)](https://github.com/Grabsky/DisplayEntities/releases/latest)
+[![Modrinth Downloads](https://img.shields.io/modrinth/dt/display-entities?logo=modrinth&logoColor=white&label=downloads&labelColor=%23139549&color=%2318c25f)](https://modrinth.com/plugin/display-entities)
+[![Discord](https://img.shields.io/discord/1366851451208601783?cacheSeconds=3600&logo=discord&logoColor=white&label=%20&labelColor=%235865F2&color=%23707BF4)](https://discord.com/invite/PuzqF2Yd5q)
+[![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/Grabsky/DisplayEntities?logo=codefactor&logoColor=white&label=%20)](https://www.codefactor.io/repository/github/grabsky/displayentities/issues/main)
+
+**DisplayEntities** is an utility plugin adding commands for manipulation of server-side Display Entities, Interaction Entities and (soon) Mannequins. Comes with [**PlaceholderAPI**](https://github.com/PlaceholderAPI/PlaceholderAPI) and [**MiniMessage**](https://docs.advntr.dev/minimessage/format.html)   support.
 
 </div>
 
-To put it simple, **DisplayEntities** is an utility plugin that adds commands for manipulating **server-side** display entities. Display entities are **lightweight** and **powerful** alternative to armor stands. Reasonable amount of these entities should **never** be a subject to server lag.
-
-Plugin does not store anything on it's own except configuration file and necessary data attached to the PDC (Persistent Data Container) of each entity it interacts with. It means that each entity created by the plugin will be kept in the world until manually removed. This can be done either by using `/display delete (name)` command provided by the plugin, or vanilla `/kill` command.
-
-To make the plugin a bit more useful, I added **MiniMessage** parsing and packet-level **PlaceholderAPI** support. That should possibly make it as useful as any other holograms plugin you're already familiar with.
-
-Use with [**Axiom**](https://modrinth.com/mod/axiom) and [**AxiomPaperPlugin**](https://modrinth.com/plugin/axiom-paper-plugin) to make the overall experience **even better**!
-
 <br/>
 
-<details>
-  <summary><strong>(Click here to expand list of available commands)</strong></summary>
+### But what *are* Display Entities?
+Display entities are lightweight hologram-like entities added in 1.19.4. They are capable of displaying text, items and blocks, and serve as an alternative to armor stands. You can read more [**here**](https://minecraft.wiki/w/Display).
 
-```yml
-# () - Required Argument, [] - Optional Argument
+### How does the plugin work?
+Each entity created by the plugin will be *physically* kept in the world until manually removed. This can be done either by plugin-provided command or built-in, vanilla commands.
 
-=== Management ===
+Since all entities are server-side, you can move / scale them freely with external tools such us [**Axiom**](https://modrinth.com/mod/axiom).
 
-# Shows list of available commands.
-Command: /display help [page]
-Permission: displayentities.command.display.help
+### How is that an *utility* plugin?
+Plugin does not store anything on it's own except configuration file and necessary data attached to the PDC (Persistent Data Container) of each entity it interacts with. It leaves minimal footprint on the server.
 
-# Clones specified display.
-Command: /display clone (display) (name)
-Permission: displayentities.command.display.clone
+To make the plugin a bit more useful, it comes with **MiniMessage** support and packet-level **PlaceholderAPI** hook. That should possibly make it as useful as any other holograms plugin you're already familiar with.
 
-# Creates a new display of specified type.
-Command: /display create (type) (name)
-Permission: displayentities.command.display.create
-
-# Permanently deletes specified display.
-Command: /display delete (type) (name)
-Permission: displayentities.command.display.delete
-
-# Respawns specified display for all viewers.
-# Use it after adding placeholders or modifying placeholder refresh interval.
-Command: /display respawn (type) (name)
-Permission: displayentities.command.display.respawn
-
-=== Editing (Common) ===
-
-# Modifies scale of specified display.
-Command: /display edit (display) scale (x) (y) (z)
-Permission: displayentities.command.display.edit.scale
-
-# Modifies view range of specified display.
-# Range must be between 0.0 and 1.0 as this is how it is scaled internally.
-Command: /display edit (display) view_range (range)
-Permission: displayentities.command.display.edit.view_range
-
-# Moves entity to specified coordinates.
-# Character ~ can be used and is replaced with sender's current coordinate.
-Command: /display edit (display) move_to (x) (y) (Z)
-Permission: displayentities.command.display.edit.move_to
-
-# Modifies billboard of specified display.
-# Billboard can be fixed, center, horizontal or vertical.
-Command: /display edit (display) billboard (billboard)
-Permission: displayentities.command.display.edit.billboard
-
-# Modifies brightness of specified display.
-# Brightness is an integer between 0 and 15.
-Command: /display edit (display) brightness (block | sky) (brightness)
-Permission: displayentities.command.display.edit.brightness
-
-=== Editing (Text) ===
-
-# Adds new line to text contents of specified text display.
-# Supports MiniMessage formatting and PlaceholderAPI.
-Command: /display edit (display) add_line (text)
-Permission: displayentities.command.display.edit.add_line
-
-# Removes specified line, from specified text display.
-Command: /display edit (display) remove_line (line)
-Permission: displayentities.command.display.edit.remove_line
-
-# Sets contents of specified line, to specified text.
-# Supports MiniMessage formatting and PlaceholderAPI.
-Command: /display edit (display) set_line (line) (text)
-Permission: displayentities.command.display.edit.set_line
-
-# Inserts new line before the specified line number.
-# Supports MiniMessage formatting and PlaceholderAPI.
-Command: /display edit (display) insert_line (line) (text)
-Permission: displayentities.command.display.edit.insert_line
-
-# Modifies ticks interval at which this text display will be refreshed to all viewers.
-# Interval can be number of ticks, where 20 ticks is equal to 1 second.
-# Interval can also be set to 'default' which makes it use a value specified in configuration file.
-Command: /display edit (display) refresh_interval (ticks) (text)
-Permission: displayentities.command.display.edit.refresh_interval
-
-# Modifies text alignment of specified text display.
-# Alignment can be left, center or right.
-Command: /display edit (display) alignment (alignment)
-Permission: displayentities.command.display.edit.alignment
-
-# Modifies background color of specified text display.
-# Color can be either named (like cyan) or any hex value (like #00FF00).
-# Opacity is specified in percentage, where 0% is fully transparent, and 100% is fully opaque.
-# Opacity, if unspecified, defaults to fully opaque.
-Command: /display edit (display) background (color) [opacity]
-Permission: displayentities.command.display.edit.background
-
-# Modifies line width of specified text display.
-Command: /display edit (display) line_width (width)
-Permission: displayentities.command.display.edit.line_width
-
-# Modifies see through state of specified text display.
-Command: /display edit (display) see_through (true / false)
-Permission: displayentities.command.display.edit.see_through
-
-# Modifies text shadow state of specified text display.
-Command: /display edit (display) text_shadow (true / false)
-Permission: displayentities.command.display.edit.text_shadow
-
-# Modifies text opacity of specified text display.
-# Opacity is specified in percentage, where 0% is fully transparent, and 100% is fully opaque.
-Command: /display edit (display) text_opacity (opacity)
-Permission: displayentities.command.display.edit.text_opacity
-
-=== Editing (Block) ===
-
-# Modifies the block that is represented by specified block display.
-# Block can be a predefined block type, or currently held block. Latter can be set with @main_hand or @off_hand selector.
-Command: /display edit (display) block (@main_hand | @off_hand | type)
-Permission: displayentities.command.display.edit.block
-
-=== Editing (Item) ===
-
-# Modifies the item that is represented by specified item display.
-# Item can be a predefined item type, or currently held item. Latter can be set with @main_hand or @off_hand selector.
-Command: /display edit (display) item (@main_hand | @off_hand | type)
-Permission: displayentities.command.display.edit.item
-```
-
-</details>
-
-
-<br />
+<br/>
 
 ## Features
 
@@ -175,6 +53,70 @@ Permission: displayentities.command.display.edit.item
 
 ## Requirements
 Plugin runs only on **Paper** (or **Folia**) **1.21.4** and above, powered by **Java 21** or higher.
+
+<br/>
+
+## Getting Started
+Small guide how to get started until I can finally get a documentation page up and running.
+
+### Commands
+Type **/display help** to see list of available commands. Make sure you're a server operator or have correct permissions applied to your account.
+
+### Permissions
+
+<details>
+  <summary>Click here to expand list of available permissions.</summary>
+
+  ```yml
+  # Management Commands
+  displayentities.command.display.help
+  displayentities.command.display.clone
+  displayentities.command.display.create
+  displayentities.command.display.delete
+  displayentities.command.display.reload
+  displayentities.command.display.respawn
+  displayentities.command.display.teleport
+
+  # Editing Commands (Text, Block, Item, Interaction)
+  displayentities.command.display.edit.move_to
+
+  # Editing Commands (Text, Block, Item)
+  displayentities.command.display.edit.scale
+  displayentities.command.display.edit.view_range
+  displayentities.command.display.edit.billboard
+  displayentities.command.display.edit.brightness
+  displayentities.command.display.edit.rotate_x
+  displayentities.command.display.edit.rotate_y
+
+  # Editing Commands (Text)
+  displayentities.command.display.edit.add_line
+  displayentities.command.display.edit.remove_line
+  displayentities.command.display.edit.set_line
+  displayentities.command.display.edit.insert_line
+  displayentities.command.display.edit.refresh_interval
+  displayentities.command.display.edit.alignment
+  displayentities.command.display.edit.background
+  displayentities.command.display.edit.line_width
+  displayentities.command.display.edit.see_through
+  displayentities.command.display.edit.text_Shadow
+  displayentities.command.display.edit.text_opacity
+
+  # Editing Commands (Block)
+  displayentities.command.display.edit.block
+
+  # Editing Commands (Item)
+  displayentities.command.display.edit.item
+
+  # Editing Commands (Interaction)
+  displayentities.command.display.edit.width
+  displayentities.command.display.edit.height
+  displayentities.command.display.edit.response
+
+  # Editing Commands (Block, Item, Interaction)
+  displayentities.command.display.edit.glow
+  ```
+
+</details>
 
 <br/>
 
