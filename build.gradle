@@ -26,7 +26,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
     // Paper API
-    compileOnly("io.papermc.paper:paper-api:1.21.6-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.9-pre4-R0.1-SNAPSHOT")
     // Plugin libraries and other runtime dependencies. Downloading and loading handled by Paper's Plugin Loader API.
     paperLibrary("io.github.revxrsal:lamp.common:4.0.0-rc.12")
     paperLibrary("io.github.revxrsal:lamp.bukkit:4.0.0-rc.12")
@@ -41,7 +41,7 @@ runPaper.folia.registerTask()
 
 tasks {
     runServer {
-        minecraftVersion("1.21.8")
+        minecraftVersion("1.21.9-pre4")
     }
     runFolia {
         minecraftVersion("1.21.8")
@@ -73,7 +73,7 @@ tasks.withType(xyz.jpenilla.runtask.task.AbstractRun.class).configureEach {
         vendor = JvmVendorSpec.JETBRAINS
         languageVersion = JavaLanguageVersion.of(21)
     }
-    jvmArgs("-XX:+AllowEnhancedClassRedefinition")
+    jvmArgs("-XX:+AllowEnhancedClassRedefinition", "-Dcom.mojang.eula.agree=true", "-Dnet.kyori.ansi.colorLevel=truecolor")
 }
 
 // Returns formatted release name. (for GitHub Actions)
