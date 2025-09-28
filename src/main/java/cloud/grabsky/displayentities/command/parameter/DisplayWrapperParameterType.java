@@ -65,8 +65,10 @@ public enum DisplayWrapperParameterType implements ParameterType.Factory<BukkitC
                 final String value = input.readString();
                 // Player is REQUIRED for this parser to work.
                 final Player sender = context.actor().requirePlayer();
+                // Getting the configured radius for nearby entities lookup.
+                final int radius = DisplayEntities.instance().configuration().nearbyEntitiesRadius();
                 // Getting all applicable entities around the player.
-                final @Nullable Entity display = context.actor().requirePlayer().getNearbyEntities(64, 64, 64).stream()
+                final @Nullable Entity display = context.actor().requirePlayer().getNearbyEntities(radius, radius, radius).stream()
                         .filter(it -> (it instanceof Display || it instanceof Interaction) && (it.getTrackedBy().contains(sender) == true) && it.getPersistentDataContainer().getOrDefault(DisplayEntities.Keys.NAME, PersistentDataType.STRING, "").equals(value) == true)
                         .findFirst().orElse(null);
                 // Throwing exception if not found.
@@ -89,8 +91,10 @@ public enum DisplayWrapperParameterType implements ParameterType.Factory<BukkitC
                 return context -> {
                     // Player is REQUIRED for any completions to work.
                     final Player sender = context.actor().requirePlayer();
+                    // Getting the configured radius for nearby entities lookup.
+                    final int radius = DisplayEntities.instance().configuration().nearbyEntitiesRadius();
                     // Filtering nearby entities and showing that in completions.
-                    return context.actor().requirePlayer().getNearbyEntities(64, 64, 64).stream()
+                    return context.actor().requirePlayer().getNearbyEntities(radius, radius, radius).stream()
                             .filter(it -> (it instanceof Display || it instanceof Interaction) && (it.getTrackedBy().contains(sender) == true) && it.getPersistentDataContainer().has(DisplayEntities.Keys.NAME, PersistentDataType.STRING) == true)
                             .map(entity -> entity.getPersistentDataContainer().get(DisplayEntities.Keys.NAME, PersistentDataType.STRING))
                             .toList();

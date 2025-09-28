@@ -54,7 +54,13 @@ public interface PluginConfiguration {
         return 200;
     }
 
-    @Order(2) @Key("predefined_colors")
+    @Order(2) @Key("nearby_entities_radius")
+    @Comment("Radius in blocks within which entities are collected for command completions and parsed in commands. Capped to server's simulation distance. (Default: 64)")
+    default int nearbyEntitiesRadius() {
+        return 64;
+    }
+
+    @Order(3) @Key("predefined_colors")
     @Comment("Predefined colors for use in messages section of the configuration file.")
     default LinkedHashMap<String, String> predefinedColors() {
         return new LinkedHashMap<>() {{
