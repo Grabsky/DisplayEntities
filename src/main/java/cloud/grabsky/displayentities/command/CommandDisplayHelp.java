@@ -30,7 +30,6 @@ import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.util.LombokExtensions;
 import org.bukkit.command.CommandSender;
 import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.Default;
 import revxrsal.commands.annotation.Dependency;
 import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.annotation.SuggestWith;
@@ -64,9 +63,9 @@ public enum CommandDisplayHelp {
     public void onDefault(
             final @NotNull CommandSender sender,
             final @Nullable @Optional @SuggestWith(PageSuggestionProvider.class) Integer page
-            ) {
+    ) {
         // Calculating max page number.
-        final int maxPage = configuration.messages().commandDisplayHelpContents().size() / 6 + 1;
+        final int maxPage = Math.max(1, (int) Math.ceil(configuration.messages().commandDisplayHelpContents().size() / 6.0D));
         // Getting the requested page. Defaults to 1 for invalid input and is capped by number of the last page.
         final int finalPage = (page != null) ? Math.clamp(page, 1, maxPage) : 1;
         // Sending help header.
@@ -86,7 +85,7 @@ public enum CommandDisplayHelp {
 
         @Override
         public @NotNull Collection<String> getSuggestions(@NotNull final ExecutionContext<BukkitCommandActor> context) {
-            final int maxPage = DisplayEntities.instance().configuration().messages().commandDisplayHelpContents().size() / 6 + 1;
+            final int maxPage = Math.max(1, (int) Math.ceil(DisplayEntities.instance().configuration().messages().commandDisplayHelpContents().size() / 6.0D));
             // Generating suggestions and returning.
             return IntStream.range(1, maxPage + 1).mapToObj(String::valueOf).toList();
         }
