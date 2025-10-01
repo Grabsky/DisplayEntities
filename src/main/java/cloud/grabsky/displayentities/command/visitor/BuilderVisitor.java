@@ -209,10 +209,15 @@ public final class BuilderVisitor implements LampBuilderVisitor<BukkitCommandAct
                     .filter(failedAttempt -> !(failedAttempt.error() instanceof ExpectedLiteralException))
                     .filter(failedAttempt -> {
                         if (failedAttempt.error() instanceof DisplayWrapperParameterType.Exception) {
-                            // Keeping the DisplayWrapperParameterType.Exception only for these patterns:
-                            //   display edit (display), display delete (display), display respawn (display)
+                            // Keeping the DisplayWrapperParameterType.Exception for some management commands.
+                            // This is still not 100% perfect and needs to be improved.
                             return (parts.length == 3 && parts[0].equalsIgnoreCase("display") == true)
-                                    && (parts[1].equalsIgnoreCase("edit") == true || parts[1].equalsIgnoreCase("respawn") == true || parts[1].equalsIgnoreCase("delete") == true);
+                                    && (parts[1].equalsIgnoreCase("edit") == true
+                                        || parts[1].equalsIgnoreCase("respawn") == true
+                                        || parts[1].equalsIgnoreCase("delete") == true
+                                        || parts[1].equalsIgnoreCase("export") == true
+                                        || parts[1].equalsIgnoreCase("teleport") == true
+                            );
                         }
                         // Otherwise, filtering it out.
                         return true;

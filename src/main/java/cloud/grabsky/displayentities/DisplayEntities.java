@@ -34,9 +34,11 @@ import cloud.grabsky.displayentities.command.CommandDisplayBrightness;
 import cloud.grabsky.displayentities.command.CommandDisplayClone;
 import cloud.grabsky.displayentities.command.CommandDisplayCreate;
 import cloud.grabsky.displayentities.command.CommandDisplayDelete;
+import cloud.grabsky.displayentities.command.CommandDisplayExport;
 import cloud.grabsky.displayentities.command.CommandDisplayGlow;
 import cloud.grabsky.displayentities.command.CommandDisplayHeight;
 import cloud.grabsky.displayentities.command.CommandDisplayHelp;
+import cloud.grabsky.displayentities.command.CommandDisplayImport;
 import cloud.grabsky.displayentities.command.CommandDisplayItem;
 import cloud.grabsky.displayentities.command.CommandDisplayLineWidth;
 import cloud.grabsky.displayentities.command.CommandDisplayMoveTo;
@@ -211,6 +213,8 @@ public final class DisplayEntities extends JavaPlugin {
         lamp.register(CommandDisplayReload.INSTANCE);
         lamp.register(CommandDisplayRespawn.INSTANCE);
         lamp.register(CommandDisplayTeleport.INSTANCE);
+        lamp.register(CommandDisplayExport.INSTANCE);
+        lamp.register(CommandDisplayImport.INSTANCE);
         // Editing (Common / All)
         lamp.register(CommandDisplayMoveTo.INSTANCE);
         // Editing (Strict / Display Entities)
