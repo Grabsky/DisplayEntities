@@ -44,7 +44,7 @@ import org.jetbrains.annotations.Nullable;
 
 import lombok.experimental.ExtensionMethod;
 
-@SuppressWarnings("UnstableApiUsage") // BlockType
+@SuppressWarnings("UnstableApiUsage") // Item Components API
 @ExtensionMethod(LombokExtensions.class)
 public enum CommandDisplayBlock {
     INSTANCE; // SINGLETON

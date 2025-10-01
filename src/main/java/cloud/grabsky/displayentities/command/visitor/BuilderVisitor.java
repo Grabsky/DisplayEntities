@@ -73,7 +73,7 @@ public final class BuilderVisitor implements LampBuilderVisitor<BukkitCommandAct
     @Getter(AccessLevel.PUBLIC)
     private final DisplayEntities plugin;
 
-    @Override @SuppressWarnings({"unchecked", "UnstableApiUsage"}) // Position, ItemType, BlockType
+    @Override @SuppressWarnings({"unchecked", "UnstableApiUsage"}) // Position
     public void visit(final @NotNull Lamp.Builder<BukkitCommandActor> builder) {
         // Registering custom parameter types.
         builder.parameterTypes(it -> {
@@ -172,7 +172,7 @@ public final class BuilderVisitor implements LampBuilderVisitor<BukkitCommandAct
             actor.reply(plugin.miniMessage().deserialize(plugin.configuration().messages().errorInvalidDisplay().repl("{input}", e.input())));
         }
 
-        @HandleException @SuppressWarnings("UnstableApiUsage") // Position, ItemType, BlockType
+        @HandleException
         public void onInvalidRegistryValue(final @NotNull RegistryParameterType.Exception e, final @NotNull BukkitCommandActor actor) {
             // Sending specialized error for the ItemType registry.
             if (e.registryType() == ItemType.class)

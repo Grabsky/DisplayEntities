@@ -43,7 +43,6 @@ import org.jetbrains.annotations.Nullable;
 
 import lombok.experimental.ExtensionMethod;
 
-@SuppressWarnings("UnstableApiUsage") // ItemType
 @ExtensionMethod(LombokExtensions.class)
 public enum CommandDisplayItem {
     INSTANCE; // SINGLETON
