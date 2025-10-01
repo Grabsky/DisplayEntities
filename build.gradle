@@ -1,7 +1,7 @@
 plugins {
     id("java-library")
-    id("xyz.jpenilla.run-paper") version "2.3.1"
-    id("de.eldoria.plugin-yml.paper") version "0.7.1"
+    id("xyz.jpenilla.run-paper") version "3.0.0"
+    id("de.eldoria.plugin-yml.paper") version "0.8.0"
 }
 
 final String VERSION = "1.5.0"
@@ -28,8 +28,8 @@ dependencies {
     // Paper API
     compileOnly("io.papermc.paper:paper-api:1.21.9-pre4-R0.1-SNAPSHOT")
     // Plugin libraries and other runtime dependencies. Downloading and loading handled by Paper's Plugin Loader API.
-    paperLibrary("io.github.revxrsal:lamp.common:4.0.0-rc.12")
-    paperLibrary("io.github.revxrsal:lamp.bukkit:4.0.0-rc.12")
+    paperLibrary("io.github.revxrsal:lamp.common:4.0.0-rc.13")
+    paperLibrary("io.github.revxrsal:lamp.bukkit:4.0.0-rc.13")
     paperLibrary("io.github.revxrsal:spec:1.5")
     // Plugin runtime dependencies.
     compileOnly("me.clip:placeholderapi:2.11.6")
@@ -41,7 +41,7 @@ runPaper.folia.registerTask()
 
 tasks {
     runServer {
-        minecraftVersion("1.21.9-pre4")
+        minecraftVersion("1.21.9")
     }
     runFolia {
         minecraftVersion("1.21.8")
@@ -58,7 +58,7 @@ tasks {
 paper {
     main = "cloud.grabsky.displayentities.DisplayEntities"
     loader = "cloud.grabsky.displayentities.DisplayEntities\$PluginLoader"
-    apiVersion = "1.21"
+    apiVersion = "1.21.9"
     foliaSupported = true
     generateLibrariesJson = true
     serverDependencies {
@@ -73,7 +73,7 @@ tasks.withType(xyz.jpenilla.runtask.task.AbstractRun.class).configureEach {
         vendor = JvmVendorSpec.JETBRAINS
         languageVersion = JavaLanguageVersion.of(21)
     }
-    jvmArgs("-XX:+AllowEnhancedClassRedefinition", "-Dcom.mojang.eula.agree=true", "-Dnet.kyori.ansi.colorLevel=truecolor")
+    jvmArgs("-XX:+AllowEnhancedClassRedefinition", "-Dcom.mojang.eula.agree=true", "-Dnet.kyori.ansi.colorLevel=truecolor", "--enable-preview")
 }
 
 // Returns formatted release name. (for GitHub Actions)
