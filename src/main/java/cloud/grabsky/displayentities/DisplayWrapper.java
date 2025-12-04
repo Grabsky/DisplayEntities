@@ -26,6 +26,7 @@
 package cloud.grabsky.displayentities;
 
 import cloud.grabsky.displayentities.util.LombokExtensions;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -55,7 +56,7 @@ import lombok.experimental.ExtensionMethod;
 @Accessors(fluent = true)
 @ExtensionMethod(LombokExtensions.class)
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public sealed abstract class DisplayWrapper permits DisplayWrapper.Strict, DisplayWrapper.Interaction {
+public sealed abstract class DisplayWrapper permits DisplayWrapper.Strict, DisplayWrapper.Interaction, DisplayWrapper.Mannequin {
 
     @Getter(AccessLevel.PUBLIC)
     protected final Class<? extends Entity> type;
@@ -94,6 +95,8 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Strict, Displ
             return (W) new Item(display, name);
         else if (entity instanceof BlockDisplay display)
             return (W) new Block(display, name);
+        else if (entity instanceof org.bukkit.entity.Mannequin display)
+            return (W) new Mannequin(display, name);
         else if (entity instanceof org.bukkit.entity.Interaction display)
             return (W) new Interaction(display, name);
         // ...
@@ -112,6 +115,7 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Strict, Displ
             case TextDisplay it -> (W) new Text(it, name);
             case ItemDisplay it -> (W) new Item(it, name);
             case BlockDisplay it -> (W) new Block(it, name);
+            case org.bukkit.entity.Mannequin it -> (W) new Mannequin(it, name);
             case org.bukkit.entity.Interaction it -> (W) new Interaction(it, name);
             default -> throw new IllegalArgumentException("UNSUPPORTED_ENTITY_TYPE");
         };
@@ -158,19 +162,24 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Strict, Displ
     }
 
     /**
+     * Returns {@code true} if specified key exists in entity's persistent data container .
+     */
+    public boolean has(final @NotNull NamespacedKey key) {
+        return entity.getPersistentDataContainer().has(key);
+    }
+
+    /**
      * Strict wrapper is a super class for all entities that inherit from display entities.
      * Ever since introduction of {@link org.bukkit.entity.Interaction} entity type, it must be handled that way.
      */
     public static abstract non-sealed class Strict extends DisplayWrapper {
 
-        private Strict(final @NotNull Class<? extends Display> type, @NotNull final String name, @NotNull final Display entity) {
+        private Strict(final @NotNull Class<? extends Entity> type, @NotNull final String name, @NotNull final Display entity) {
             super(type, name, entity);
         }
 
         @Override @SuppressWarnings("unchecked")
-        public @NotNull Display entity() {
-            return (Display) this.entity;
-        }
+        public @NotNull Entity entity() { return this.entity; }
 
 
     }
@@ -242,6 +251,7 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Strict, Displ
 
     }
 
+
     public static final class Interaction extends DisplayWrapper {
 
         private Interaction(final @NotNull org.bukkit.entity.Interaction entity, final @NotNull String name) {
@@ -263,11 +273,44 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Strict, Displ
     }
 
 
+    public static final class Mannequin extends DisplayWrapper {
+
+        private Mannequin(final @NotNull org.bukkit.entity.Mannequin entity, final @NotNull String name) {
+            super(org.bukkit.entity.Mannequin.class, name, entity);
+        }
+
+        @Override @SuppressWarnings("unchecked")
+        public @NotNull org.bukkit.entity.Mannequin entity() {
+            return (org.bukkit.entity.Mannequin) this.entity;
+        }
+
+        @Override @SuppressWarnings("unchecked")
+        public @NotNull DisplayWrapper.Mannequin initialConfiguration() {
+            // Preventing collisions and other movement types.
+            // This isn't enough to prevent mannequins from entering vehicles, which is handled in MannequinListener class.
+            this.entity().setImmovable(true);
+            this.entity().setGravity(false);
+            this.entity().setAI(false);
+            // Making the mannequin invulnerable to damage.
+            // That isn't enough to prevent creative players from damaging them, which is handled in MannequinListener class.
+            this.entity().setInvulnerable(true);
+            // Setting the name above their head and making sure it is shown at all times. Will likely be moved to packets to enable PlaceholderAPI support. (Not 100% sure about that yet)
+            this.entity().customName(Component.text(name));
+            this.entity().setCustomNameVisible(true);
+            // Removing the 'NPC' below_name objective.
+            this.entity().setDescription(null);
+            return this;
+        }
+
+    }
+
+
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     public enum Type {
         TEXT(EntityType.TEXT_DISPLAY),
         ITEM(EntityType.ITEM_DISPLAY),
         BLOCK(EntityType.BLOCK_DISPLAY),
+        MANNEQUIN(EntityType.MANNEQUIN),
         INTERACTION(EntityType.INTERACTION);
 
         @Getter(AccessLevel.PUBLIC)

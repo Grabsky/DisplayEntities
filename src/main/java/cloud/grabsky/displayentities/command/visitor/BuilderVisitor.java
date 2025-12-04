@@ -29,10 +29,12 @@ import cloud.grabsky.displayentities.DisplayEntities;
 import cloud.grabsky.displayentities.DisplayWrapper;
 import cloud.grabsky.displayentities.command.parameter.ColorParameterType;
 import cloud.grabsky.displayentities.command.parameter.DisplayWrapperParameterType;
+import cloud.grabsky.displayentities.command.parameter.NamedTextColorParameterType;
 import cloud.grabsky.displayentities.command.parameter.PositionParameterType;
 import cloud.grabsky.displayentities.command.parameter.RegistryParameterType;
 import cloud.grabsky.displayentities.util.LombokExtensions;
 import io.papermc.paper.math.Position;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
 import org.bukkit.Registry;
 import org.bukkit.block.BlockType;
@@ -79,6 +81,7 @@ public final class BuilderVisitor implements LampBuilderVisitor<BukkitCommandAct
         builder.parameterTypes(it -> {
             it.addParameterType(Color.class, ColorParameterType.INSTANCE);
             it.addParameterType(Position.class, PositionParameterType.INSTANCE);
+            it.addParameterType(NamedTextColor.class, NamedTextColorParameterType.INSTANCE);
             it.addParameterType(ItemType.class, new RegistryParameterType<>(ItemType.class, () -> Registry.ITEM));
             it.addParameterType(BlockType.class, new RegistryParameterType<>(BlockType.class, () -> Registry.BLOCK));
             it.addParameterTypeFactory(DisplayWrapperParameterType.INSTANCE);

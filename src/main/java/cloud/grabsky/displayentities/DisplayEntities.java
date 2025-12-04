@@ -31,9 +31,13 @@ import cloud.grabsky.displayentities.command.CommandDisplayBackground;
 import cloud.grabsky.displayentities.command.CommandDisplayBillboard;
 import cloud.grabsky.displayentities.command.CommandDisplayBlock;
 import cloud.grabsky.displayentities.command.CommandDisplayBrightness;
+import cloud.grabsky.displayentities.command.CommandDisplayClickCommand;
 import cloud.grabsky.displayentities.command.CommandDisplayClone;
 import cloud.grabsky.displayentities.command.CommandDisplayCreate;
+import cloud.grabsky.displayentities.command.CommandDisplayCustomName;
 import cloud.grabsky.displayentities.command.CommandDisplayDelete;
+import cloud.grabsky.displayentities.command.CommandDisplayDescription;
+import cloud.grabsky.displayentities.command.CommandDisplayEquipment;
 import cloud.grabsky.displayentities.command.CommandDisplayExport;
 import cloud.grabsky.displayentities.command.CommandDisplayGlow;
 import cloud.grabsky.displayentities.command.CommandDisplayHeight;
@@ -42,6 +46,7 @@ import cloud.grabsky.displayentities.command.CommandDisplayImport;
 import cloud.grabsky.displayentities.command.CommandDisplayItem;
 import cloud.grabsky.displayentities.command.CommandDisplayLineWidth;
 import cloud.grabsky.displayentities.command.CommandDisplayMoveTo;
+import cloud.grabsky.displayentities.command.CommandDisplayPose;
 import cloud.grabsky.displayentities.command.CommandDisplayRefreshInterval;
 import cloud.grabsky.displayentities.command.CommandDisplayReload;
 import cloud.grabsky.displayentities.command.CommandDisplayRespawn;
@@ -50,16 +55,20 @@ import cloud.grabsky.displayentities.command.CommandDisplayRotateX;
 import cloud.grabsky.displayentities.command.CommandDisplayRotateY;
 import cloud.grabsky.displayentities.command.CommandDisplayScale;
 import cloud.grabsky.displayentities.command.CommandDisplaySeeThrough;
+import cloud.grabsky.displayentities.command.CommandDisplaySkin;
 import cloud.grabsky.displayentities.command.CommandDisplayTeleport;
 import cloud.grabsky.displayentities.command.CommandDisplayTextManipulation;
 import cloud.grabsky.displayentities.command.CommandDisplayTextOpacity;
 import cloud.grabsky.displayentities.command.CommandDisplayTextShadow;
+import cloud.grabsky.displayentities.command.CommandDisplayTrackNearestPlayer;
 import cloud.grabsky.displayentities.command.CommandDisplayTransform;
 import cloud.grabsky.displayentities.command.CommandDisplayViewRange;
 import cloud.grabsky.displayentities.command.CommandDisplayWidth;
 import cloud.grabsky.displayentities.command.visitor.BuilderVisitor;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.hook.PacketEventsHook;
+import cloud.grabsky.displayentities.listener.ClickCommandListener;
+import cloud.grabsky.displayentities.listener.MannequinListener;
 import cloud.grabsky.displayentities.util.LombokExtensions;
 import cloud.grabsky.displayentities.util.MapFlattener;
 import com.google.gson.Gson;
@@ -193,6 +202,9 @@ public final class DisplayEntities extends JavaPlugin {
                 .build();
         // Registering plugin commands.
         this.registerCommands(this.lamp);
+        // Registering event listeners.
+        this.getServer().getPluginManager().registerEvents(MannequinListener.INSTANCE, this);
+        this.getServer().getPluginManager().registerEvents(ClickCommandListener.INSTANCE, this);
         // Connecting to bStats.
         new Metrics(this, 25686);
     }
@@ -225,6 +237,8 @@ public final class DisplayEntities extends JavaPlugin {
         lamp.register(CommandDisplayRotateX.INSTANCE);
         lamp.register(CommandDisplayRotateY.INSTANCE);
         lamp.register(CommandDisplayGlow.INSTANCE);
+        // Editing (Click Command)
+        lamp.register(CommandDisplayClickCommand.INSTANCE);
         // Editing (Block)
         lamp.register(CommandDisplayBlock.INSTANCE);
         // Editing (Item)
@@ -243,6 +257,13 @@ public final class DisplayEntities extends JavaPlugin {
         lamp.register(CommandDisplayWidth.INSTANCE);
         lamp.register(CommandDisplayHeight.INSTANCE);
         lamp.register(CommandDisplayResponse.INSTANCE);
+        // Editing (Mannequin)
+        lamp.register(CommandDisplaySkin.INSTANCE);
+        lamp.register(CommandDisplayPose.INSTANCE);
+        lamp.register(CommandDisplayEquipment.INSTANCE);
+        lamp.register(CommandDisplayCustomName.INSTANCE);
+        lamp.register(CommandDisplayDescription.INSTANCE);
+        lamp.register(CommandDisplayTrackNearestPlayer.INSTANCE);
     }
 
     public void debug(final String message) {
@@ -256,6 +277,7 @@ public final class DisplayEntities extends JavaPlugin {
         final Map<String, Object> flattened = MapFlattener.flatten(commentedConfiguration().getData());
         // Building new MiniMessage instance.
         this.miniMessage = MiniMessage.builder()
+                // Adding standard MiniMessage tags.
                 .tags(TagResolver.standard())
                 // Creating and registering configured color tags.
                 .editTags(it -> this.configuration.predefinedColors().forEach((key, value) -> {
@@ -268,7 +290,7 @@ public final class DisplayEntities extends JavaPlugin {
                     // Adding new styling tag.
                     it.tag(key, Tag.styling(color));
                 }))
-                // Creating <spec:config.value.path> tag which acts like a placeholder for specific.
+                // Creating <spec:config.value.path> tag which acts like a placeholder for Spec config value.
                 .editTags(it -> it.tag("spec", (queue, context) -> {
                     if (flattened.isEmpty() == false && queue.hasNext() == true) {
                         final String key = queue.pop().value();
@@ -295,6 +317,21 @@ public final class DisplayEntities extends JavaPlugin {
 
         /** Used to store override for refresh interval time. */
         public static final NamespacedKey REFRESH_INTERVAL = new NamespacedKey("display_entities", "refresh_interval");
+
+        /** Used to store click command of mannequin or interaction entity. */
+        public static final NamespacedKey CLICK_COMMAND = new NamespacedKey("display_entities", "click_command");
+
+        /** Used to store custom name of mannequin entity. */
+        public static final NamespacedKey MANNEQUIN_CUSTOM_NAME = new NamespacedKey("display_entities", "mannequin_custom_name");
+
+        /** Used to store description of mannequin entity. */
+        public static final NamespacedKey MANNEQUIN_DESCRIPTION = new NamespacedKey("display_entities", "mannequin_description");
+
+        /** Used to store state of whether mannequin should track nearest player. */
+        public static final NamespacedKey MANNEQUIN_TRACK_NEAREST_PLAYER = new NamespacedKey("display_entities", "mannequin_track_nearest_player");
+
+        // NOT IMPLEMENTED
+        // public static final NamespacedKey MANNEQUIN_IS_SITTING = new NamespacedKey("display_entities", "mannequin_is_sitting");
 
     }
 

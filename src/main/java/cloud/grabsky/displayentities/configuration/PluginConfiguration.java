@@ -60,7 +60,17 @@ public interface PluginConfiguration {
         return 64;
     }
 
-    @Order(3) @Key("predefined_colors")
+    @Order(3) @Key("refresh_text_displays_upon_resource-pack_load")
+    @Comment("Whether text displays should be refreshed when player loads a resource-pack. Enable this if you're using custom fonts in text displays. (Default: false)")
+    default boolean refreshTextDisplaysUponResourcePackLoad() { return false; }
+
+    @Order(3) @Key("track_nearest_player_radius")
+    @Comment("Radius in blocks within which mannequin entities will track (look at) nearest player. (Default: 2.5)")
+    default float trackNearestPlayerRadius() {
+        return 2.5F;
+    }
+
+    @Order(4) @Key("predefined_colors")
     @Comment("Predefined colors for use in messages section of the configuration file.")
     default LinkedHashMap<String, String> predefinedColors() {
         return new LinkedHashMap<>() {{
@@ -76,10 +86,12 @@ public interface PluginConfiguration {
             put("item_secondary", "#FF9680");
             put("interaction_primary", "#FFFFFF");
             put("interaction_secondary", "#999999");
+            put("mannequin_primary", "#F20039");
+            put("mannequin_secondary", "#F2506E");
         }};
     }
 
-    @Order(3) @Key("messages")
+    @Order(5) @Key("messages")
     @Comment("Translatable messages used across the entire plugin. MiniMessage is the only supported text format.")
     Messages messages();
 
@@ -201,7 +213,13 @@ public interface PluginConfiguration {
                 put("display.edit.height",           "<interaction_primary>/display edit <interaction_secondary>(display) <interaction_primary>height <interaction_secondary>(height)");
                 put("display.edit.response",         "<interaction_primary>/display edit <interaction_secondary>(display) <interaction_primary>response <interaction_secondary>(true | false)");
                 // Additional glow entry for in-game 'invalid-usage' message. The reason why it is needed is because the glow command only available for item and block displays.
-                put("display.edit.glow",             "<common_primary>/display edit <common_secondary>(display) <common_primary>glow <common_secondary>(@none | color)");
+                put("display.edit.glow",                 "<common_primary>/display edit <common_secondary>(display) <common_primary>glow <common_secondary>(@none | color)");
+                put("display.edit.skin",                 "<mannequin_primary>/display edit <mannequin_secondary>(display) <mannequin_primary>skin <mannequin_secondary>(skin)");
+                put("display.edit.pose",                 "<mannequin_primary>/display edit <mannequin_secondary>(display) <mannequin_primary>pose <mannequin_secondary>(pose)");
+                put("display.edit.custom_name",          "<mannequin_primary>/display edit <mannequin_secondary>(display) <mannequin_primary>custom_name <mannequin_secondary>(name | @hidden)");
+                put("display.edit.description",          "<mannequin_primary>/display edit <mannequin_secondary>(display) <mannequin_primary>description <mannequin_secondary>(name | @hidden)");
+                put("display.edit.track_nearest_player", "<mannequin_primary>/display edit <mannequin_secondary>(display) <mannequin_primary>track_nearest_player <mannequin_secondary>(true | false)");
+                put("display.edit.equipment",            "<mannequin_primary>/display edit <mannequin_secondary>(display) <mannequin_primary>equipment <mannequin_secondary>(slot) (item | @nothing)");
             }};
         }
         
@@ -256,7 +274,13 @@ public interface PluginConfiguration {
                     "<dark_gray>› <spec:messages.command_usages.display.edit.item.glow>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.width>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.height>",
-                    "<dark_gray>› <spec:messages.command_usages.display.edit.response>"
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.response>",
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.skin>",
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.pose>",
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.custom_name>",
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.description>",
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.track_nearest_player>",
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.equipment>"
             );
         }
 
@@ -593,6 +617,77 @@ public interface PluginConfiguration {
         @Order(64) @Key("command.display.edit.glow.disabled.success")
         default String commandDisplayEditGlowDisabledSuccess() {
             return "<dark_gray>› <gray>Display glow has been disabled.";
+        }
+
+        // Display > Edit > Click Command
+
+        @Order(65) @Key("command.display.edit.click_command.success")
+        @Comment("Display > Edit > Click Command")
+        default String commandDisplayEditClickCommandSuccess() {
+            return "<dark_gray>› <gray>Display click command(s) have been modified.";
+        }
+
+        // Display > Edit > Custom Name
+
+        @Order(66) @Key("command.display.edit.custom_name.success")
+        @Comment("Display > Edit > Custom Name")
+        default String commandDisplayEditCustomNameSuccess() {
+            return "<dark_gray>› <gray>Display custom name has been modified.";
+        }
+
+        // Display > Edit > Description
+
+        @Order(67) @Key("command.display.edit.description.success")
+        @Comment("Display > Edit > Description")
+        default String commandDisplayEditDescriptionSuccess() {
+            return "<dark_gray>› <gray>Display description has been modified.";
+        }
+
+        // Display > Edit > Equipment
+
+        @Order(68) @Key("command.display.edit.equipment.failure.invalid_slot")
+        @Comment("Display > Edit > Equipment")
+        default String commandDisplayEditEquipmentFailureInvalidSlot() {
+            return "<dark_gray>› <red>Argument <yellow>{input}<red> is not a valid equipment slot.";
+        }
+
+        @Order(69) @Key("command.display.edit.equipment.failure.invalid_item")
+        default String commandDisplayEditEquipmentFailureInvalidItem() {
+            return "<dark_gray>› <red>Argument <yellow>{input}<red> is not a valid item type.";
+        }
+
+        @Order(70) @Key("command.display.edit.equipment.success")
+        default String commandDisplayEditEquipmentSuccess() {
+            return "<dark_gray>› <gray>Display equipment has been modified.";
+        }
+
+        // Display > Edit > Pose
+
+        @Order(71) @Key("command.display.edit.pose.failure.unsupported_pose")
+        @Comment("Display > Edit > Pose")
+        default String commandDisplayEditPoseFailureUnsupportedPose() {
+            return "<dark_gray>› <gray>Argument <yellow>{input}<gray> is not a valid pose.";
+        }
+
+        @Order(72) @Key("command.display.edit.pose.success")
+        default String commandDisplayEditPoseSuccess() {
+            return "<dark_gray>› <gray>Display pose has been set to <yellow>{pose}<gray>.";
+        }
+
+        // Display > Edit > Skin
+
+        @Order(73) @Key("command.display.edit.skin.success")
+        @Comment("Display > Edit > Skin")
+        default String commandDisplayEditSkinSuccess() {
+            return "<dark_gray>› <gray>Display skin has been set to <yellow>{skin}<gray>.";
+        }
+
+        // Display > Edit > Track Nearest Player
+
+        @Order(74) @Key("command.display.edit.track_nearest_player.success")
+        @Comment("Display > Edit > Track Nearest Player")
+        default String commandDisplayEditTrackNearestPlayerSuccess() {
+            return "<dark_gray>› <gray>Display tracking state has been set to <primary>{state}<gray>.";
         }
 
     }

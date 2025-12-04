@@ -25,6 +25,8 @@
  */
 package cloud.grabsky.displayentities.util;
 
+import java.util.UUID;
+
 public final class Conditions {
 
     /**
@@ -39,6 +41,18 @@ public final class Conditions {
      */
     public static boolean inRange(final long num, final long rangeFrom, final long rangeTo) {
         return num >= rangeFrom && num <= rangeTo;
+    }
+
+    /**
+     * Returns {@code true} if {@code value} is a valid {@link java.util.UUID}.
+     */
+    public static boolean isUUID(final String value) {
+        try {
+            UUID.fromString(value);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 
 }

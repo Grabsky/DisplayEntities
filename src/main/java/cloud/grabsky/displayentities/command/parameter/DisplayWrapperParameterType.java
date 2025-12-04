@@ -31,6 +31,7 @@ import com.google.common.reflect.TypeToken;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Interaction;
+import org.bukkit.entity.Mannequin;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 import revxrsal.commands.Lamp;
@@ -69,7 +70,7 @@ public enum DisplayWrapperParameterType implements ParameterType.Factory<BukkitC
                 final int radius = DisplayEntities.instance().configuration().nearbyEntitiesRadius();
                 // Getting all applicable entities around the player.
                 final @Nullable Entity display = context.actor().requirePlayer().getNearbyEntities(radius, radius, radius).stream()
-                        .filter(it -> (it instanceof Display || it instanceof Interaction) && (it.getTrackedBy().contains(sender) == true) && it.getPersistentDataContainer().getOrDefault(DisplayEntities.Keys.NAME, PersistentDataType.STRING, "").equals(value) == true)
+                        .filter(it -> (it instanceof Display || it instanceof Interaction || it instanceof Mannequin) && (it.getTrackedBy().contains(sender) == true) && it.getPersistentDataContainer().getOrDefault(DisplayEntities.Keys.NAME, PersistentDataType.STRING, "").equals(value) == true)
                         .findFirst().orElse(null);
                 // Throwing exception if not found.
                 if (display == null) {
@@ -95,7 +96,7 @@ public enum DisplayWrapperParameterType implements ParameterType.Factory<BukkitC
                     final int radius = DisplayEntities.instance().configuration().nearbyEntitiesRadius();
                     // Filtering nearby entities and showing that in completions.
                     return context.actor().requirePlayer().getNearbyEntities(radius, radius, radius).stream()
-                            .filter(it -> (it instanceof Display || it instanceof Interaction) && (it.getTrackedBy().contains(sender) == true) && it.getPersistentDataContainer().has(DisplayEntities.Keys.NAME, PersistentDataType.STRING) == true)
+                            .filter(it -> (it instanceof Display || it instanceof Interaction || it instanceof Mannequin) && (it.getTrackedBy().contains(sender) == true) && it.getPersistentDataContainer().has(DisplayEntities.Keys.NAME, PersistentDataType.STRING) == true)
                             .map(entity -> entity.getPersistentDataContainer().get(DisplayEntities.Keys.NAME, PersistentDataType.STRING))
                             .toList();
                 };

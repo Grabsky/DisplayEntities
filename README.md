@@ -53,71 +53,13 @@ To make the plugin a bit more useful, it comes with **MiniMessage** support and 
 <br/>
 
 ## Requirements
-Plugin runs only on **Paper** (or **Folia**) **1.21.4** and above, powered by **Java 21** or higher.
+Plugin runs only on **Paper** (or **Folia**) **1.21.9** and above, powered by **Java 21** or higher.
 
 <br/>
 
 ## Getting Started
-Small guide how to get started until I can finally get a documentation page up and running.
-
-### Commands
-Type **/display help** to see list of available commands. Make sure you're a server operator or have correct permissions applied to your account.
-
-### Permissions
-
-<details>
-  <summary>Click here to expand list of available permissions.</summary>
-
-  ```yml
-  # Management Commands
-  displayentities.command.display.help
-  displayentities.command.display.clone
-  displayentities.command.display.create
-  displayentities.command.display.delete
-  displayentities.command.display.reload
-  displayentities.command.display.respawn
-  displayentities.command.display.teleport
-
-  # Editing Commands (Text, Block, Item, Interaction)
-  displayentities.command.display.edit.move_to
-
-  # Editing Commands (Text, Block, Item)
-  displayentities.command.display.edit.scale
-  displayentities.command.display.edit.view_range
-  displayentities.command.display.edit.billboard
-  displayentities.command.display.edit.brightness
-  displayentities.command.display.edit.rotate_x
-  displayentities.command.display.edit.rotate_y
-
-  # Editing Commands (Text)
-  displayentities.command.display.edit.add_line
-  displayentities.command.display.edit.remove_line
-  displayentities.command.display.edit.set_line
-  displayentities.command.display.edit.insert_line
-  displayentities.command.display.edit.refresh_interval
-  displayentities.command.display.edit.alignment
-  displayentities.command.display.edit.background
-  displayentities.command.display.edit.line_width
-  displayentities.command.display.edit.see_through
-  displayentities.command.display.edit.text_Shadow
-  displayentities.command.display.edit.text_opacity
-
-  # Editing Commands (Block)
-  displayentities.command.display.edit.block
-
-  # Editing Commands (Item)
-  displayentities.command.display.edit.item
-
-  # Editing Commands (Interaction)
-  displayentities.command.display.edit.width
-  displayentities.command.display.edit.height
-  displayentities.command.display.edit.response
-
-  # Editing Commands (Block, Item, Interaction)
-  displayentities.command.display.edit.glow
-  ```
-
-</details>
+Plugin documentation can be found here:
+**[grabsky.github.io](https://grabsky.github.io)**
 
 <br/>
 

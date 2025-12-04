@@ -28,13 +28,17 @@ package cloud.grabsky.displayentities.command;
 import cloud.grabsky.displayentities.DisplayWrapper;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.util.LombokExtensions;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Team;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import lombok.experimental.ExtensionMethod;
 
@@ -101,6 +105,53 @@ public enum CommandDisplayGlow {
     ) {
         // Disabling glow state of the display.
         display.entity().setGlowing(false);
+        // Sending success message to the sender.
+        return configuration.messages().commandDisplayEditGlowDisabledSuccess();
+    }
+
+
+    /* MANNEQUIN */
+
+    @Command("display edit <display> glow")
+    @CommandPermission("displayentities.command.display.edit.glow")
+    public String onMannequinGlow(
+            final @NotNull Player sender,
+            final @NotNull DisplayWrapper.Mannequin display,
+            final @NotNull NamedTextColor color
+    ) {
+        final String colorKey = NamedTextColor.NAMES.keyOr(color, "null");
+        // Enabling glow state and updating glow color of the mannequin.
+        display.entity().setGlowing(true);
+        // Getting scoreboard team for the specified color.
+        Team team = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("de_" + colorKey);
+        // Creating the team if non-existent.
+        if (team == null) {
+            team = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("de_" + colorKey);
+            team.color(color);
+        }
+        // Adding entity to the team.
+        team.addEntity(display.entity());
+        // Sending success message to the sender.
+        return configuration.messages().commandDisplayEditGlowColorChangeSuccess().repl("{color}", colorKey);
+    }
+
+    @Command("display edit <display> glow @none")
+    @CommandPermission("displayentities.command.display.edit.glow")
+    public String onMannequinGlow(
+            final @NotNull Player sender,
+            final @NotNull DisplayWrapper.Mannequin display
+    ) {
+        // Disabling glow state of the mannequin.
+        display.entity().setGlowing(false);
+        // Getting the team this entity is currently in.
+        final @Nullable Team team = Bukkit.getScoreboardManager().getMainScoreboard().getEntityTeam(display.entity());
+        // Removing entity from their team if specified.
+        if (team != null) {
+            team.removeEntity(display.entity());
+            // Unregistering (deleting) the team if it's empty.
+            if (team.getSize() == 0)
+                team.unregister();
+        }
         // Sending success message to the sender.
         return configuration.messages().commandDisplayEditGlowDisabledSuccess();
     }

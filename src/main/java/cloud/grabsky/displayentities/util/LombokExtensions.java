@@ -27,6 +27,8 @@ package cloud.grabsky.displayentities.util;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Location;
+import org.bukkit.Nameable;
+import org.bukkit.entity.Mannequin;
 import org.bukkit.entity.TextDisplay;
 
 import org.jetbrains.annotations.NotNull;
@@ -52,6 +54,14 @@ public enum LombokExtensions {
 
     public static void setRichText(final TextDisplay display, final String text) {
         display.text(MiniMessage.miniMessage().deserialize(text));
+    }
+
+    public static void setRichDescription(final Mannequin mannequin, final String text) {
+        mannequin.setDescription(MiniMessage.miniMessage().deserialize(text));
+    }
+
+    public static void setRichCustomName(final Nameable nameable, final String text) {
+        nameable.customName(MiniMessage.miniMessage().deserialize(text));
     }
 
     public static Location withPitch(final Location location, final float pitch) {

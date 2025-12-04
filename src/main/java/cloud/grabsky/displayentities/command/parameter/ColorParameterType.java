@@ -44,7 +44,7 @@ public enum ColorParameterType implements ParameterType<BukkitCommandActor, Colo
     INSTANCE; // SINGLETON
 
     // Holds map of common colors identified by their name.
-    private static final Map<String, Color> NAMED_COLOR_MAP = Map.ofEntries(
+    public static final Map<String, Color> NAMED_COLOR_MAP = Map.ofEntries(
             Map.entry("aqua", Color.AQUA),
             Map.entry("black", Color.BLACK),
             Map.entry("blue", Color.BLUE),

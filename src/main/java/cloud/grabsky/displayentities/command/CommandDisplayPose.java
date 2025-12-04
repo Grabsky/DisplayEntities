@@ -25,52 +25,51 @@
  */
 package cloud.grabsky.displayentities.command;
 
-import cloud.grabsky.displayentities.DisplayEntities;
 import cloud.grabsky.displayentities.DisplayWrapper;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.util.LombokExtensions;
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Pose;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
+import revxrsal.commands.annotation.Suggest;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import org.jetbrains.annotations.NotNull;
 
 import lombok.experimental.ExtensionMethod;
 
+// TO-DO: Sitting pose requires a better implementation.
 @ExtensionMethod(LombokExtensions.class)
-public enum CommandDisplayRespawn {
+public enum CommandDisplayPose {
     INSTANCE; // SINGLETON
-
-    @Dependency
-    private DisplayEntities plugin;
 
     @Dependency
     private PluginConfiguration configuration;
 
-    @Command("display respawn")
-    @CommandPermission("displayentities.command.display.respawn")
-    public String onDisplayRespawn(
+    @Command("display edit <display> pose")
+    @CommandPermission("displayentities.command.display.edit.pose")
+    public String onDisplayPose(
             final @NotNull Player sender,
-            final @NotNull DisplayWrapper display
+            final @NotNull DisplayWrapper.Mannequin display,
+            final @NotNull @Suggest({"standing", "sneaking", "swimming", "fall_flying", "sleeping"}) Pose pose
     ) {
-        // Getting location of the entity.
-        final Location location = display.entity().getLocation();
-        // Copying the display entity.
-        final Entity copy = display.entity().copy();
-        // Removing the original display entity.
-        display.entity().remove();
-        // Spawning a copy of display entity.
-        sender.getScheduler().run(plugin, (it) -> {
-            copy.spawnAt(location);
-            // Creating the DisplayWrapper instance from the copied entity.
-            final DisplayWrapper newDisplay = DisplayWrapper.existing(copy);
-            // ...for syncing things like sitting pose; currently unused.
-        }, null);
-        // Returning (sending) message to the sender.
-        return configuration.messages().commandDisplayRespawnSuccess().repl("{name}", display.name());
+        // Returning when specified pose is not supported.
+        if (isSupportedPose(pose) == false)
+            return configuration.messages().commandDisplayEditPoseFailureUnsupportedPose().repl("{input}", pose.name());
+        // Setting the new pose.
+        display.entity().setPose(pose);
+        // Sending success message to the sender.
+        return configuration.messages().commandDisplayEditPoseSuccess().repl("{pose}", pose.name());
+    }
+
+    private static boolean isSupportedPose(final @NotNull Pose pose) {
+        return switch (pose) {
+            // Supported by default.
+            case STANDING, SNEAKING, SWIMMING, FALL_FLYING, SLEEPING -> true;
+            // Anything else is not supported.
+            default -> false;
+        };
     }
 
 }

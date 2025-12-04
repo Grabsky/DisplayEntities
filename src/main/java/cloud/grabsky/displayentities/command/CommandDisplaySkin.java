@@ -25,52 +25,48 @@
  */
 package cloud.grabsky.displayentities.command;
 
-import cloud.grabsky.displayentities.DisplayEntities;
 import cloud.grabsky.displayentities.DisplayWrapper;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
+import cloud.grabsky.displayentities.util.Conditions;
 import cloud.grabsky.displayentities.util.LombokExtensions;
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
+import io.papermc.paper.datacomponent.item.ResolvableProfile;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
+import java.util.UUID;
+
 import org.jetbrains.annotations.NotNull;
 
 import lombok.experimental.ExtensionMethod;
 
+// TO-DO: Support for NamespacedKey texture field and maybe remaining properties like cape, elytra etc.
+//        Maybe PlaceholderAPI support? Not needed for initial release.
+@SuppressWarnings("UnstableApiUsage")
 @ExtensionMethod(LombokExtensions.class)
-public enum CommandDisplayRespawn {
+public enum CommandDisplaySkin {
     INSTANCE; // SINGLETON
-
-    @Dependency
-    private DisplayEntities plugin;
 
     @Dependency
     private PluginConfiguration configuration;
 
-    @Command("display respawn")
-    @CommandPermission("displayentities.command.display.respawn")
-    public String onDisplayRespawn(
+    @Command("display edit <display> skin")
+    @CommandPermission("displayentities.command.display.edit.skin")
+    public String onDisplaySkin(
             final @NotNull Player sender,
-            final @NotNull DisplayWrapper display
+            final @NotNull DisplayWrapper.Mannequin display,
+            final @NotNull String skin
     ) {
-        // Getting location of the entity.
-        final Location location = display.entity().getLocation();
-        // Copying the display entity.
-        final Entity copy = display.entity().copy();
-        // Removing the original display entity.
-        display.entity().remove();
-        // Spawning a copy of display entity.
-        sender.getScheduler().run(plugin, (it) -> {
-            copy.spawnAt(location);
-            // Creating the DisplayWrapper instance from the copied entity.
-            final DisplayWrapper newDisplay = DisplayWrapper.existing(copy);
-            // ...for syncing things like sitting pose; currently unused.
-        }, null);
-        // Returning (sending) message to the sender.
-        return configuration.messages().commandDisplayRespawnSuccess().repl("{name}", display.name());
+        // Creating ResolvableProfile based on user input.
+        final ResolvableProfile profile = (Conditions.isUUID(skin) == true)
+                ? ResolvableProfile.resolvableProfile(Bukkit.createProfile(UUID.fromString(skin)))
+                : ResolvableProfile.resolvableProfile(Bukkit.createProfile(skin));
+        // Setting the (skin) profile of the mannequin entity.
+        display.entity().setProfile(profile);
+        // Sending success message to the sender.
+        return configuration.messages().commandDisplayEditSkinSuccess().repl("{skin}", skin);
     }
 
 }
