@@ -53,7 +53,7 @@ To make the plugin a bit more useful, it comes with **MiniMessage** support and 
 <br/>
 
 ## Requirements
-Plugin runs only on **Paper** (or **Folia**) **1.21.9** and above, powered by **Java 21** or higher.
+Plugin runs only on **Paper** (or **Folia**) **1.21.10** and above, powered by **Java 21** or higher.
 
 <br/>
 

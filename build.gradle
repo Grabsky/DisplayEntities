@@ -27,8 +27,8 @@ dependencies {
     // Paper API
     compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
     // Plugin libraries and other runtime dependencies. Downloading and loading handled by Paper's Plugin Loader API.
-    paperLibrary("io.github.revxrsal:lamp.common:4.0.0-rc.13")
-    paperLibrary("io.github.revxrsal:lamp.bukkit:4.0.0-rc.13")
+    paperLibrary("io.github.revxrsal:lamp.common:4.0.0-rc.14")
+    paperLibrary("io.github.revxrsal:lamp.bukkit:4.0.0-rc.14")
     paperLibrary("io.github.revxrsal:spec:1.5")
     // Plugin runtime dependencies.
     compileOnly("me.clip:placeholderapi:2.11.6")
