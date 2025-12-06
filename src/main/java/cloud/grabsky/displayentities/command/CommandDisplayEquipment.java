@@ -28,7 +28,6 @@ package cloud.grabsky.displayentities.command;
 import cloud.grabsky.displayentities.DisplayWrapper;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.util.LombokExtensions;
-import org.bukkit.block.BlockType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -60,12 +59,12 @@ public enum CommandDisplayEquipment {
     ) {
         // Returning when specified slot is not supported.
         if (isSupportedSlot(slot) == false)
-            return configuration.messages().commandDisplayEditEquipmentFailureInvalidSlot().repl("{input}", slot.name());;
-        // Creating instance of BlockData from provided material.
+            return configuration.messages().errorEnumNotFoundEquipmentSlot().repl("{input}", slot.name());;
+        // Creating instance of ItemStack from provided item type.
         final ItemStack item = itemType.createItemStack();
-        // Sending error message if BlockData ended up being null.
-        if (item.getType().asItemType() == BlockType.AIR)
-            return configuration.messages().commandDisplayEditItemFailureSpecifiedInvalidType();
+        // Sending error message ItemStack ends up being empty.
+        if (item.isEmpty() == true)
+            return configuration.messages().commandDisplayEditItemFailureSpecifiedInvalidType().repl("{input}", itemType.key().asString());
         // Updating entity with new block data.
         display.entity().getEquipment().setItem(slot, item);
         // Sending success message to the sender.
@@ -82,7 +81,7 @@ public enum CommandDisplayEquipment {
     ) {
         // Returning when specified slot is not supported.
         if (isSupportedSlot(slot) == false)
-            return configuration.messages().commandDisplayEditEquipmentFailureInvalidSlot().repl("{input}", slot.name());
+            return configuration.messages().errorEnumNotFoundEquipmentSlot().repl("{input}", slot.name());
         // Handling '@nothing' selector.
         if (selector.equalsIgnoreCase("@nothing") == true) {
             display.entity().getEquipment().setItem(slot, null);
@@ -99,10 +98,10 @@ public enum CommandDisplayEquipment {
             return configuration.messages().errorInvalidRegistryValueItemType().repl("{input}", selector);
         // Getting the item at specified slot.
         final ItemStack item = sender.getInventory().getItem(fromSlot);
-        // Sending error message if BlockData ended up being null.
-        if (item.getType().asItemType() == BlockType.AIR)
-            return configuration.messages().commandDisplayEditEquipmentFailureInvalidItem();
-        // Updating entity with new block data.
+        // Sending error message ItemStack is empty.
+        if (item.isEmpty() == true)
+            return configuration.messages().errorInvalidRegistryValueItemType().replace("{input}", item.getType().key().asString());
+        // Updating equipment on the mannequin entity.
         display.entity().getEquipment().setItem(slot, item);
         // Sending success message to the sender.
         return configuration.messages().commandDisplayEditEquipmentSuccess();

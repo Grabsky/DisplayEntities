@@ -39,6 +39,8 @@ import org.bukkit.Color;
 import org.bukkit.Registry;
 import org.bukkit.block.BlockType;
 import org.bukkit.entity.Display;
+import org.bukkit.entity.Pose;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemType;
 import revxrsal.commands.Lamp;
 import revxrsal.commands.LampBuilderVisitor;
@@ -142,6 +144,10 @@ public final class BuilderVisitor implements LampBuilderVisitor<BukkitCommandAct
                 actor.reply(plugin.miniMessage().deserialize(plugin.configuration().messages().errorEnumNotFoundDisplayType().repl("{input}", e.input())));
             else if (e.enumType() == Display.Billboard.class)
                 actor.reply(plugin.miniMessage().deserialize(plugin.configuration().messages().errorEnumNotFoundBillboard().repl("{input}", e.input())));
+            else if (e.enumType() == Pose.class)
+                actor.reply(plugin.miniMessage().deserialize(plugin.configuration().messages().errorEnumNotFoundPose().repl("{input}", e.input())));
+            else if (e.enumType() == EquipmentSlot.class)
+                actor.reply(plugin.miniMessage().deserialize(plugin.configuration().messages().errorEnumNotFoundEquipmentSlot().repl("{input}", e.input())));
             else super.onEnumNotFound(e, actor);
         }
 

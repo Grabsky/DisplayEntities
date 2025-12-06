@@ -56,7 +56,7 @@ public enum CommandDisplayPose {
     ) {
         // Returning when specified pose is not supported.
         if (isSupportedPose(pose) == false)
-            return configuration.messages().commandDisplayEditPoseFailureUnsupportedPose().repl("{input}", pose.name());
+            return configuration.messages().errorEnumNotFoundPose().repl("{input}", pose.name());
         // Setting the new pose.
         display.entity().setPose(pose);
         // Sending success message to the sender.

@@ -89,18 +89,15 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Strict, Displ
         // Setting name of the display.
         entity.getPersistentDataContainer().set(DisplayEntities.Keys.NAME, PersistentDataType.STRING, name);
         // Returning new instance of DisplayWrapper containing provided entity.
-        if (entity instanceof TextDisplay display)
-            return (W) new Text(display, name);
-        else if (entity instanceof ItemDisplay display)
-            return (W) new Item(display, name);
-        else if (entity instanceof BlockDisplay display)
-            return (W) new Block(display, name);
-        else if (entity instanceof org.bukkit.entity.Mannequin display)
-            return (W) new Mannequin(display, name);
-        else if (entity instanceof org.bukkit.entity.Interaction display)
-            return (W) new Interaction(display, name);
-        // ...
-        throw new IllegalArgumentException("UNSUPPORTED_ENTITY_TYPE");
+        return switch (entity) {
+            case TextDisplay display -> (W) new Text(display, name);
+            case ItemDisplay display -> (W) new Item(display, name);
+            case BlockDisplay display -> (W) new Block(display, name);
+            case org.bukkit.entity.Mannequin display -> (W) new Mannequin(display, name);
+            case org.bukkit.entity.Interaction display -> (W) new Interaction(display, name);
+            // Throwing for all other entities.
+            default -> throw new IllegalArgumentException("UNSUPPORTED_ENTITY_TYPE");
+        };
     }
 
     /**
@@ -117,6 +114,7 @@ public sealed abstract class DisplayWrapper permits DisplayWrapper.Strict, Displ
             case BlockDisplay it -> (W) new Block(it, name);
             case org.bukkit.entity.Mannequin it -> (W) new Mannequin(it, name);
             case org.bukkit.entity.Interaction it -> (W) new Interaction(it, name);
+            // Throwing for all other entities.
             default -> throw new IllegalArgumentException("UNSUPPORTED_ENTITY_TYPE");
         };
     }

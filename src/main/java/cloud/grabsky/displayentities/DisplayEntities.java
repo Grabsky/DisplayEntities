@@ -330,9 +330,6 @@ public final class DisplayEntities extends JavaPlugin {
         /** Used to store state of whether mannequin should track nearest player. */
         public static final NamespacedKey MANNEQUIN_TRACK_NEAREST_PLAYER = new NamespacedKey("display_entities", "mannequin_track_nearest_player");
 
-        // NOT IMPLEMENTED
-        // public static final NamespacedKey MANNEQUIN_IS_SITTING = new NamespacedKey("display_entities", "mannequin_is_sitting");
-
     }
 
     /* PLUGIN LOADER; FOR USE WITH PLUGIN-YML FOR GRADLE */
