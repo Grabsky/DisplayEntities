@@ -8,7 +8,7 @@
 [![bStats Servers](https://img.shields.io/bstats/servers/25686?label=bStats&labelColor=%2300786D&color=%23009688)](https://bstats.org/plugin/bukkit/Display%20Entities/25686)
 [![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/Grabsky/DisplayEntities?logo=codefactor&logoColor=white&label=%20)](https://www.codefactor.io/repository/github/grabsky/displayentities/issues/main)
 
-**DisplayEntities** is an utility plugin adding commands for manipulation of server-side Display Entities, Interaction Entities and (soon) Mannequins. Comes with [**PlaceholderAPI**](https://github.com/PlaceholderAPI/PlaceholderAPI) and [**MiniMessage**](https://docs.advntr.dev/minimessage/format.html)   support.
+**DisplayEntities** is an utility plugin adding commands for manipulation of server-side Display Entities, Interaction Entities and Mannequins (NPCs). Comes with [**PlaceholderAPI**](https://github.com/PlaceholderAPI/PlaceholderAPI) and [**MiniMessage**](https://docs.advntr.dev/minimessage/format.html) support.
 
 </div>
 
