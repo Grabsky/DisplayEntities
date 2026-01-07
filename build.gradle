@@ -32,7 +32,7 @@ dependencies {
     paperLibrary("io.github.revxrsal:spec:1.5")
     // Plugin runtime dependencies.
     compileOnly("me.clip:placeholderapi:2.11.6")
-    compileOnly("com.github.retrooper:packetevents-spigot:2.10.1")
+    compileOnly("com.github.retrooper:packetevents-spigot:2.11.1")
 }
 
 // Registering runFolia task so that Folia compatibility can be tested more easily.
@@ -40,12 +40,12 @@ runPaper.folia.registerTask()
 
 tasks {
     runServer {
-        minecraftVersion("1.21.10")
+        minecraftVersion("1.21.11")
         downloadPlugins {
-            modrinth("axiom-paper-plugin", "5.0.2+1.21.10")
+            // modrinth("axiom-paper-plugin", "5.0.2+1.21.10")
             modrinth("luckperms", "v5.5.17-bukkit")
             modrinth("placeholderapi", "2.11.7")
-            modrinth("packetevents", "2.10.1")
+            modrinth("packetevents", "2.11.1+spigot")
         }
     }
     runFolia {
@@ -53,7 +53,7 @@ tasks {
         downloadPlugins {
             modrinth("luckperms", "v5.5.17-bukkit")
             modrinth("placeholderapi", "2.11.7")
-            modrinth("packetevents", "2.10.1")
+            modrinth("packetevents", "2.11.1")
         }
     }
     compileJava {
