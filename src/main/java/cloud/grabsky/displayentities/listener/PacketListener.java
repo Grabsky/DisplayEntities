@@ -61,7 +61,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public final class PacketListener implements com.github.retrooper.packetevents.event.PacketListener {
 
-    // Holds reference  to the plugin instance.
+    // Holds reference to the plugin instance.
     private final @NotNull DisplayEntities plugin;
 
     // Stores entities that have an active task.
@@ -73,14 +73,22 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
     // Stores players that are currently being tracked by a mannequin entity.
     private final Set<String> isBeingTracked = ConcurrentHashMap.newKeySet();
 
+    // Stores entities not created by DisplayEntities.
+    // This should (hopefully) avoid many calls to a rather expensive (?) SpigotConversionUtil#getEntityById method.
+    private final Set<Integer> notHandled = ConcurrentHashMap.newKeySet();
+
     @Override @SuppressWarnings("unchecked")
     public void onPacketSend(final @NotNull PacketSendEvent event) {
         if (event.getPacketType() == PacketType.Play.Server.SPAWN_ENTITY && event.getPlayer() instanceof Player eventPlayer) {
-            // Getting the the entity from it's int id. Can be null.
-            final @Nullable Entity entity = SpigotConversionUtil.getEntityById(eventPlayer.getWorld(), new WrapperPlayServerSpawnEntity(event).getEntityId());
-            // Checking if entity with this id exists on the server and is a text display entity.
+            // Getting the id of the entity associated with the event.
+            final int entityId = new WrapperPlayServerSpawnEntity(event).getEntityId();
+            // Skipping further execution if this entity was already marked as not created by the plugin.
+            if (notHandled.contains(entityId) == true)
+                return;
+            // Getting the entity from it's int id. Can be null.
+            final @Nullable Entity entity = SpigotConversionUtil.getEntityById(eventPlayer.getWorld(), entityId);
+            // Checking if the entity with this id exists on the server and is a text display entity.
             if (entity instanceof TextDisplay && entity.getPersistentDataContainer().has(DisplayEntities.Keys.TEXT_CONTENTS) == true) {
-                final int entityId = entity.getEntityId();
                 // Skipping further logic if the task is already running.
                 if (hasActiveTextRefreshTask.contains(entityId) == true)
                     return;
@@ -106,18 +114,18 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
                                 plugin.debug("[E:" + entityId + "] Cancelling the placeholders refresh task... [C:SELF]");
                                 // Cancelling the task.
                                 task.cancel();
-                                // Removing task from the list of active tasks.
+                                // Removing the task from the list of active tasks.
                                 hasActiveTextRefreshTask.remove(entityId);
                                 return;
                             }
-                            // Scheduling further logic to be executed off the main thread, or on Folia's EntityScheduler if needed.
+                            // Scheduling further logic to be executed off the main thread or on Folia's EntityScheduler if needed.
                             runWrappedAsync(entity, () -> {
                                 entity.getTrackedBy().forEach(viewer -> {
                                     final var packet = new WrapperPlayServerEntityMetadata(entityId, List.of(
                                             // Setting text to an empty component. This is intercepted in the entity_metadata listener where all placeholders and colors are applied.
                                             new EntityData<>(23, EntityDataTypes.ADV_COMPONENT, Component.empty())
                                     ));
-                                    // Sending packet to the viewer.
+                                    // Sending the packet to the viewer.
                                     PacketEvents.getAPI().getPlayerManager().sendPacket(viewer, packet);
                                     // Logging debug information to the console.
                                     plugin.debug("[E:" + entityId + "] Packet sent to user " + viewer.getName() + "... [P:" + packet.getNativePacketId() + "] [H:" + packet.hashCode() + "]");
@@ -126,7 +134,7 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
                         }, () -> {
                             // Logging debug information to the console.
                             plugin.debug("[E:" + entityId + "] Cancelling the placeholders refresh task... [C:RETIRED]");
-                            // Removing task from the list of active tasks.
+                            // Removing the task from the list of active tasks.
                             hasActiveTextRefreshTask.remove(entityId);
                         }, 10L, refreshInterval);
                     });
@@ -134,7 +142,6 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
             }
             // Handling mannequin's player tracking task.
             else if (entity instanceof Mannequin && entity.getPersistentDataContainer().has(DisplayEntities.Keys.MANNEQUIN_TRACK_NEAREST_PLAYER) == true) {
-                final int entityId = entity.getEntityId();
                 // Skipping further logic if the task is already running.
                 if (hasActiveDirectionTask.contains(entityId) == true)
                     return;
@@ -149,7 +156,7 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
                     final float squaredTrackNearestPlayerRadius = trackNearestPlayerRadius * trackNearestPlayerRadius;
                     // Logging debug information to the console.
                     plugin.debug("[E:" + entityId + "] Starting the mannequin radius search task task... [R:" + trackNearestPlayerRadius + "]");
-                    // Scheduling a repeating task to refresh entity's rotation to make it look at the nearest player.
+                    // Scheduling a repeating task to refresh the entity's rotation to make it look at the nearest player.
                     entity.getScheduler().runAtFixedRate(plugin, (distanceTask) -> {
                         // Cancelling the task if nobody is tracking the entity.
                         if (entity.getTrackedBy().isEmpty() == true) {
@@ -157,17 +164,17 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
                             plugin.debug("[E:" + entityId + "] Cancelling the mannequin radius search task... [C:SELF]");
                             // Cancelling the task.
                             distanceTask.cancel();
-                            // Removing task from the list of active tasks.
+                            // Removing a task from the list of active tasks.
                             hasActiveDirectionTask.remove(entityId);
                             return;
                         }
-                        // Scheduling further logic to be executed off the main thread, or on Folia's EntityScheduler if needed.
+                        // Scheduling further logic to be executed off the main thread or on Folia's EntityScheduler if needed.
                         runWrappedAsync(entity, () -> {
-                            // Calculating center point of the circular radius within which mannequin entity will look at the nearest player.
+                            // Calculating the center point of the circular radius within which the mannequin entity will look at the nearest player.
                             final Location center = entity.getLocation().add(entity.getLocation().getDirection().normalize().multiply(trackNearestPlayerRadius - 0.35));
                             // Iterating over all viewers of the mannequin entity.
                             for (final Player viewer : entity.getTrackedBy()) {
-                                // Skipping further logic if viewer is not within configured radius.
+                                // Skipping further logic if the viewer is not within the configured radius.
                                 if (viewer.getLocation().distanceSquared(center) > squaredTrackNearestPlayerRadius)
                                     continue;
                                 // Getting viewer's entity id.
@@ -178,9 +185,9 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
                                 if (isBeingTracked.contains(identifier) == true)
                                     continue;
                                 isBeingTracked.add(identifier);
-                                // Scheduling repeating task...
+                                // Scheduling a repeating task...
                                 entity.getScheduler().runAtFixedRate(plugin, (refreshTask) -> {
-                                    // Cancelling the task if viewer is no longer connected to the server.
+                                    // Cancelling the task if the viewer is no longer connected to the server.
                                     if (viewer.isConnected() == false) {
                                         // Removing viewer from the list.
                                         isBeingTracked.remove(identifier);
@@ -188,9 +195,9 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
                                         refreshTask.cancel();
                                         return;
                                     }
-                                    // Resetting mannequin position and cancelling the task if viewer is no longer within configured radius.
+                                    // Resetting the mannequin position and cancelling the task if the viewer is no longer within the configured radius.
                                     if (viewer.getLocation().distanceSquared(center) > squaredTrackNearestPlayerRadius) {
-                                        // Resetting mannequin's body and head rotations.
+                                        // Resetting a mannequin's body and head rotations.
                                         PacketEvents.getAPI().getPlayerManager().sendPacket(viewer, new WrapperPlayServerEntityRotation(entityId, entity.getYaw(), entity.getPitch(), false));
                                         PacketEvents.getAPI().getPlayerManager().sendPacket(viewer, new WrapperPlayServerEntityHeadLook(entityId, entity.getYaw()));
                                         // Removing viewer from the list.
@@ -199,13 +206,13 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
                                         refreshTask.cancel();
                                         return;
                                     }
-                                    // Calculating direction for mannequin to look at.
+                                    // Calculating the direction for the mannequin to look at.
                                     final Location direction = entity.getLocation().setDirection(viewer.getEyeLocation().toVector().subtract(((Mannequin) entity).getEyeLocation().toVector()));
-                                    // Updating mannequin's body and head rotations to face the nearest player.
+                                    // Updating the mannequin's body and head rotations to face the nearest player.
                                     PacketEvents.getAPI().getPlayerManager().sendPacket(viewer, new WrapperPlayServerEntityRotation(entityId, direction.getYaw(), direction.getPitch(), false));
                                     PacketEvents.getAPI().getPlayerManager().sendPacket(viewer, new WrapperPlayServerEntityHeadLook(entityId, direction.getYaw()));
                                 }, () -> {
-                                    // Resetting mannequin's body and head rotations.
+                                    // Resetting a mannequin's body and head rotations.
                                     PacketEvents.getAPI().getPlayerManager().sendPacket(viewer, new WrapperPlayServerEntityRotation(entityId, entity.getYaw(), entity.getPitch(), false));
                                     PacketEvents.getAPI().getPlayerManager().sendPacket(viewer, new WrapperPlayServerEntityHeadLook(entityId, entity.getYaw()));
                                     // Removing viewer from the list.
@@ -216,18 +223,21 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
                     }, () -> {
                         // Logging debug information to the console.
                         plugin.debug("[E:" + entityId + "] Cancelling the mannequin radius search task... [C:RETIRED]");
-                        // Removing task from the list of active tasks.
+                        // Removing the task from the list of active tasks.
                         hasActiveDirectionTask.remove(entityId);
                     }, 3L, 3L);
                 });
+            } else if (entity != null) {
+                // Adding id of this entity to the list of entities that should not be handled.
+                notHandled.add(entityId);
             }
         }
         // Handling text display formatting and placeholder parsing.
         else if (event.getPacketType() == PacketType.Play.Server.ENTITY_METADATA && event.getPlayer() instanceof Player player) {
             final var packet = new WrapperPlayServerEntityMetadata(event);
-            // Getting the the entity from it's int id. Can be null.
+            // Getting the entity from it's int id. Can be null.
             final @Nullable Entity entity = SpigotConversionUtil.getEntityById(player.getWorld(), packet.getEntityId());
-            // Checking if entity with this id exists on the server and is a text display entity.
+            // Checking if an entity with this id exists on the server and is a text display entity.
             if (entity instanceof TextDisplay) {
                 // Getting the text contents stored inside PDC.
                 final String text = entity.getPersistentDataContainer().getOrDefault(DisplayEntities.Keys.TEXT_CONTENTS, PersistentDataType.STRING, "");
@@ -236,7 +246,7 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
                     // Iterating over list entity metadata in search for text changes.
                     for (final EntityData<?> data : packet.getEntityMetadata()) {
                         if (data.getType() == EntityDataTypes.ADV_COMPONENT)
-                            // Overriding with parsed component.
+                            // Overriding with a parsed component.
                             ((EntityData<Component>) data).setValue(MiniMessage.miniMessage().deserialize(PlaceholderAPI.setPlaceholders(player, text)));
                     }
                 }
@@ -245,7 +255,7 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
     }
 
     private void runWrapped(final @NotNull Entity entity, final @NotNull Runnable runnable) {
-        // Executing runnable on EntityScheduler when server is using Folia.
+        // Executing runnable on EntityScheduler when the server is using Folia.
         if (DisplayEntities.isFolia() == true)
             entity.getScheduler().run(plugin, (it) -> runnable.run(), null);
         // Otherwise, runnable is executed on the current thread.
@@ -253,7 +263,7 @@ public final class PacketListener implements com.github.retrooper.packetevents.e
     }
 
     private void runWrappedAsync(final @NotNull Entity entity, final @NotNull Runnable runnable) {
-        // Executing runnable on EntityScheduler when server is using Folia.
+        // Executing runnable on EntityScheduler when the server is using Folia.
         if (DisplayEntities.isFolia() == true)
             entity.getScheduler().run(plugin, (it) -> runnable.run(), null);
         // Otherwise, runnable is executed on async scheduler.
