@@ -53,7 +53,7 @@ tasks {
         downloadPlugins {
             modrinth("luckperms", "v5.5.17-bukkit")
             modrinth("placeholderapi", "2.11.7")
-            modrinth("packetevents", "2.11.1")
+            modrinth("packetevents", "2.11.1+spigot")
         }
     }
     compileJava {
