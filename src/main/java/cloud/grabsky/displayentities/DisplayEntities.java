@@ -72,6 +72,7 @@ import cloud.grabsky.displayentities.listener.MannequinListener;
 import cloud.grabsky.displayentities.util.LombokExtensions;
 import cloud.grabsky.displayentities.util.MapFlattener;
 import com.google.gson.Gson;
+import dev.faststats.bukkit.BukkitMetrics;
 import io.papermc.paper.plugin.loader.PluginClasspathBuilder;
 import io.papermc.paper.plugin.loader.library.impl.MavenLibraryResolver;
 import net.kyori.adventure.text.format.TextColor;
@@ -205,8 +206,10 @@ public final class DisplayEntities extends JavaPlugin {
         // Registering event listeners.
         this.getServer().getPluginManager().registerEvents(MannequinListener.INSTANCE, this);
         this.getServer().getPluginManager().registerEvents(ClickCommandListener.INSTANCE, this);
-        // Connecting to bStats.
+        // Setting up bStats...
         new Metrics(this, 25686);
+        // Setting up FastStats...
+        BukkitMetrics.factory().token("d863b62225a2d9e30474d4edaae49b43").create(this);
     }
 
     @Override

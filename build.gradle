@@ -12,11 +12,9 @@ version = "$VERSION+$RUN_NUMBER"
 
 repositories {
     mavenCentral()
-    // Repository for the Paper API.
     maven { url = "https://repo.papermc.io/repository/maven-public/" }
-    // Repository for the PacketEvents API.
+    maven { url = "https://repo.thenextlvl.net/releases" }
     maven { url = "https://repo.codemc.io/repository/maven-public/" }
-    // Repository for the PlaceholderAPI, API.
     maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
 }
 
@@ -30,6 +28,7 @@ dependencies {
     paperLibrary("io.github.revxrsal:lamp.common:4.0.0-rc.14")
     paperLibrary("io.github.revxrsal:lamp.bukkit:4.0.0-rc.14")
     paperLibrary("io.github.revxrsal:spec:1.5")
+    paperLibrary("dev.faststats.metrics:bukkit:0.11.1")
     // Plugin runtime dependencies.
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly("com.github.retrooper:packetevents-spigot:2.11.1")
