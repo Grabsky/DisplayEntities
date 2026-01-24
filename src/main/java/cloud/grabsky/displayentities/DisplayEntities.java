@@ -145,6 +145,9 @@ public final class DisplayEntities extends JavaPlugin {
 
     private @Nullable PacketEventsHook packetEventsHook;
 
+    private Metrics bStats;
+    private dev.faststats.core.Metrics fastStats;
+
     static {
         try {
             Class.forName("io.papermc.paper.threadedregions.ThreadedRegionizer");
@@ -207,9 +210,17 @@ public final class DisplayEntities extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(MannequinListener.INSTANCE, this);
         this.getServer().getPluginManager().registerEvents(ClickCommandListener.INSTANCE, this);
         // Setting up bStats...
-        new Metrics(this, 25686);
+        this.bStats = new Metrics(this, 25686);
         // Setting up FastStats...
-        BukkitMetrics.factory().token("d863b62225a2d9e30474d4edaae49b43").create(this);
+        this.fastStats = BukkitMetrics.factory().token("d863b62225a2d9e30474d4edaae49b43").create(this);
+    }
+
+    @Override
+    public void onDisable() {
+        // Shutting down bStats.
+        this.bStats.shutdown();
+        // Shutting down FastStats.
+        this.fastStats.shutdown();
     }
 
     @Override
