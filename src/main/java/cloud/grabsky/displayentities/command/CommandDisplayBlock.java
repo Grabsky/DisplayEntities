@@ -3,7 +3,7 @@
  *
  * MIT License
  *
- * Copyright (c) 2025 Grabsky (michal.czopek.foss@proton.me)
+ * Copyright (c) 2026 Grabsky (michal.czopek.foss@proton.me)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
