@@ -69,6 +69,7 @@ import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.hook.PacketEventsHook;
 import cloud.grabsky.displayentities.listener.ClickCommandListener;
 import cloud.grabsky.displayentities.listener.MannequinListener;
+import cloud.grabsky.displayentities.spec.ConfigurationHelper;
 import cloud.grabsky.displayentities.util.LombokExtensions;
 import cloud.grabsky.displayentities.util.MapFlattener;
 import com.google.gson.Gson;
@@ -84,13 +85,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.repository.RemoteRepository;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
 import revxrsal.commands.Lamp;
 import revxrsal.commands.bukkit.BukkitLamp;
 import revxrsal.commands.bukkit.BukkitLampConfig;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
-import revxrsal.spec.ArrayCommentStyle;
 import revxrsal.spec.CommentedConfiguration;
 import revxrsal.spec.Specs;
 
@@ -122,7 +120,7 @@ public final class DisplayEntities extends JavaPlugin {
     private static DisplayEntities instance;
 
     @Getter(AccessLevel.PUBLIC)
-    private File configurationFile;
+    private File configurationFile = new File(this.getDataFolder(), "config.yml");
 
     @Getter(AccessLevel.PUBLIC)
     private CommentedConfiguration commentedConfiguration;
@@ -157,21 +155,11 @@ public final class DisplayEntities extends JavaPlugin {
         }
     }
 
-    private static final ThreadLocal<Yaml> YAML = ThreadLocal.withInitial(() -> {
-        final DumperOptions options = new DumperOptions();
-        options.setSplitLines(false);
-        options.setProcessComments(false);
-        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        return new Yaml(options);
-    });
-
     @Override
     public void onEnable() {
         instance = this;
-        // Initializing instance File representing config.yml file of this plugin.
-        this.configurationFile = new File(this.getDataFolder(), "config.yml");
         // Initializing instance of CommentedConfiguration.
-        this.commentedConfiguration = new CommentedConfiguration(this.configurationFile.toPath(), CommentedConfiguration.GSON, ArrayCommentStyle.COMMENT_FIRST_ELEMENT, YAML.get());
+        this.commentedConfiguration = ConfigurationHelper.fromFile(this.configurationFile);
         // Loading configuration file.
         this.configuration = Specs.fromConfig(PluginConfiguration.class, commentedConfiguration);
         // Saving default contents to the configuration file.
