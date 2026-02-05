@@ -24,14 +24,16 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.42")
     // Paper API
     compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
-    // Plugin libraries and other runtime dependencies. Downloading and loading handled by Paper's Plugin Loader API.
+    // https://github.com/Revxrsal/Lamp
     paperLibrary("io.github.revxrsal:lamp.common:4.0.0-rc.14")
     paperLibrary("io.github.revxrsal:lamp.bukkit:4.0.0-rc.14")
+    // https://github.com/Revxrsal/Spec
     paperLibrary("io.github.revxrsal:spec:1.5")
-    paperLibrary("dev.faststats.metrics:bukkit:0.13.0")
-    // Plugin runtime dependencies.
-    compileOnly("me.clip:placeholderapi:2.11.6")
-    compileOnly("com.github.retrooper:packetevents-spigot:2.11.1")
+    paperLibrary("dev.faststats.metrics:bukkit:0.14.0")
+    // https://github.com/PlaceholderAPI/PlaceholderAPI
+    compileOnly("me.clip:placeholderapi:2.11.7")
+    // https://github.com/retrooper/packetevents
+    compileOnly("com.github.retrooper:packetevents-spigot:2.11.2")
 }
 
 // Registering runFolia task so that Folia compatibility can be tested more easily.
@@ -44,15 +46,15 @@ tasks {
             // modrinth("axiom-paper-plugin", "5.0.2+1.21.10")
             modrinth("luckperms", "v5.5.17-bukkit")
             modrinth("placeholderapi", "2.11.7")
-            modrinth("packetevents", "2.11.1+spigot")
+            modrinth("packetevents", "2.11.2+spigot")
         }
     }
     runFolia {
-        minecraftVersion("1.21.8")
+        minecraftVersion("1.21.11")
         downloadPlugins {
             modrinth("luckperms", "v5.5.17-bukkit")
             modrinth("placeholderapi", "2.11.7")
-            modrinth("packetevents", "2.11.1+spigot")
+            modrinth("packetevents", "2.11.2+spigot")
         }
     }
     compileJava {
