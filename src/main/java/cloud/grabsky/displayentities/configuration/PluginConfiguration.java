@@ -476,12 +476,12 @@ public interface PluginConfiguration {
         // Display > Edit > Insert Line
 
         @Order(46) @Key("command.display.edit.insert_line.failure.out_of_bounds")
+        @Comment("Display > Edit > Insert Line")
         default String commandDisplayEditInsertLineFailureOutOfBounds() {
             return "<dark_gray>› <red>Line <yellow>{number} <red>is out of bounds. (Max: {max})";
         }
 
         @Order(47) @Key("command.display.edit.insert_line.success")
-        @Comment("Display > Edit > Insert Line")
         default String commandDisplayEditInsertLineSuccess() {
             return "<dark_gray>› <gray>Line <primary>{number} <gray>has been added to the display. Remaining entries were shifted downwards.";
         }
