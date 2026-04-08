@@ -25,15 +25,16 @@ dependencies {
     // Paper API
     compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
     // https://github.com/Revxrsal/Lamp
-    paperLibrary("io.github.revxrsal:lamp.common:4.0.0-rc.14")
-    paperLibrary("io.github.revxrsal:lamp.bukkit:4.0.0-rc.14")
+    paperLibrary("io.github.revxrsal:lamp.common:4.0.0-rc.16")
+    paperLibrary("io.github.revxrsal:lamp.bukkit:4.0.0-rc.16")
     // https://github.com/Revxrsal/Spec
     paperLibrary("io.github.revxrsal:spec:1.5")
-    paperLibrary("dev.faststats.metrics:bukkit:0.14.0")
+    // https://github.com/faststats-dev/dev-kits
+    paperLibrary("dev.faststats.metrics:bukkit:0.21.0")
     // https://github.com/PlaceholderAPI/PlaceholderAPI
-    compileOnly("me.clip:placeholderapi:2.11.7")
+    compileOnly("me.clip:placeholderapi:2.12.2")
     // https://github.com/retrooper/packetevents
-    compileOnly("com.github.retrooper:packetevents-spigot:2.11.2")
+    compileOnly("com.github.retrooper:packetevents-spigot:2.12.0")
 }
 
 // Registering runFolia task so that Folia compatibility can be tested more easily.
@@ -41,12 +42,12 @@ runPaper.folia.registerTask()
 
 tasks {
     runServer {
-        minecraftVersion("1.21.11")
+        minecraftVersion("26.1.1")
         downloadPlugins {
             // modrinth("axiom-paper-plugin", "5.0.2+1.21.10")
             modrinth("luckperms", "v5.5.17-bukkit")
-            modrinth("placeholderapi", "2.11.7")
-            modrinth("packetevents", "2.11.2+spigot")
+            modrinth("placeholderapi", "2.12.2")
+            modrinth("packetevents", "2.12.0+spigot")
         }
     }
     runFolia {
@@ -82,8 +83,10 @@ paper {
 tasks.withType(xyz.jpenilla.runtask.task.AbstractRun.class).configureEach {
     javaLauncher = javaToolchains.launcherFor {
         vendor = JvmVendorSpec.JETBRAINS
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
+    // -XX:+AllowEnhancedClassRedefinition is not currently supported by Spark on Java 25.
+    // When testing plugin with recent Java versions, either disable Spark in Paper's global configuration or remove '-XX:+AllowEnhancedClassRedefinition' flag from jvmArgs array.
     jvmArgs("-Xmx1G", "-XX:+AllowEnhancedClassRedefinition", "-Dcom.mojang.eula.agree=true", "-Dnet.kyori.ansi.colorLevel=truecolor")
 }
 
