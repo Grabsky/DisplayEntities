@@ -62,8 +62,8 @@ public final class ResourcePackListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onResourcePackStatus(final @NotNull PlayerResourcePackStatusEvent event) {
-        // Skipping event calls before player has fully loaded to the server. (Configuration Stage)
-        if (event.getPlayer().isOnline() == false)
+        // Skipping event before player has fully loaded to the server or if setting is not enabled.
+        if (plugin.configuration().refreshTextDisplaysUponResourcePackLoad() == false && event.getPlayer().isOnline() == false)
             return;
         // Getting the UUID of the player.
         final UUID uniqueId = event.getPlayer().getUniqueId();
