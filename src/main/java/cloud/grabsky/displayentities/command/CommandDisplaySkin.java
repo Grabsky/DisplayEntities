@@ -29,13 +29,17 @@ import cloud.grabsky.displayentities.DisplayWrapper;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.util.Conditions;
 import cloud.grabsky.displayentities.util.LombokExtensions;
+import com.destroystokyo.paper.profile.PlayerProfile;
 import io.papermc.paper.datacomponent.item.ResolvableProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.profile.PlayerTextures;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.UUID;
 
 import org.jetbrains.annotations.NotNull;
@@ -59,14 +63,39 @@ public enum CommandDisplaySkin {
             final @NotNull DisplayWrapper.Mannequin display,
             final @NotNull String skin
     ) {
-        // Creating ResolvableProfile based on user input.
-        final ResolvableProfile profile = (Conditions.isUUID(skin) == true)
-                ? ResolvableProfile.resolvableProfile(Bukkit.createProfile(UUID.fromString(skin)))
-                : ResolvableProfile.resolvableProfile(Bukkit.createProfile(skin));
-        // Setting the (skin) profile of the mannequin entity.
-        display.entity().setProfile(profile);
-        // Sending success message to the sender.
-        return configuration.messages().commandDisplayEditSkinSuccess().repl("{skin}", skin);
+        // Handling texture URLs.
+        if (skin.startsWith("https://textures.minecraft.net/texture/") == true) {
+            // Creating dummy profile and getting textures.
+            final PlayerProfile dummyProfile = Bukkit.createProfile(UUID.randomUUID());
+            final PlayerTextures textures = dummyProfile.getTextures();
+            try {
+                textures.setSkin(URI.create(skin).toURL());
+                dummyProfile.setTextures(textures);
+                // Getting the full skin identifier from provided URL.
+                final String fullId = skin.substring(skin.lastIndexOf("/") + 1);
+                // Setting the (skin) profile of the mannequin entity.
+                display.entity().setProfile(ResolvableProfile.resolvableProfile(dummyProfile));
+                // Sending success message to the sender.
+                return configuration.messages().commandDisplayEditSkinSuccess()
+                        .repl("{skin}", fullId.substring(0, 8) + "..." + fullId.substring(fullId.length() - 4));
+            } catch (final IllegalArgumentException | MalformedURLException e) {
+                // Sending failure message to the sender.
+                return configuration.messages().commandDisplayEditSkinFailureInvalidUrl();
+            }
+        } else {
+            // Creating ResolvableProfile based on user input.
+            final ResolvableProfile profile = (Conditions.isUUID(skin) == true)
+                    ? ResolvableProfile.resolvableProfile(Bukkit.createProfile(UUID.fromString(skin)))
+                    : ResolvableProfile.resolvableProfile(Bukkit.createProfile(skin));
+            // Setting the (skin) profile of the mannequin entity.
+            display.entity().setProfile(profile);
+            // Sending success message to the sender.
+            return configuration.messages().commandDisplayEditSkinSuccess().repl("{skin}", skin);
+        }
+    }
+
+    private static boolean isTextureURL(final @NotNull String string) {
+        return string.startsWith("https://") || string.startsWith("http://");
     }
 
 }

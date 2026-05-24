@@ -682,9 +682,14 @@ public interface PluginConfiguration {
             return "<dark_gray>› <gray>Display skin has been set to <yellow>{skin}<gray>.";
         }
 
+        @Order(74) @Key("command.display.edit.skin.failure.invalid_url")
+        default String commandDisplayEditSkinFailureInvalidUrl() {
+            return "<dark_gray>› <red>URL does not point to a valid skin texture.";
+        }
+
         // Display > Edit > Track Nearest Player
 
-        @Order(74) @Key("command.display.edit.track_nearest_player.success")
+        @Order(75) @Key("command.display.edit.track_nearest_player.success")
         @Comment("Display > Edit > Track Nearest Player")
         default String commandDisplayEditTrackNearestPlayerSuccess() {
             return "<dark_gray>› <gray>Display tracking state has been set to <primary>{state}<gray>.";
