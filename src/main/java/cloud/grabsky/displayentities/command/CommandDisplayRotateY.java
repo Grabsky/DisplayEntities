@@ -57,4 +57,17 @@ public enum CommandDisplayRotateY {
         return configuration.messages().commandDisplayEditRotateYSuccess().repl("{yaw}", String.format("%.2f", display.entity().getYaw()));
     }
 
+    @Command("display edit <display> rotate_y")
+    @CommandPermission("displayentities.command.display.edit.rotate_y")
+    public String onDisplayRotateY(
+            final @NotNull Player sender,
+            final @NotNull DisplayWrapper.Mannequin display,
+            final @NotNull Float degrees
+    ) {
+        // Teleporting entity to desired location.
+        display.entity().setRotation(display.entity().getYaw() + degrees, display.entity().getPitch());
+        // Returning (sending) success message to the sender.
+        return configuration.messages().commandDisplayEditRotateYSuccess().repl("{yaw}", String.format("%.2f", display.entity().getYaw()));
+    }
+
 }

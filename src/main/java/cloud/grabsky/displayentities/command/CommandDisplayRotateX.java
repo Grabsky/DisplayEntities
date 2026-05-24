@@ -57,4 +57,17 @@ public enum CommandDisplayRotateX {
         return configuration.messages().commandDisplayEditRotateXSuccess().repl("{pitch}", String.format("%.2f", display.entity().getPitch()));
     }
 
+    @Command("display edit <display> rotate_x")
+    @CommandPermission("displayentities.command.display.edit.rotate_x")
+    public String onDisplayRotateX(
+            final @NotNull Player sender,
+            final @NotNull DisplayWrapper.Mannequin display,
+            final @NotNull Float degrees
+    ) {
+        // Teleporting entity to desired location.
+        display.entity().setRotation(display.entity().getYaw(), Math.clamp(display.entity().getPitch() + degrees, -90F, 90F));
+        // Returning (sending) success message to the sender.
+        return configuration.messages().commandDisplayEditRotateXSuccess().repl("{pitch}", String.format("%.2f", display.entity().getPitch()));
+    }
+
 }
