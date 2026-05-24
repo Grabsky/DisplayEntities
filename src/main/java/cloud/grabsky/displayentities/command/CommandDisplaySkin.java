@@ -36,6 +36,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.profile.PlayerTextures;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
+import revxrsal.commands.annotation.Switch;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 import java.net.MalformedURLException;
@@ -61,7 +62,8 @@ public enum CommandDisplaySkin {
     public String onDisplaySkin(
             final @NotNull Player sender,
             final @NotNull DisplayWrapper.Mannequin display,
-            final @NotNull String skin
+            final @NotNull String skin,
+            final @Switch("slim") boolean isSlim
     ) {
         // Handling texture URLs.
         if (skin.startsWith("https://textures.minecraft.net/texture/") == true) {
@@ -69,7 +71,7 @@ public enum CommandDisplaySkin {
             final PlayerProfile dummyProfile = Bukkit.createProfile(UUID.randomUUID());
             final PlayerTextures textures = dummyProfile.getTextures();
             try {
-                textures.setSkin(URI.create(skin).toURL());
+                textures.setSkin(URI.create(skin).toURL(), (isSlim == true) ? PlayerTextures.SkinModel.SLIM : PlayerTextures.SkinModel.CLASSIC);
                 dummyProfile.setTextures(textures);
                 // Getting the full skin identifier from provided URL.
                 final String fullId = skin.substring(skin.lastIndexOf("/") + 1);
