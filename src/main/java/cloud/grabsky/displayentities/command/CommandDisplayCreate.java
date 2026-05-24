@@ -28,7 +28,6 @@ package cloud.grabsky.displayentities.command;
 import cloud.grabsky.displayentities.DisplayWrapper;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.util.LombokExtensions;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
@@ -56,11 +55,14 @@ public enum CommandDisplayCreate {
             final @NotNull DisplayWrapper.Type type,
             final @NotNull String name
     ) {
-        // Sending error message if specified name does not does not match the format.
+        // Sending error message if specified name does not match the format.
         if (NAME_FORMAT.matcher(name).matches() == false)
             return configuration.messages().commandDisplayCreateFailureInvalidFormat();
         // Getting player's location and stripping pitch and yaw from it.
-        final Location location = sender.getLocation().withPitch(0F).withYaw(0F);
+        var location = sender.getLocation();
+        // Stripping yaw and pitch if display is text, block or item.
+        if (type == DisplayWrapper.Type.TEXT || type == DisplayWrapper.Type.BLOCK || type == DisplayWrapper.Type.ITEM)
+            location = location.withPitch(0).withYaw(0);
         // Creating, spawning and configuring new display entity.
         final DisplayWrapper display = type.create(location, name).initialConfiguration();
         // Sending success message to the sender.
