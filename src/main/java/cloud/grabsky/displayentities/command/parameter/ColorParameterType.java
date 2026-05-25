@@ -61,7 +61,8 @@ public enum ColorParameterType implements ParameterType<BukkitCommandActor, Colo
             Map.entry("silver", Color.SILVER),
             Map.entry("teal", Color.TEAL),
             Map.entry("white", Color.WHITE),
-            Map.entry("yellow", Color.YELLOW)
+            Map.entry("yellow", Color.YELLOW),
+            Map.entry("transparent", Color.WHITE.setAlpha(0))
     );
 
     // Holds a list of suggestions for named colors.

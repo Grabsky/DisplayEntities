@@ -61,7 +61,7 @@ public enum CommandDisplayBackground {
         // Updating value of the background_color property of the display entity.
         display.entity().setBackgroundColor(finalColor);
         // Sending success message to the sender.
-        return configuration.messages().commandDisplayEditBackgroundSuccess().repl("{color}", "#" + Integer.toHexString(finalColor.asARGB()).toUpperCase());
+        return configuration.messages().commandDisplayEditBackgroundSuccess().repl("{color}", (finalColor.getAlpha() > 0) ? "#" + Integer.toHexString(finalColor.asARGB()).toUpperCase() : "transparent");
     }
 
 }
