@@ -26,9 +26,15 @@
 package cloud.grabsky.displayentities.listener;
 
 import cloud.grabsky.displayentities.DisplayEntities;
+import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Interaction;
+import org.bukkit.entity.Mannequin;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.persistence.PersistentDataType;
@@ -42,18 +48,39 @@ public enum ClickCommandListener implements Listener {
 
     private final Map<UUID, Long> lastClicked = new HashMap<>();
 
-    @EventHandler(ignoreCancelled = false) // Should still run even if the event was cancelled. Because of WorldGuard etc.
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    public void onDisplayAttack(final PrePlayerAttackEntityEvent event) {
+        if (event.getAttacked() instanceof Mannequin || event.getAttacked() instanceof Interaction) {
+            final boolean shouldCancel = handleEvent(event.getPlayer(), event.getAttacked());
+            // Cancelling the event if desired.
+            if (shouldCancel == true)
+                event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onDisplayInteract(final PlayerInteractEntityEvent event) {
+        if (event.getRightClicked() instanceof Mannequin || event.getRightClicked() instanceof Interaction) {
+            final boolean shouldCancel = handleEvent(event.getPlayer(), event.getRightClicked());
+            // Cancelling the event if desired.
+            if (shouldCancel == true)
+                event.setCancelled(true);
+        }
+    }
+
+    private boolean handleEvent(final Player player, final Entity entity) {
+        if (entity.getPersistentDataContainer().has(DisplayEntities.Keys.NAME) == false)
+            return false; // Not a DisplayEntities mannequin.
         // Returning if clicked entity does not have any command associated with it.
-        if (event.getRightClicked().getPersistentDataContainer().has(DisplayEntities.Keys.CLICK_COMMAND) == false)
-            return;
+        if (entity.getPersistentDataContainer().has(DisplayEntities.Keys.CLICK_COMMAND) == false)
+            return true;
         // Returning if player is on cooldown.
-        if (System.currentTimeMillis() - this.lastClicked.getOrDefault(event.getPlayer().getUniqueId(), 0L) < 500L)
-            return;
-        // Setting the last interaction time to now, putting player on a short cooldown.
-        this.lastClicked.put(event.getPlayer().getUniqueId(), System.currentTimeMillis());
+        if (System.currentTimeMillis() - this.lastClicked.getOrDefault(player.getUniqueId(), 0L) < 500L)
+            return true;
+        // Updating the last interaction time - putting player on a short cooldown.
+        this.lastClicked.put(player.getUniqueId(), System.currentTimeMillis());
         // Getting the stored command.
-        final String[] commands = PlaceholderAPI.setPlaceholders(event.getPlayer(), event.getRightClicked().getPersistentDataContainer().getOrDefault(DisplayEntities.Keys.CLICK_COMMAND, PersistentDataType.STRING, "")).split("\\$AND");
+        final String[] commands = PlaceholderAPI.setPlaceholders(player, entity.getPersistentDataContainer().getOrDefault(DisplayEntities.Keys.CLICK_COMMAND, PersistentDataType.STRING, "")).split("\\$AND");
         // Iterating over all specified commands.
         for (final String command : commands) {
             // Stripping leading slash if needed and trimming leading and trailing whitespaces.
@@ -63,6 +90,7 @@ public enum ClickCommandListener implements Listener {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand);
             }
         }
+        return true;
     }
 
 }
