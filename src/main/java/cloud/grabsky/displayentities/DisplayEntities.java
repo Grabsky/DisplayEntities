@@ -73,7 +73,7 @@ import cloud.grabsky.displayentities.spec.ConfigurationHelper;
 import cloud.grabsky.displayentities.util.LombokExtensions;
 import cloud.grabsky.displayentities.util.MapFlattener;
 import com.google.gson.Gson;
-import dev.faststats.bukkit.BukkitMetrics;
+import dev.faststats.bukkit.BukkitContext;
 import io.papermc.paper.plugin.loader.PluginClasspathBuilder;
 import io.papermc.paper.plugin.loader.library.impl.MavenLibraryResolver;
 import net.kyori.adventure.text.format.TextColor;
@@ -144,7 +144,7 @@ public final class DisplayEntities extends JavaPlugin {
     private @Nullable PacketEventsHook packetEventsHook;
 
     private Metrics bStats;
-    private dev.faststats.core.Metrics fastStats;
+    private BukkitContext fastStats;
 
     static {
         try {
@@ -200,7 +200,9 @@ public final class DisplayEntities extends JavaPlugin {
         // Setting up bStats...
         this.bStats = new Metrics(this, 25686);
         // Setting up FastStats...
-        this.fastStats = BukkitMetrics.factory().token("d863b62225a2d9e30474d4edaae49b43").create(this);
+        this.fastStats = new BukkitContext.Factory(this, "d863b62225a2d9e30474d4edaae49b43")
+                .metrics(dev.faststats.Metrics.Factory::create)
+                .create();
     }
 
     @Override
