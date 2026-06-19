@@ -4,13 +4,23 @@ plugins {
     id("xyz.jpenilla.run-paper") version "3.0.2"
     // https://github.com/eldoriarpg/plugin-yml
     id("de.eldoria.plugin-yml.paper") version "0.9.0"
+    // https://github.com/GradleUp/shadow
+    id("com.gradleup.shadow") version "9.4.2"
 }
 
-final String VERSION = "1.7.0"
+final String VERSION = "1.7.1"
 final String RUN_NUMBER = System.getenv("GITHUB_RUN_NUMBER") ?: "DEV"
 
 group = "cloud.grabsky"
 version = "$VERSION+$RUN_NUMBER"
+
+configurations {
+    shadowImplementation
+}
+
+configurations.implementation {
+    extendsFrom(configurations.shadowImplementation)
+}
 
 repositories {
     mavenCentral()
@@ -20,6 +30,8 @@ repositories {
     maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
 }
 
+// Shading Maven Central dependencies is not needed.
+// Only if the repository becomes unreliable in the future.
 dependencies {
     // Lombok
     compileOnly("org.projectlombok:lombok:1.18.42")
@@ -27,12 +39,12 @@ dependencies {
     // Paper API
     compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
     // https://github.com/Revxrsal/Lamp
-    paperLibrary("io.github.revxrsal:lamp.common:4.0.0-rc.16")
-    paperLibrary("io.github.revxrsal:lamp.bukkit:4.0.0-rc.16")
+    paperLibrary("io.github.revxrsal:lamp.common:4.0.0-rc.17")
+    paperLibrary("io.github.revxrsal:lamp.bukkit:4.0.0-rc.17")
     // https://github.com/Revxrsal/Spec
     paperLibrary("io.github.revxrsal:spec:1.5")
     // https://github.com/faststats-dev/dev-kits
-    paperLibrary("dev.faststats.metrics:bukkit:0.25.1")
+    shadowImplementation("dev.faststats.metrics:bukkit:0.27.0")
     // https://github.com/PlaceholderAPI/PlaceholderAPI
     compileOnly("me.clip:placeholderapi:2.12.2")
     // https://github.com/retrooper/packetevents
@@ -66,6 +78,11 @@ tasks {
         // Setting compatibility to Java 21 and higher.
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
+    }
+    shadowJar {
+        configurations = [project.configurations.shadowImplementation]
+        archiveFileName = "${project.name}-${version}.jar"
+        relocate("dev.faststats", "cloud.grabsky.displayentities.libs.dev.faststats")
     }
 }
 
