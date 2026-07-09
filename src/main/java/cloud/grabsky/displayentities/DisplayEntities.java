@@ -44,6 +44,7 @@ import cloud.grabsky.displayentities.command.CommandDisplayHelp;
 import cloud.grabsky.displayentities.command.CommandDisplayImport;
 import cloud.grabsky.displayentities.command.CommandDisplayItem;
 import cloud.grabsky.displayentities.command.CommandDisplayLineWidth;
+import cloud.grabsky.displayentities.command.CommandDisplayMoveHere;
 import cloud.grabsky.displayentities.command.CommandDisplayMoveTo;
 import cloud.grabsky.displayentities.command.CommandDisplayPose;
 import cloud.grabsky.displayentities.command.CommandDisplayRefreshInterval;
@@ -227,6 +228,7 @@ public final class DisplayEntities extends JavaPlugin {
         lamp.register(CommandDisplayImport.INSTANCE);
         // Editing (Common / All)
         lamp.register(CommandDisplayMoveTo.INSTANCE);
+        lamp.register(CommandDisplayMoveHere.INSTANCE);
         // Editing (Strict / Display Entities)
         lamp.register(CommandDisplayScale.INSTANCE);
         lamp.register(CommandDisplayBillboard.INSTANCE);

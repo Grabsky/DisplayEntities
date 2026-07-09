@@ -198,6 +198,7 @@ public interface PluginConfiguration {
                 put("display.edit.scale",            "<common_primary>/display edit <common_secondary>(display) <common_primary>scale <common_secondary>(x) (y) (z)");
                 put("display.edit.view_range",       "<common_primary>/display edit <common_secondary>(display) <common_primary>view_range <common_secondary>(range)");
                 put("display.edit.move_to",          "<common_primary>/display edit <common_secondary>(display) <common_primary>move_to <common_secondary>(x) (y) (z)");
+                put("display.edit.move_here",        "<common_primary>/display edit <common_secondary>(display) <common_primary>move_here");
                 put("display.edit.billboard",        "<common_primary>/display edit <common_secondary>(display) <common_primary>billboard <common_secondary>(billboard)");
                 put("display.edit.brightness.block", "<common_primary>/display edit <common_secondary>(display) <common_primary>brightness block <common_secondary>(brightness)");
                 put("display.edit.brightness.sky",   "<common_primary>/display edit <common_secondary>(display) <common_primary>brightness sky <common_secondary>(brightness)");
@@ -261,6 +262,7 @@ public interface PluginConfiguration {
                     "<dark_gray>› <spec:messages.command_usages.display.edit.scale>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.view_range>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.move_to>",
+                    "<dark_gray>› <spec:messages.command_usages.display.edit.move_here>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.billboard>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.brightness.block>",
                     "<dark_gray>› <spec:messages.command_usages.display.edit.brightness.sky>",
@@ -544,9 +546,17 @@ public interface PluginConfiguration {
             return "<dark_gray>› <gray>Display has been moved to <primary>{x}<gray>, <primary>{y}<gray>, <primary>{z}<gray>.";
         }
 
+        // Display > Edit > Move Here
+
+        @Order(56) @Key("command.display.edit.move_here.success")
+        @Comment("Display > Edit > Move Here")
+        default String commandDisplayEditMoveHereSuccess() {
+            return "<dark_gray>› <gray>Display has been moved to <primary>{x}<gray>, <primary>{y}<gray>, <primary>{z}<gray>.";
+        }
+
         // Display > Edit > Brightness
 
-        @Order(56) @Key("command.display.edit.brightness.success")
+        @Order(57) @Key("command.display.edit.brightness.success")
         @Comment("Display > Edit > Brightness")
         default String commandDisplayEditBrightnessSuccess() {
             return "<dark_gray>› <gray>Display brightness has been modified. (B: <primary>{brightness_block}<gray>, S: <primary>{brightness_sky}<gray>)";
@@ -554,7 +564,7 @@ public interface PluginConfiguration {
 
         // Display > Edit > Line Width
 
-        @Order(57) @Key("command.display.edit.line_width.success")
+        @Order(58) @Key("command.display.edit.line_width.success")
         @Comment("Display > Edit > Line Width")
         default String commandDisplayEditLineWidthSuccess() {
             return "<dark_gray>› <gray>Display line width has been set to <primary>{width}<gray>.";
@@ -562,20 +572,20 @@ public interface PluginConfiguration {
 
         // Display > Edit > Refresh Interval
 
-        @Order(58) @Key("command.display.edit.refresh_interval.success")
+        @Order(59) @Key("command.display.edit.refresh_interval.success")
         @Comment("Display > Edit > Refresh Interval")
         default String commandDisplayEditRefreshIntervalSuccess() {
             return "<dark_gray>› <gray>Display refresh interval has been set to <primary>{ticks}<gray> ticks. It's not an immediate operation and may require respawning the entity.";
         }
 
-        @Order(59) @Key("command.display.edit.refresh_interval.failure")
+        @Order(60) @Key("command.display.edit.refresh_interval.failure")
         default String commandDisplayEditRefreshIntervalFailure() {
             return "<dark_gray>› <red>Refresh interval must be either <yellow>default<red> or a positive integer value.";
         }
 
         // Display > Edit > Rotate X
 
-        @Order(60) @Key("command.display.edit.rotate_x.success")
+        @Order(61) @Key("command.display.edit.rotate_x.success")
         @Comment("Display > Edit > Rotate X")
         default String commandDisplayEditRotateXSuccess() {
             return "<dark_gray>› <gray>Display has been rotated. (Pitch: <primary>{pitch}°<gray>)";
@@ -583,7 +593,7 @@ public interface PluginConfiguration {
 
         // Display > Edit > Rotate X
 
-        @Order(61) @Key("command.display.edit.rotate_y.success")
+        @Order(62) @Key("command.display.edit.rotate_y.success")
         @Comment("Display > Edit > Rotate Y")
         default String commandDisplayEditRotateYSuccess() {
             return "<dark_gray>› <gray>Display has been rotated. (Yaw: <primary>{yaw}°<gray>)";
@@ -591,7 +601,7 @@ public interface PluginConfiguration {
 
         // Display > Edit > Width (Interaction)
 
-        @Order(62) @Key("command.display.edit.width.success")
+        @Order(63) @Key("command.display.edit.width.success")
         @Comment("Display > Edit > Width")
         default String commandDisplayEditWidthSuccess() {
             return "<dark_gray>› <gray>Interaction width has been set to <primary>{width}<gray>.";
@@ -599,7 +609,7 @@ public interface PluginConfiguration {
 
         // Display > Edit > Height (Interaction)
 
-        @Order(63) @Key("command.display.edit.height.success")
+        @Order(64) @Key("command.display.edit.height.success")
         @Comment("Display > Edit > Height")
         default String commandDisplayEditHeightSuccess() {
             return "<dark_gray>› <gray>Interaction height has been set to <primary>{height}<gray>.";
@@ -607,7 +617,7 @@ public interface PluginConfiguration {
 
         // Display > Edit > Response (Interaction)
 
-        @Order(64) @Key("command.display.edit.response.success")
+        @Order(65) @Key("command.display.edit.response.success")
         @Comment("Display > Edit > Response")
         default String commandDisplayEditResponseSuccess() {
             return "<dark_gray>› <gray>Interaction response has been set to <primary>{state}<gray>.";
@@ -615,7 +625,7 @@ public interface PluginConfiguration {
 
         // Display > Edit > Transform (Item)
 
-        @Order(65) @Key("command.display.edit.transform.success")
+        @Order(66) @Key("command.display.edit.transform.success")
         @Comment("Display > Edit > Transform")
         default String commandDisplayEditTransformSuccess() {
             return "<dark_gray>› <gray>Display transform has been set to <primary>{transform}<gray>.";
@@ -623,20 +633,20 @@ public interface PluginConfiguration {
 
         // Display > Edit > Glow (Common)
 
-        @Order(66) @Key("command.display.edit.glow.color_change.success")
+        @Order(67) @Key("command.display.edit.glow.color_change.success")
         @Comment("Display > Edit > Glow")
         default String commandDisplayEditGlowColorChangeSuccess() {
             return "<dark_gray>› <gray>Display glow color has been set to <primary>{color}<gray>.";
         }
 
-        @Order(67) @Key("command.display.edit.glow.disabled.success")
+        @Order(68) @Key("command.display.edit.glow.disabled.success")
         default String commandDisplayEditGlowDisabledSuccess() {
             return "<dark_gray>› <gray>Display glow has been disabled.";
         }
 
         // Display > Edit > Click Command
 
-        @Order(68) @Key("command.display.edit.click_command.success")
+        @Order(69) @Key("command.display.edit.click_command.success")
         @Comment("Display > Edit > Click Command")
         default String commandDisplayEditClickCommandSuccess() {
             return "<dark_gray>› <gray>Display click command(s) have been modified.";
@@ -644,7 +654,7 @@ public interface PluginConfiguration {
 
         // Display > Edit > Custom Name
 
-        @Order(69) @Key("command.display.edit.custom_name.success")
+        @Order(70) @Key("command.display.edit.custom_name.success")
         @Comment("Display > Edit > Custom Name")
         default String commandDisplayEditCustomNameSuccess() {
             return "<dark_gray>› <gray>Display custom name has been modified.";
@@ -652,7 +662,7 @@ public interface PluginConfiguration {
 
         // Display > Edit > Description
 
-        @Order(70) @Key("command.display.edit.description.success")
+        @Order(71) @Key("command.display.edit.description.success")
         @Comment("Display > Edit > Description")
         default String commandDisplayEditDescriptionSuccess() {
             return "<dark_gray>› <gray>Display description has been modified.";
@@ -660,7 +670,7 @@ public interface PluginConfiguration {
 
         // Display > Edit > Equipment
 
-        @Order(71) @Key("command.display.edit.equipment.success")
+        @Order(72) @Key("command.display.edit.equipment.success")
         @Comment("Display > Edit > Equipment")
         default String commandDisplayEditEquipmentSuccess() {
             return "<dark_gray>› <gray>Display equipment has been modified.";
@@ -668,7 +678,7 @@ public interface PluginConfiguration {
 
         // Display > Edit > Pose
 
-        @Order(72) @Key("command.display.edit.pose.success")
+        @Order(73) @Key("command.display.edit.pose.success")
         @Comment("Display > Edit > Pose")
         default String commandDisplayEditPoseSuccess() {
             return "<dark_gray>› <gray>Display pose has been set to <yellow>{pose}<gray>.";
@@ -676,20 +686,20 @@ public interface PluginConfiguration {
 
         // Display > Edit > Skin
 
-        @Order(73) @Key("command.display.edit.skin.success")
+        @Order(74) @Key("command.display.edit.skin.success")
         @Comment("Display > Edit > Skin")
         default String commandDisplayEditSkinSuccess() {
             return "<dark_gray>› <gray>Display skin has been set to <yellow>{skin}<gray>.";
         }
 
-        @Order(74) @Key("command.display.edit.skin.failure.invalid_url")
+        @Order(75) @Key("command.display.edit.skin.failure.invalid_url")
         default String commandDisplayEditSkinFailureInvalidUrl() {
             return "<dark_gray>› <red>URL does not point to a valid skin texture.";
         }
 
         // Display > Edit > Track Nearest Player
 
-        @Order(75) @Key("command.display.edit.track_nearest_player.success")
+        @Order(76) @Key("command.display.edit.track_nearest_player.success")
         @Comment("Display > Edit > Track Nearest Player")
         default String commandDisplayEditTrackNearestPlayerSuccess() {
             return "<dark_gray>› <gray>Display tracking state has been set to <primary>{state}<gray>.";
