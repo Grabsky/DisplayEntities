@@ -25,7 +25,6 @@
  */
 package cloud.grabsky.displayentities;
 
-import cloud.grabsky.bstats.Metrics;
 import cloud.grabsky.displayentities.command.CommandDisplayAlignment;
 import cloud.grabsky.displayentities.command.CommandDisplayBackground;
 import cloud.grabsky.displayentities.command.CommandDisplayBillboard;
@@ -143,8 +142,9 @@ public final class DisplayEntities extends JavaPlugin {
 
     private @Nullable PacketEventsHook packetEventsHook;
 
-    private Metrics bStats;
-    private BukkitContext fastStats;
+    private final BukkitContext fastStats = new BukkitContext.Factory(this, "d863b62225a2d9e30474d4edaae49b43")
+            .metrics(dev.faststats.Metrics.Factory::create)
+            .create();
 
     static {
         try {
@@ -197,18 +197,12 @@ public final class DisplayEntities extends JavaPlugin {
         // Registering event listeners.
         this.getServer().getPluginManager().registerEvents(MannequinListener.INSTANCE, this);
         this.getServer().getPluginManager().registerEvents(ClickCommandListener.INSTANCE, this);
-        // Setting up bStats...
-        this.bStats = new Metrics(this, 25686);
         // Setting up FastStats...
-        this.fastStats = new BukkitContext.Factory(this, "d863b62225a2d9e30474d4edaae49b43")
-                .metrics(dev.faststats.Metrics.Factory::create)
-                .create();
+        this.fastStats.ready();
     }
 
     @Override
     public void onDisable() {
-        // Shutting down bStats.
-        this.bStats.shutdown();
         // Shutting down FastStats.
         this.fastStats.shutdown();
     }
