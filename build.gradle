@@ -8,7 +8,7 @@ plugins {
     id("com.gradleup.shadow") version "9.5.1"
 }
 
-final String VERSION = "1.8.0"
+final String VERSION = "1.8.1"
 final String RUN_NUMBER = System.getenv("GITHUB_RUN_NUMBER") ?: "DEV"
 
 group = "cloud.grabsky"
