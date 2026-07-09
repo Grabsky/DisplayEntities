@@ -21,6 +21,7 @@ import cloud.grabsky.displayentities.util.LombokExtensions;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
@@ -53,7 +54,7 @@ public enum CommandDisplayRespawn {
         display.entity().remove();
         // Spawning a copy of display entity.
         sender.getScheduler().run(plugin, (it) -> {
-            copy.spawnAt(location);
+            copy.spawnAt(location, CreatureSpawnEvent.SpawnReason.COMMAND);
             // Creating the DisplayWrapper instance from the copied entity.
             final DisplayWrapper newDisplay = DisplayWrapper.existing(copy);
             // ...for syncing things like sitting pose; currently unused.
