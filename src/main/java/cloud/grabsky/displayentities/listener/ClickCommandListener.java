@@ -81,15 +81,18 @@ public enum ClickCommandListener implements Listener {
         this.lastClicked.put(player.getUniqueId(), System.currentTimeMillis());
         // Getting the stored command.
         final String[] commands = PlaceholderAPI.setPlaceholders(player, entity.getPersistentDataContainer().getOrDefault(DisplayEntities.Keys.CLICK_COMMAND, PersistentDataType.STRING, "")).split("\\$AND");
-        // Iterating over all specified commands.
-        for (final String command : commands) {
-            // Stripping leading slash if needed and trimming leading and trailing whitespaces.
-            final String finalCommand = command.trim().startsWith("/") == true ? command.substring(1).trim() : command.trim();
-            // Invoking command associated with the clicked entity, or doing nothing if it's blank.
-            if (command.isBlank() == false) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand);
+        // Scheduling onto the GlobalRegionThread for Folia compatibility.
+        Bukkit.getGlobalRegionScheduler().run(DisplayEntities.instance(), (task) -> {
+            // Iterating over all specified commands.
+            for (final String command : commands) {
+                // Stripping leading slash if needed and trimming leading and trailing whitespaces.
+                final String finalCommand = command.trim().startsWith("/") == true ? command.substring(1).trim() : command.trim();
+                // Invoking command associated with the clicked entity, or doing nothing if it's blank.
+                if (command.isBlank() == false) {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand);
+                }
             }
-        }
+        });
         return true;
     }
 
