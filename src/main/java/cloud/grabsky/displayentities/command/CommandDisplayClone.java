@@ -19,7 +19,7 @@ import cloud.grabsky.displayentities.DisplayWrapper;
 import cloud.grabsky.displayentities.configuration.PluginConfiguration;
 import cloud.grabsky.displayentities.util.LombokExtensions;
 import org.bukkit.Location;
-import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
@@ -50,11 +50,11 @@ public enum CommandDisplayClone {
             final @NotNull DisplayWrapper display,
             final @NotNull String name
     ) {
-        // Sending error message if specified name does not does not match the format.
+        // Sending error message if specified name does not match the format.
         if (NAME_FORMAT.matcher(name).matches() == false)
             return configuration.messages().commandDisplayCloneFailureInvalidFormat();
         // Cloning the display entity.
-        final Display clone = (Display) display.entity().copy();
+        final Entity clone = display.entity().copy();
         // Creating location for entity to be spawned at. This is sender's location but with yaw and pitch kept from the original entity.
         final Location location = sender.getLocation().withYaw(clone.getYaw()).withPitch(clone.getPitch());
         // Spawning a clone of display entity.
